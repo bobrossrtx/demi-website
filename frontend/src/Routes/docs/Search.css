@@ -1,0 +1,100 @@
+.small-fa-icon {
+    font-size: 0.625em;
+}
+
+.search-result-container {
+    margin-top: 2rem;
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: .5rem 2rem;
+    border-radius: 1em;
+    border: transparent solid 2px;
+}
+
+.search-result-container:hover {
+    border-color: white;
+}
+
+.search-page-title {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.search-page-tags-label {
+    font-size: 1em;
+}
+
+.search-page-tags {
+    margin-left: 10px;
+    font-size: 1em;
+    background: rgba(0, 0, 0, 0.237);
+    padding: 0.1em 0.5em;
+    border-radius: .8em;
+    text-decoration: none;
+}
+
+.search-page-tags:hover {
+    text-decoration: underline;
+}
+
+.search-page-tags-label, .search-page-tags {
+    display: inline-block;
+}
+
+.beat-fade {
+    animation-iteration-count: infinite;
+    animation: fadeIn ease 1s;
+    -webkit-animation: fadeIn ease 1s;
+    -moz-animation: fadeIn ease 1s;
+    -o-animation: fadeIn ease 1s;
+    -ms-animation: fadeIn ease 1s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-ms-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

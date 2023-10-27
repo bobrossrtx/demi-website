@@ -1,0 +1,63 @@
+import React from 'react'
+import './Downloads.css'
+import DownloadButton from '../../Components/Buttons/DownloadButton'
+import { Link } from 'react-router-dom'
+
+type Props = {}
+
+export default function Downloads({}: Props) {
+  return (
+    <div className="container">
+      <h1>Download Deno <i className="fas fa-download"></i></h1>
+      <h2>Download the latest version for Windows | Linux | MacOS </h2>
+      <hr className='hr-thick'/>
+      <div className="current-version-container"></div><p className='current-version-label'>Current Demi Version: </p><p className="current-version">{process.env.REACT_APP_CURRENT_DEMI_VERSION}</p>
+      <a href="https://github.com/bobrossrtx/demi-lang" className="github-link"><i className="fa fa-github"></i></a>
+      <br></br>
+      <div className="download-container">
+        <DownloadButton file={""}>Windows <i className="fa fa-windows"></i></DownloadButton>
+        <DownloadButton file={""}>Linux <i className="fa fa-linux"></i></DownloadButton>
+        <DownloadButton file={""}>MacOS <i className="fa fa-apple"></i></DownloadButton>
+      </div>
+      <hr />
+      <h2>Previous Versions</h2>
+      <table className='release-table'>
+      <tr>
+        <th>Alpha</th>
+        <th>Beta</th>
+        <th>Release</th>
+      </tr>
+      <tr>
+        <td>
+          0.0.1-alpha
+          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_linux.rar" target="_blank" download><i className="fa fa-linux"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_macos.rar" target="_blank" download><i className="fa fa-apple"></i></Link>
+        </td>
+        <td>
+          0.0.1-alpha
+          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_linux.rar" target="_blank" download><i className="fa fa-linux"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_macos.rar" target="_blank" download><i className="fa fa-apple"></i></Link>
+        </td>
+        <td>
+          0.0.1-alpha
+          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_linux.rar" target="_blank" download><i className="fa fa-linux"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/dem-lang-0.0.1-alpha_macos.rar" target="_blank" download><i className="fa fa-apple"></i></Link>
+        </td>
+      </tr>
+      <tr>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+      </tr>
+      </table>
+    </div>
+  )
+}

@@ -1,0 +1,18 @@
+.search-container {
+    height: 35px;
+    margin-top: 22px;
+}
+
+.search-container .search-bar {
+    height: 100%;
+    /* background: transparent */
+    background: transparent;
+    border-radius: 50em;
+    border: 2px solid #485560;
+    color: white;
+    padding-left: 15px;
+}
+
+.search-container .search-bar:focus {
+    outline: none;
+}

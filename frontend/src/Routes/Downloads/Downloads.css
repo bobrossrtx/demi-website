@@ -1,0 +1,72 @@
+.download-container {
+    display: inline-block
+}
+
+.download-container button {
+    margin-right: 1rem;
+}
+
+button>i {
+    margin-left: 5px;
+}
+
+.current-version-label, .current-version {
+    display: inline-block;
+}
+
+.github-link {
+    color: white;
+    font-size: 1.5em;
+    margin-left: 25px
+}
+
+@media only screen and (max-width: 410px) {
+    .github-link {
+        margin-left: 5px;
+    }
+}
+
+.current-version-label {
+    margin-right: 10px;
+}
+
+.current-version {
+    font-size: 1em;
+    background: rgba(0, 0, 0, 0.237);
+    padding: 0.1em 0.5em;
+    border-radius: .8em;
+}
+
+.release-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.release-table>tr>td, .release-table>tr>th {
+    border: 1px solid white;
+    text-align: cen;
+    padding: 8px;
+}
+
+.release-table>tr:nth-child(odd) {
+    background-color: #2B2F31;
+}
+.release-table>tr:nth-child(even) {
+    background-color: #677185;
+}
+
+
+.release-table-button-first {
+    margin-left: 4em!important;
+}
+.release-table-button {
+    margin-left: 10px;
+    color: white;
+}
+
+@media only screen and (max-width: 855px) {
+    .release-table-button-first {
+        margin-left: 1em!important;
+    }
+    
+}
