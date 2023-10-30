@@ -47,3 +47,7 @@ hr.hr-thick {
   color: #fff;
   margin-left: 5px;
 }
+
+.underline {
+  text-decoration: underline;
+}

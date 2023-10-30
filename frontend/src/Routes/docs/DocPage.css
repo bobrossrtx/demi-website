@@ -5,3 +5,29 @@
     text-align: center;
     margin-top: 20px;
 }
+
+.mt-em {
+    margin-top: 10em
+}
+
+.fa-spin-pulse {
+    -webkit-animation-name: fa-spin;
+    animation-name: fa-spin;
+    -webkit-animation-duration: var(--fa-animation-duration,2s);
+    animation-duration: var(--fa-animation-duration,2s);
+    -webkit-animation-iteration-count: var(--fa-animation-iteration-count,infinite);
+    animation-iteration-count: var(--fa-animation-iteration-count,infinite);
+    -webkit-animation-timing-function: var(--fa-animation-timing,linear);
+    animation-timing-function: var(--fa-animation-timing,linear);
+}
+
+@keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn);
+    }
+}

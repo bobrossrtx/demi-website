@@ -67,6 +67,11 @@ const Navbar = (props: Props) => {
             </Link>
           </li>
           <li className='nav-item'>
+            <Link to='https://github.com/bobrossrtx/demi-lang' className='nav-links' onClick={closeMobileMenu}>
+              Github <i className="fa fa-github"></i>
+            </Link>
+          </li>
+          {/* <li className='nav-item'>
             <Link to='/about' className='nav-links' onClick={closeMobileMenu}>
               About
             </Link>
@@ -75,7 +80,7 @@ const Navbar = (props: Props) => {
             <Link to='/contact' className='nav-links' onClick={closeMobileMenu}>
               Contact
             </Link>
-          </li>
+          </li> */}
           <SearchBar placeholder='🔎︎ Search Docs' />
 
 

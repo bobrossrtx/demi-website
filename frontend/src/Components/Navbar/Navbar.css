@@ -17,7 +17,7 @@
 }
 
 .btn:hover {
-    padding: 4px 20px;
+    padding: 8px 20px;
     transition: all 0.3s ease-out;
     background-color: transparent;
     border-radius: 4px;
@@ -122,12 +122,13 @@
   .nav-links {
     color: #fff;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: .2em 1rem;
+    height: 35px;
   }
   
   .nav-links:hover {
     background: linear-gradient(to bottom right, #827498  50%, #056941);
-    border-radius: 4px;
+    border-radius: 50em;
     transition: all 0.2s ease-out;
   }
   
@@ -181,7 +182,7 @@
   
     .nav-links:hover {
       background: linear-gradient(to bottom right, #827498  50%, #056941);;
-      border-radius: 5px;
+      border-radius: 4px;
       text-decoration: overline;
       text-decoration-thickness: 5px;
     }

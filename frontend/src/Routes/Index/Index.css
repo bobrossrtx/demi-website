@@ -1,0 +1,4 @@
+.download-container>.current-version {
+    position: absolute;
+    margin-top: 10px;
+}

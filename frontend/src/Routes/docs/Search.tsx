@@ -48,15 +48,21 @@ export default function Search(props: Props) {
 
     return (
         <div>
-            {results.map((page) => (
-                <a href={"/docs?page="+page.page}>
-                <div className='search-result-container' onMouseEnter={fadeChevron} onMouseLeave={unfadeChevron} >
-                    <h2 className='search-page-title'>{page.category[0].toUpperCase() + page.category.substring(1)} <i className={fade ? "small-fa-icon fas fa-chevron-right beat-fade" : "small-fa-icon fas fa-chevron-right"}></i> {page.showTitle}</h2>
-                    <h3 className='search-page-tags-label'>Tags: </h3>{page.tags.map(tag => <a href={"?query="+tag} className="search-page-tags">{tag} •</a>)}
-                    <p className='search-page-description'>{page.description}</p>
+            {results.length > 0 ? (
+                results.map((page) => (
+                    <a className='search-result-link' href={"/docs?page="+page.page}>
+                    <div className='search-result-container' onMouseEnter={fadeChevron} onMouseLeave={unfadeChevron} >
+                        <h2 className='search-page-title'>{page.category[0].toUpperCase() + page.category.substring(1)} <i className={fade ? "small-fa-icon fas fa-chevron-right beat-fade" : "small-fa-icon fas fa-chevron-right"}></i> {page.showTitle}</h2>
+                        <h3 className='search-page-tags-label'>Tags: </h3>{page.tags.map(tag => <a href={"?query="+tag} className="search-page-tags">{tag} •</a>)}
+                        <p className='search-page-description'>{page.description}</p>
+                    </div>
+                    </a>
+                ))
+            ) : (
+                <div className='container-text-center'>
+                    <h1>No Results Found!</h1>
                 </div>
-                </a>
-            ))}
+            )}
         </div> 
     )
 }

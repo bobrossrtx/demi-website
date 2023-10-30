@@ -25,12 +25,20 @@ export default class Index extends Component<Props, State> {
         <hr className="hr-thick" />
         <div className="download-container">
           <h1>Download Demi Now!</h1>
-          <DownloadButton file="/downloads">Download <i className="fas fa-download"></i></DownloadButton>
+          <DownloadButton file="/downloads" download={false}>Download <i className="fas fa-download"></i></DownloadButton> <p className="current-version">{process.env.REACT_APP_CURRENT_DEMI_VERSION}</p>
           <p>
-            Laborum anim magna nulla consequat in. Commodo non minim occaecat et reprehenderit et deserunt labore nisi nostrud cillum velit dolor ea. Velit laborum nulla sint Lorem eu.
-            Exercitation aute aute Lorem irure. Magna tempor culpa aliqua ipsum id cillum pariatur esse ex aute eiusmod ad. Ullamco adipisicing id eiusmod et in laborum magna Lorem non.
-            Lorem eiusmod incididunt fugiat magna incididunt consequat eu sint adipisicing cupidatat officia aliqua consectetur pariatur. Velit incididunt eiusmod consectetur ex dolor quis
-            nostrud exercitation sit. Ut duis id velit sint aute id dolore. Pariatur occaecat labore officia ut cupidatat reprehenderit mollit laborum in anim sunt tempor.
+            Download the latest version of Demi above!
+          </p>
+        </div>
+        <hr />
+        <div className="description-container">
+          <h1 className='underline'>Why Demi?</h1>
+          <p>
+          Deno, built on TypeScript and the Deno runtime, offers speed, security, and continual updates with new features.
+          Its focus on safety without sacrificing performance makes it an ideal choice for developers seeking a modern and evolving platform.
+          With regular enhancements, Deno provides a secure and efficient environment for coding. Additionally, its robust documentation and a growing
+          community of contributors ensure a wealth of resources and support, making it easier for developers to adopt and implement Deno into their projects seamlessly.
+          The platform's compatibility with various libraries and its supportive ecosystem further solidify its position as a versatile and forward-thinking programming language.
           </p>
         </div>
       </div>
