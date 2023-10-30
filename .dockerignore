@@ -1,0 +1,12 @@
+**/node_modules/
+**/dist
+**/target
+
+.git
+npm-debug.log
+.coverage
+.coverage.*
+dockerfile
+.dockerignore
+.gitignore
+deploy.ps1

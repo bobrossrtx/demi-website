@@ -6,22 +6,5 @@
         "page": "test/test",
         "tags": ["test"],
         "category": "test"
-    },
-    {
-        "title": "test1",
-        "showTitle": "Test1",
-        "description": "This is a test markdown file 2",
-        "page": "test/test1",
-        "tags": ["test", "test2"],
-        "category": "test"
-    },
-    {
-        "title": "demi",
-        "showTitle": "Demi",
-        "description": "This is a real markdown file",
-        "page": "demi/demi",
-        "tags": ["demi"],
-        "category": "demi"
     }
-    
 ]

@@ -98,13 +98,13 @@ pub(crate) fn fallback_url() -> &'static str {
 }
 
 
-#[get("/<file..>", rank = 1)]
+#[get("/<file..>", rank = 2)]
 async fn files(file: PathBuf) -> Option<NamedFile> {
     let paged_directory_path = format!("{}/../frontend/build/static", env!("CARGO_MANIFEST_DIR"));
     NamedFile::open(Path::new(&paged_directory_path).join(file)).await.ok()
 }
 
-#[get("/downloads/<file..>", rank= 2)]
+#[get("/downloads/<file..>", rank= 1)]
 async fn downloads(file: PathBuf) -> Option<NamedFile> {
     let paged_directory_path = format!("{}/static/downloads", env!("CARGO_MANIFEST_DIR"));
     NamedFile::open(Path::new(&paged_directory_path).join(file)).await.ok()
