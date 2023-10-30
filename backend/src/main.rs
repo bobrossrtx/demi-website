@@ -110,12 +110,17 @@ async fn downloads(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new(&paged_directory_path).join(file)).await.ok()
 }
 
+#[get("/images/<file..>", rank= 1)]
+async fn images(file: PathBuf) -> Option<NamedFile> {
+    let paged_directory_path = format!("{}/static/images", env!("CARGO_MANIFEST_DIR"));
+    NamedFile::open(Path::new(&paged_directory_path).join(file)).await.ok()
+}
 
 #[launch]
 fn rocket() -> _ {
     rocket::build()
         .attach(CORS)
         .mount("/api", routes![getdocs, docpages])
-        .mount("/static", routes![files, downloads])
+        .mount("/static", routes![files, downloads, images])
         .mount("/", routes![index, fallback_url])
 }
