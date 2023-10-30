@@ -2,3 +2,10 @@
     position: absolute;
     margin-top: 10px;
 }
+
+.idx-download-button {
+    height: 4em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

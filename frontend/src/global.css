@@ -7,7 +7,7 @@
 
 html, body {
   height: 100%;
-  background: linear-gradient(to bottom right, #827498  50%, #056941);
+  background: linear-gradient(to bottom right, #61667b  20%, #373a47);
   color: #fff
 }
 
@@ -50,4 +50,8 @@ hr.hr-thick {
 
 .underline {
   text-decoration: underline;
+}
+
+.neon {
+  box-shadow: 0 0 70px 15px #000000;
 }

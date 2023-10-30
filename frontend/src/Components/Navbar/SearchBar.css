@@ -8,11 +8,13 @@
     /* background: transparent */
     background: transparent;
     border-radius: 50em;
-    border: 2px solid #485560;
+    border: 2px solid #3c404d;
     color: white;
     padding-left: 15px;
+    transition: border 0.2s ease-in-out;
 }
 
 .search-container .search-bar:focus {
     outline: none;
+    border-color: #4b4f60;
 }

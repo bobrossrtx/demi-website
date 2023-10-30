@@ -1,20 +1,24 @@
 .btn {
-    padding: 8px 20px;
     border-radius: 4px;
     outline: none;
     border: none;
     font-size: 18px;
-    color: #fff !important;
     cursor: pointer;
-    background: rgb(61,110,104) !important;
+    background: white !important;
     margin-bottom: 1rem;
 }
 
+.btn * {
+    color: #3d414f !important;
+}
+
 .btn:hover {
-    padding: 8px 20px;
     transition: all 0.3s ease-out;
-    background-color: transparent;
-    border-radius: 4px;
-    border: 2px solid #fff;
-    color: #fff;
+    background: #3d414f !important;
+    color: white !important;
+}
+
+.btn:hover * {
+    transition: all 0.3s ease-out;
+    color: #fff !important;
 }
