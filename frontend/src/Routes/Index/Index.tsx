@@ -38,7 +38,7 @@ export default class Index extends Component<Props, State> {
         <section className="description-container">
           <h1 className='underline'>Why Demi?</h1>
           <p>
-          Deno, built on TypeScript and the Deno runtime, offers speed, security, and continual updates with new features.
+          Demi, built on TypeScript and the Deno runtime, offers speed, security, and continual updates with new features.
           Its focus on safety without sacrificing performance makes it an ideal choice for developers seeking a modern and evolving platform.
           With regular enhancements, Deno provides a secure and efficient environment for coding. Additionally, its robust documentation and a growing
           community of contributors ensure a wealth of resources and support, making it easier for developers to adopt and implement Deno into their projects seamlessly.
