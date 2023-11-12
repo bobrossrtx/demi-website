@@ -48,7 +48,12 @@ export default function Downloads(props: Props) {
         <td>N/A</td>
       </tr>
       <tr>
-        <td>N/A</td>
+        <td>
+          0.0.3-alpha
+          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.3-alpha/bin/demi-lang-0.0.3-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.3-alpha/bin/demi-lang-0.0.3-alpha_linux.zip" target="_blank" download><i className="fa fa-linux"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.3-alpha/bin/demi-lang-0.0.3-alpha_macos.zip" target="_blank" download><i className="fa fa-apple"></i></Link>
+        </td>
         <td>N/A</td>
         <td>N/A</td>
       </tr>
