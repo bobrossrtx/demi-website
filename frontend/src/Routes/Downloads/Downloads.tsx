@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 type Props = {}
 
-export default function Downloads({}: Props) {
+export default function Downloads(props: Props) {
   return (
     <div className="container">
       <h1>Download Deno <i className="fas fa-download"></i></h1>
@@ -34,21 +34,16 @@ export default function Downloads({}: Props) {
           <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_linux.zip" target="_blank" download><i className="fa fa-linux"></i></Link>
           <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_macos.zip" target="_blank" download><i className="fa fa-apple"></i></Link>
         </td>
-        <td>
-          0.0.1-alpha
-          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
-          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_linux.zip" target="_blank" download><i className="fa fa-linux"></i></Link>
-          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_macos.zip" target="_blank" download><i className="fa fa-apple"></i></Link>
-        </td>
-        <td>
-          0.0.1-alpha
-          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
-          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_linux.zip" target="_blank" download><i className="fa fa-linux"></i></Link>
-          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.1-alpha/bin/demi-lang-0.0.1-alpha_macos.zip" target="_blank" download><i className="fa fa-apple"></i></Link>
-        </td>
+        <td>N/A</td>
+        <td>N/A</td>
       </tr>
       <tr>
-        <td>N/A</td>
+      <td>
+          0.0.2-alpha
+          <Link className='release-table-button release-table-button-first' to="/static/downloads/demi-lang-0.0.2-alpha/bin/demi-lang-0.0.2-alpha_windows.rar" target="_blank" download><i className="fa fa-windows"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.2-alpha/bin/demi-lang-0.0.2-alpha_linux.zip" target="_blank" download><i className="fa fa-linux"></i></Link>
+          <Link className='release-table-button' to="/static/downloads/demi-lang-0.0.2-alpha/bin/demi-lang-0.0.2-alpha_macos.zip" target="_blank" download><i className="fa fa-apple"></i></Link>
+        </td>
         <td>N/A</td>
         <td>N/A</td>
       </tr>
