@@ -6,8 +6,6 @@ import parseMD from '@demi-lang/parse-md'
 import "./DocPage.css"
 import "./Highlighting.css"
 import "../Errors/Errors.css"
-import { Link } from 'react-router-dom'
-import { refreshPage } from '../../helpers/helpers'
 
 type Props = {
 

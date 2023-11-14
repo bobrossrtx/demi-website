@@ -15,7 +15,7 @@ export default function Downloads(props: Props) {
       <a href="https://github.com/bobrossrtx/demi-lang" className="github-link"><i className="fa fa-github"></i></a>
       <br></br>
       <div className="download-container">
-        <DownloadButton file={"/static/downloads/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"/demiscript-installer-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+".exe"}>Windows Installer<i className="fa fa-download"></i></DownloadButton>
+        <DownloadButton file={"/static/downloads/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"/demiscript-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"-installer.exe"}>Windows Installer<i className="fa fa-download"></i></DownloadButton>
         <DownloadButton file={"/static/downloads/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"/bin/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"_windows.rar"}>Windows <i className="fa fa-windows"></i></DownloadButton>
         <DownloadButton file={"/static/downloads/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"/bin/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"_linux.zip"}>Linux <i className="fa fa-linux"></i></DownloadButton>
         <DownloadButton file={"/static/downloads/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"/bin/demi-lang-"+process.env.REACT_APP_CURRENT_DEMI_VERSION+"_macos.zip"}>MacOS <i className="fa fa-apple"></i></DownloadButton>
