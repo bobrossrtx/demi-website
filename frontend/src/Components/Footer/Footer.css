@@ -33,6 +33,11 @@ footer .attribution {
     padding-top: 30px;
 }
 
+.alit-c {
+    align-items: center;
+    text-align: left;
+}
+
 @media screen and (min-width: 60em) {
     .mw9-l {
         max-width: 96rem;

@@ -19,7 +19,7 @@ export default class Footer extends Component<Props, State> {
               <h4>Get help!</h4>
               <ul>
                 <li><Link to="/docs">Documentation</Link></li>
-                <li><Link to="/docs">Documentation</Link></li>
+                <li><Link to="/faq">Frequently Asked Questions</Link></li>
                 <li><Link to="https://discord.gg/vvhkhGkuGF">Ask a Question on the Discord Forum</Link></li>
               </ul>
             </div>
