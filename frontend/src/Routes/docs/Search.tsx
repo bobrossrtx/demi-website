@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
 import './Search.css'
-import { Link, Navigate, redirect } from 'react-router-dom';
 
 type Props = {}
 

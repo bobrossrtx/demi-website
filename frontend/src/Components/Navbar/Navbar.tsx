@@ -67,6 +67,11 @@ const Navbar = (props: Props) => {
             </Link>
           </li>
           <li className='nav-item'>
+            <a href='../docs' className='nav-links' onClick={closeMobileMenu}>
+              Docs
+            </a>
+          </li>
+          <li className='nav-item'>
             <Link to='https://github.com/bobrossrtx/demi-lang' className='nav-links' onClick={closeMobileMenu}>
               Github <i className="fa fa-github"></i>
             </Link>
