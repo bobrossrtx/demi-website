@@ -6,9 +6,9 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100vh;
   background: linear-gradient(to bottom right, #61667b  20%, #373a47);
-  color: #fff
+  color: #fff;
 }
 
 /* body {
@@ -20,6 +20,12 @@ main {
   margin: auto;
   width: 80%;
 }
+
+/* .root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+} */
 
 .container {
   width: 80vw;

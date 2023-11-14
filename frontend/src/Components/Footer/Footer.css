@@ -1,0 +1,120 @@
+footer {
+    margin-top: 5em;
+    padding: 30px 0;
+    background-color: #2828289f;
+    color: white;
+}
+
+footer h4 {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+footer ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 0;
+}
+
+ul {
+    list-style: disc;
+    padding-left: 1.5em;
+}
+
+footer a {
+    color: #ffc832;
+    text-decoration: none;
+}
+
+footer .attribution {
+    text-align: center;
+    padding-top: 30px;
+}
+
+@media screen and (min-width: 60em) {
+    .mw9-l {
+        max-width: 96rem;
+    }
+
+    .pv0-l {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .measure-wide-l {
+        max-width: 34em;
+    }
+
+    .ph4-l {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+@media screen and (min-width: 48.4375em) {
+    .flex-row-ns {
+        flex-direction: row !important;
+    }
+
+    .pv2-ns {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+}
+
+.pv2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex {
+    display: flex;
+}
+
+.center, .mr-auto {
+    margin-right: auto;
+}
+
+.center {
+    margin-left: auto;
+}
+
+.f3 {
+    font-size: 1.5rem;
+}
+
+.ph3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.mw-none {
+    max-width: none;
+}
+
+.mw8 {
+    max-width: 64rem;
+}
+
+.footer-icons a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: .5em;
+}
+
+.footer-icons img {
+    filter: invert(100%) sepia(0%) saturate(17%) hue-rotate(217deg) brightness(103%) contrast(104%);
+    width: 2em;
+
+}
