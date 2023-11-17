@@ -1,10 +1,18 @@
 [
     {
-        "title": "test",
-        "showTitle": "Test",
-        "description": "This is a test markdown file",
-        "page": "test/test",
-        "tags": ["test"],
-        "category": "test"
+        "category": "Getting Started",
+        "title": "getting-started",
+        "showTitle": "Getting Started",
+        "description": "Getting started with Demi Script",
+        "page": "getting-started/getting-started",
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi"]
+    },
+    {
+        "category": "Getting Started",
+        "title": "installation",
+        "showTitle": "Installation",
+        "description": "Installing Demi Script for Linux, MacOS, and Windows",
+        "page": "getting-started/installation",
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "installation"]
     }
 ]
