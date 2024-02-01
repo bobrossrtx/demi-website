@@ -18,7 +18,7 @@ html, body {
 
 main {
   margin: auto;
-  width: 80%;
+  width: 100%;
 }
 
 /* .root {
@@ -26,6 +26,10 @@ main {
   display: flex;
   flex-direction: column;
 } */
+
+.center-text {
+  text-align: center;
+}
 
 .container {
   width: 80vw;

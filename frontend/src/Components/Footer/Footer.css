@@ -1,7 +1,8 @@
 footer {
-    margin-top: 5em;
+    position: relative;
+    z-index: 100;
     padding: 30px 0;
-    background-color: #2828289f;
+    background-color: #282828;
     color: white;
 }
 

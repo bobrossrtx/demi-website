@@ -32,12 +32,75 @@
     }
 }
 
+.documentation-page {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    align-content: space-between;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.documentation-page-sidebar {
+    width: 250px;
+    left: 0;
+    background-color: #282828;
+    overflow: auto;
+    padding: 20px;
+    margin: 0;
+    position: relative;
+    height: 100%;
+}
+
+.documentation-page-sidebar li {
+    list-style: "⁍ "
+}
+
+.documentation-page-sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+
+.documentation-page-sidebar a:hover {
+    color: #61667b;
+}
+
+.document-page-sidebar-item {
+    margin: 0;
+}
+
+.documentation-page-container {
+    width: 100%;
+    text-align: center;
+}
+
 .documentation-page-title {
     text-align: center;
 }
 
 .documentation-page-title {
     margin-top: 20px;
+}
+
+.documentation-page-container-document {
+    padding: 16px;
+    max-width: 70vw;
+}
+
+.documentation-page-container-temp {
+    padding: 16px;
+    max-width: 70vw;
+    text-align: center;
+}
+
+.doc-temp  h3 {
+    font-size: 62px;
+}
+
+.doc-temp p {
+    font-size: 24px;
 }
 
 .category-container {
