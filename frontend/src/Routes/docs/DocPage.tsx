@@ -26,6 +26,7 @@ export default function DocPage(props: Props) {
         page:        string;
         tags:        string[];
         category:    string;
+        catid:       number;
     }    
 
     const [jsonData, setJsonData] = useState<Page[]>([]);
@@ -66,6 +67,8 @@ export default function DocPage(props: Props) {
             categories.push(jsonData[i].category);
     }
 
+    // let pages: {showTitle: string, catid: number}[];
+
     if (typeof page == "string" && page.length > 0)
         if (statusCode === 200) {
             const markdown = parseMD(markdownData);
@@ -85,6 +88,9 @@ export default function DocPage(props: Props) {
                                             </li>
                                         </a>
                                     )
+                                    
+                                    // pages.push({"showTitle": page.showTitle, catid: page.catid})
+
                                     return <></>
                                 })}
                             </ul>
@@ -96,6 +102,7 @@ export default function DocPage(props: Props) {
                         <p className="document-description">{markdown.metadata["description"]}</p>
                         <hr />
                         <Markdown rehypePlugins={[rehypeHighlight]}>{markdown.content}</Markdown>
+                                
                     </div>
                 </div>
                 </>

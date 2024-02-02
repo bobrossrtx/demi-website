@@ -5,7 +5,8 @@
         "showTitle": "Getting Started",
         "description": "Getting started with Demi Script",
         "page": "getting-started/getting-started",
-        "tags": ["guide", "guides", "getting-started", "getting started", "demi"]
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi"],
+        "catid": 0
     },
     {
         "category": "Getting Started",
@@ -13,6 +14,7 @@
         "showTitle": "Installation",
         "description": "Installing Demi Script for Linux, MacOS, and Windows",
         "page": "getting-started/installation",
-        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "installation"]
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "installation"],
+        "catid": 1
     }
 ]

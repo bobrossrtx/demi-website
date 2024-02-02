@@ -1,8 +1,9 @@
 ---
 title: Installation
 description: Installing Demi Script for Linux, MacOS, and Windows
-page: getting-started/installation.md
+page: getting-started/installation
 tags: ["guide", "guides", "getting-started", "getting started", "demi", "installation"]
+catid: 1
 ---
 
 To get started with Demi, we must install it. There are multiple ways in which you can download Demi Script and the tools associated, You will need an internet connection for the download.

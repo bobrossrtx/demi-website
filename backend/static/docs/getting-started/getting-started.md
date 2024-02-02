@@ -1,8 +1,9 @@
 ---
-title: "Getting Started"
-description: "Get started programming in Demi"
-page: "guides/getting-started"
+title: Getting Started
+description: Get started programming in Demi
+page: getting-started/getting-started
 tags: ["guide", "guides", "getting-started", "getting started", "demi"]
+catid: 0
 ---
 
 Welcome! To get started, lets explain what Demi is. Demi is an interpreted javascript runtime language
