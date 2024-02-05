@@ -16,6 +16,9 @@ export default function DocPage(props: Props) {
     const [statusCode, setStatusCode] = useState(0);
     const [loaded, setLoaded] = useState(false);
 
+    const [click, setClick] = useState(false);
+    const handleClick = () => setClick(!click);
+
     const queryParameters = new URLSearchParams(window.location.search)
     const page = queryParameters.get('page')
     
@@ -44,20 +47,22 @@ export default function DocPage(props: Props) {
 
     useEffect(() => {
         setTimeout(() => {
-            if (statusCode !== 200) {
-                fetch(`/api/docs/${page}.md`, { method: "GET"})
-                .then(response => {
-                    if (response.status === 200) {
-                        setStatusCode(response.status);
-                        setLoaded(true);
-                        return response.text();
-                    } else {
-                        setStatusCode(response.status);
-                        setLoaded(true);
-                        return response.text();
-                    }
-                })
-                .then(data => setMarkdown(data))
+            if (page != null) {
+                if (statusCode !== 200) {
+                    fetch(`/api/docs/${page}.md`, { method: "GET"})
+                    .then(response => {
+                        if (response.status === 200) {
+                            setStatusCode(response.status);
+                            setLoaded(true);
+                            return response.text();
+                        } else {
+                            setStatusCode(response.status);
+                            setLoaded(true);
+                            return response.text();
+                        }
+                    })
+                    .then(data => setMarkdown(data))
+                }
             }
         }, 500);
     }, [statusCode, page]);
@@ -75,7 +80,12 @@ export default function DocPage(props: Props) {
             return (
                 <>
                 <div className="documentation-page">
-                    <div className="documentation-page-sidebar">
+                    <div className='sidebar-menu-icon' onClick={handleClick}>
+                        {click
+                        ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />)
+                        : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
+                    </div>
+                    <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
                         {categories.map(category => (
                             <>
                             <h4>{category}</h4>

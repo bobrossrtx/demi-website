@@ -129,3 +129,34 @@
 .category-container h3 {
     margin-top: 1em;
 }
+
+.sidebar-menu-icon {
+    display: none;
+}
+
+.chevron {
+    filter: invert(100%) sepia(0%) saturate(7493%) hue-rotate(344deg) brightness(101%) contrast(98%);
+    width: 20px;
+}
+
+@media screen and (max-width: 970px) {
+    .sidebar-menu-icon {
+        display: flex;
+        height: 100%;
+        width: 25px;
+        background-color: #282828;
+        justify-content: center;
+    }
+
+    .documentation-page-sidebar {
+        display: none;
+    }
+
+    .sidebar-large {
+        display: block;
+        width: 100%;
+        position: absolute;
+        left: 25px;
+
+    }
+}
