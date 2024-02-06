@@ -81,9 +81,7 @@ export default function DocPage(props: Props) {
                 <>
                 <div className="documentation-page">
                     <div className='sidebar-menu-icon' onClick={handleClick}>
-                        {click
-                        ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />)
-                        : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
+                        {click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
                     </div>
                     <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
                         {categories.map(category => (
@@ -98,9 +96,6 @@ export default function DocPage(props: Props) {
                                             </li>
                                         </a>
                                     )
-                                    
-                                    // pages.push({"showTitle": page.showTitle, catid: page.catid})
-
                                     return <></>
                                 })}
                             </ul>
@@ -121,7 +116,10 @@ export default function DocPage(props: Props) {
             return (
                 <>
                 <div className="documentation-page">
-                    <div className="documentation-page-sidebar">
+                    <div className='sidebar-menu-icon' onClick={handleClick}>
+                        {click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
+                    </div>
+                    <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
                         {categories.map(category => (
                             <>
                             <h4>{category}</h4>
@@ -159,7 +157,10 @@ export default function DocPage(props: Props) {
     else {
         return (
             <div className="documentation-page">
-                <div className="documentation-page-sidebar">
+                <div className='sidebar-menu-icon' onClick={handleClick}>
+                    {click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
+                </div>
+                <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
                     {categories.map(category => (
                         <>
                         <h4>{category}</h4>

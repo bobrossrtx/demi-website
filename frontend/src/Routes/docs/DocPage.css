@@ -141,6 +141,7 @@
 
 @media screen and (max-width: 970px) {
     .sidebar-menu-icon {
+        position: absolute;
         display: flex;
         height: 100%;
         width: 25px;
@@ -149,7 +150,8 @@
     }
 
     .documentation-page-sidebar {
-        display: none;
+        left: -1000px;
+        transition: all 0.5s ease;
     }
 
     .sidebar-large {
@@ -157,6 +159,6 @@
         width: 100%;
         position: absolute;
         left: 25px;
-
+        transition: all 0.5s ease;
     }
 }

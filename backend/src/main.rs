@@ -16,34 +16,6 @@ use rocket::{Request, Response};
 use rocket::fairing::{Fairing, Info, Kind};
 
 ////////////////////////////////////////////////////////////
-/// API IMPLEMENTATION /////////////////////////////////////
-////////////////////////////////////////////////////////////
-
-// #[derive(Debug, FromForm, Deserialize)]
-// struct Book {
-//     title: String,
-//     author: String,
-//     isbn: String,
-// }
-
-// #[post("/book", data = "<book_form>")]
-// fn new_book(book_form: Json<Book>) -> String {
-//     println!("{:?}", book_form);
-//     format!("Book {} by {} with ISBN {}",
-//         book_form.title,
-//         book_form.author,
-//         book_form.isbn
-//     )
-// }
-
-// #[get("/last_update")]
-// fn last_update() -> Json<String> {
-//     // const test: Date = ;
-//     // let test = Utc::now();
-//     Json(format!("last_update: {{test}}").parse().unwrap())
-// }
-
-////////////////////////////////////////////////////////////
 /// CORS CONFIGURATION /////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
