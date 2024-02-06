@@ -7,6 +7,8 @@ import "./DocPage.css"
 import "./Highlighting.css"
 import "../Errors/Errors.css"
 
+import DocSideBar from '../../Components/doc-sidebar/DocSideBar'
+
 type Props = {
 
 }
@@ -72,36 +74,14 @@ export default function DocPage(props: Props) {
             categories.push(jsonData[i].category);
     }
 
-    // let pages: {showTitle: string, catid: number}[];
-
     if (typeof page == "string" && page.length > 0)
         if (statusCode === 200) {
             const markdown = parseMD(markdownData);
             return (
                 <>
                 <div className="documentation-page">
-                    <div className='sidebar-menu-icon' onClick={handleClick}>
-                        {click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
-                    </div>
-                    <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
-                        {categories.map(category => (
-                            <>
-                            <h4>{category}</h4>
-                            <ul>
-                                {jsonData.map(page => {
-                                    if (page.category === category) return (
-                                        <a href={"../docs?page="+page.page}>
-                                            <li>
-                                                <p className='document-page-sidebar-item'>{page.showTitle}</p>
-                                            </li>
-                                        </a>
-                                    )
-                                    return <></>
-                                })}
-                            </ul>
-                            </>
-                        ))}
-                    </div>
+
+                    <DocSideBar click={click} handleClick={handleClick} categories={categories} jsonData={jsonData} />
                     <div className="documentation-page-container-document">
                         <h1 className="document-title">{markdown.metadata["title"]}</h1>
                         <p className="document-description">{markdown.metadata["description"]}</p>
@@ -116,28 +96,7 @@ export default function DocPage(props: Props) {
             return (
                 <>
                 <div className="documentation-page">
-                    <div className='sidebar-menu-icon' onClick={handleClick}>
-                        {click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
-                    </div>
-                    <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
-                        {categories.map(category => (
-                            <>
-                            <h4>{category}</h4>
-                            <ul>
-                                {jsonData.map(page => {
-                                    if (page.category === category) return (
-                                        <a href={"../docs?page="+page.page}>
-                                            <li>
-                                                <p className='document-page-sidebar-item'>{page.showTitle}</p>
-                                            </li>
-                                        </a>
-                                    )
-                                    return <></>
-                                })}
-                            </ul>
-                            </>
-                        ))}
-                    </div>
+                    <DocSideBar click={click} handleClick={handleClick} categories={categories} jsonData={jsonData} />
                     <div className="documentation-page-container-temp">
                         {!loaded ? (
                             <div className='doc-temp'>
@@ -157,49 +116,12 @@ export default function DocPage(props: Props) {
     else {
         return (
             <div className="documentation-page">
-                <div className='sidebar-menu-icon' onClick={handleClick}>
-                    {click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
-                </div>
-                <div className={click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
-                    {categories.map(category => (
-                        <>
-                        <h4>{category}</h4>
-                        <ul>
-                            {jsonData.map(page => {
-                                if (page.category === category) return (
-                                    <a href={"../docs?page="+page.page}>
-                                        <li>
-                                            <p className='document-page-sidebar-item'>{page.showTitle}</p>
-                                        </li>
-                                    </a>
-                                )
-                                return <></>
-                            })}
-                        </ul>
-                        </>
-                    ))}
-                </div>
+                <DocSideBar click={click} handleClick={handleClick} categories={categories} jsonData={jsonData} />
                 <div className="documentation-page-container">
                     <h1 className="documentation-page-title">Documentation</h1>
-                    {/* {categories.map(category => (
-                        <div className="category-container">
-                            <h3>{category}</h3>
-                            <ul>
-                                {jsonData.map(page => {
-                                    if (page.category === category) return (
-                                        <a href={"../docs?page="+page.page}>
-                                            <li>
-                                                <h4>{page.showTitle} - {page.description}</h4>
-                                            </li>
-                                        </a>
-                                    )
-                                    return <></>
-                                })}
-                            </ul>
-                        </div>
-                    ))} */} {/* Un-neccesary code for time being */}
                     <p>
-                        The documentation to Demi is a work in progress. (THIS PAGE TO BE COMPLETE)
+                        Welcome to Demi, here you can learn the basics and the fundamentals to programming in Demi. Demi is a fast Deno runtime featuring different syntax
+                        If you would like to install Demi please follow this <a className="default-link" href="/docs?page=getting-started/installation">Guide</a>!
                     </p>
                 </div>
             </div>

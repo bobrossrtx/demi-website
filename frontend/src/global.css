@@ -66,3 +66,11 @@ hr.hr-thick {
 .neon {
   box-shadow: 0 0 70px 15px #000000;
 }
+
+.default-link {
+  color: white;
+}
+
+.default-link:hover {
+  color: #282828;
+}
