@@ -1,11 +1,12 @@
 [
     {
         "category": "Getting Started",
-        "title": "getting-started",
-        "showTitle": "Getting Started",
+        "title": "introduction",
+        "showTitle": "Introduction",
         "description": "Getting started with Demi Script",
-        "page": "getting-started/getting-started",
-        "tags": ["guide", "guides", "getting-started", "getting started", "demi"],
+        "page": "getting-started/introduction",
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "installation", "getting started", "introduction"],
+        "order": 0,
         "catid": 0
     },
     {
@@ -14,7 +15,28 @@
         "showTitle": "Installation",
         "description": "Installing Demi Script for Linux, MacOS, and Windows",
         "page": "getting-started/installation",
-        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "installation"],
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "installation", "download", "install"],
+        "order": 1,
+        "catid": 0
+    },
+    {
+        "category": "Getting Started",
+        "title": "first-program",
+        "showTitle": "First Program",
+        "description": "Writing your first Demi Script program",
+        "page": "getting-started/first-program",
+        "tags": ["guide", "guides", "getting-started", "getting started", "demi", "first program", "program", "script"],
+        "order": 2,
+        "catid": 0
+    },
+    {
+        "category": "basics",
+        "title": "variables",
+        "showTitle": "Variables and Data Types",
+        "description": "Understanding Demi Variables and Data Types",
+        "page": "basics/variables",
+        "tags": ["variables", "basics", "demi", "programming", "guide"],
+        "order": 3,
         "catid": 1
     }
 ]
