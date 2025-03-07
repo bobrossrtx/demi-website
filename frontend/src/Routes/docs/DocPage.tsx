@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import parseMD from "@demi-lang/parse-md";
-import { Link } from "react-router-dom";
 
 import "./DocPage.css";
 import "./Highlighting.css";

@@ -2,6 +2,15 @@
     font-size: 0.625em;
 }
 
+.search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444;
+}
+
 .search-results-container {
     margin: 2rem;
     /* Add margin around the results */
@@ -143,7 +152,9 @@
     100% {
         opacity: 1;
     }
-}.small-fa-icon {
+}
+
+.small-fa-icon {
     font-size: 0.625em;
 }
 
@@ -158,6 +169,21 @@
     /* Slightly rounded corners */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     /* Add some shadow for depth */
+}
+
+.filter-button {
+    background-color: #282828;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.filter-button:hover {
+    background-color: #444;
 }
 
 /* Overall container for search results */
@@ -236,6 +262,120 @@
     /* Lighter text for better readability */
     margin-top: 10px;
     /* Space above the description */
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    width: 100%;
+}
+
+.filter-dropdown {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-top: 10px;
+    opacity: 1;
+    transform: none;
+    animation: none;
+    visibility: visible;
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Match search results background */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    /* Match search container border */
+    border-radius: 8px;
+    /* Match search container radius */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Match search container shadow */
+}
+
+.filter-dropdown {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.filter-dropdown {
+    opacity: 1;
+    max-height: 500px;
+    overflow: visible;
+}
+
+/* Add this after existing filter-dropdown styles */
+.filter-dropdown {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Consistent with parent */
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    margin-inline: 10px;
+}
+
+.filter-label {
+    color: #ffc832;
+    margin: 0 0 10px 0;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    margin: 4px 0;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.filter-option:hover {
+    background: rgba(255, 200, 50, 0.1);
+}
+
+.filter-option input[type="checkbox"] {
+    margin: 0 10px 0 0;
+    accent-color: #ffc832;
+    transform: scale(1.1);
+}
+
+.filter-option label {
+    color: #e0e0e0;
+    font-size: 0.9em;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Scrollable container if many filters */
+.filter-group>div {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Custom scrollbar */
+.filter-group>div::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-group>div::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-group>div::-webkit-scrollbar-thumb {
+    background: #ffc832;
+    border-radius: 3px;
 }
 
 .beat-fade {

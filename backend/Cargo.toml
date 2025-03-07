@@ -8,7 +8,22 @@ edition = "2021"
 [dependencies]
 markdown-meta-parser = "0.1.3"
 rocket = { version = "=0.5.0-rc.3", features = ["secrets", "json", "tls"] }
-rocket_contrib = "0.4.11"
+# Removed rocket_contrib as it's not compatible with Rocket 0.5
 serde = { version = "1.0.177", features = ["derive"] }
 serde_json = "1.0.104"
 walkdir = "2.4.0"
+glob = "0.3.1"
+lazy_static = "1.4.0"
+serde_urlencoded = "0.7.1"
+
+
+[profile.dev]
+opt-level = 1  # Use minimal optimization to handle _FORTIFY_SOURCE
+debug = 1  # Reduced debug info
+incremental = false  # Disable incremental compilation to save space
+
+[profile.release]
+opt-level = 'z'  # Optimize for size
+lto = true
+codegen-units = 1
+panic = 'abort'
