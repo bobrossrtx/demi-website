@@ -1,7 +1,8 @@
 .container-doc {
-    width: 60vw;
+    width: calc(100% - 15vw);
     align-items: center;
     justify-content: center;
+
     text-align: center;
     margin-top: 20px;
 }
@@ -13,12 +14,12 @@
 .fa-spin-pulse {
     -webkit-animation-name: fa-spin;
     animation-name: fa-spin;
-    -webkit-animation-duration: var(--fa-animation-duration,2s);
-    animation-duration: var(--fa-animation-duration,2s);
-    -webkit-animation-iteration-count: var(--fa-animation-iteration-count,infinite);
-    animation-iteration-count: var(--fa-animation-iteration-count,infinite);
-    -webkit-animation-timing-function: var(--fa-animation-timing,linear);
-    animation-timing-function: var(--fa-animation-timing,linear);
+    -webkit-animation-duration: var(--fa-animation-duration, 2s);
+    animation-duration: var(--fa-animation-duration, 2s);
+    -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+    animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+    -webkit-animation-timing-function: var(--fa-animation-timing, linear);
+    animation-timing-function: var(--fa-animation-timing, linear);
 }
 
 @keyframes fa-spin {
@@ -26,6 +27,7 @@
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(1turn);
         transform: rotate(1turn);
@@ -33,8 +35,8 @@
 }
 
 .documentation-page {
-    max-height: 100vh;
-    height: 90vh;
+    min-height: calc(100vh - 80px - 200px);
+    /* Adjust height if necessary, keeping footer space in mind */
     display: flex;
     align-items: flex-start;
     align-content: space-between;
@@ -43,18 +45,33 @@
 }
 
 .documentation-page-sidebar {
-    width: 20vw;
+    width: 15vw;
     left: 0;
     background-color: #282828;
-    overflow: auto;
-    padding: 20px;
+    overflow-y: auto;
+    padding: 10px;
     margin: 0;
-    position: relative;
-    height: 100%;
+    position: sticky;
+    top: 0;
+    /* Start from top of screen */
+    padding-top: 20px;
+    /* Add padding to account for navbar height */
+    height: 100vh;
+    /* Full viewport height */
+    font-size: 0.9em;
+    z-index: 5;
+    /* Lower z-index than navbar */
+}
+
+.documentation-page-sidebar h4 {
+    font-size: 1.5em;
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .documentation-page-sidebar li {
-    list-style: "⁍ "
+    list-style: disc;
+    font-size: 1em;
 }
 
 .documentation-page-sidebar a {
@@ -69,6 +86,8 @@
 
 .document-page-sidebar-item {
     margin: 0;
+    padding: 3px 0;
+    font-size: 1em;
 }
 
 .documentation-page-container {
@@ -86,9 +105,13 @@
 
 .documentation-page-container-document {
     padding: 16px;
-    max-width: 80vw;
-    overflow: scroll;
-    height: 100%;
+    width: calc(100% - 17vw);
+    margin-left: 2vw;
+    /* Provide space for the sidebar */
+    overflow-x: hidden;
+    min-height: 100%;
+    overflow-y: visible;
+    /* Let it flow with page scroll */
 }
 
 .documentation-page-container-temp {
@@ -97,7 +120,7 @@
     text-align: center;
 }
 
-.doc-temp  h3 {
+.doc-temp h3 {
     font-size: 62px;
 }
 
@@ -117,7 +140,7 @@
 }
 
 
-.category-container > a *:hover{
+.category-container>a *:hover {
     color: #000000;
 }
 
@@ -137,6 +160,90 @@
 .chevron {
     filter: invert(100%) sepia(0%) saturate(7493%) hue-rotate(344deg) brightness(101%) contrast(98%);
     width: 20px;
+}
+
+/* Documentation navigation buttons */
+.doc-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    align-items: center;
+}
+
+.doc-nav-prev,
+.doc-nav-next,
+.doc-nav-refresh {
+    max-width: 45%;
+}
+
+.doc-tags {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.doc-tags h4 {
+    font-size: 1.25em;
+    margin-bottom: 10px;
+}
+
+.doc-tags ul {
+    list-style-type: none;
+    /* Removes default bullet points */
+    padding: 0;
+    /* Removes default padding */
+}
+
+.doc-tags li {
+    display: inline-block;
+    /* Align tags horizontally */
+    background-color: #f0f0f0;
+    color: #282828;
+    margin: 5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    /* Rounded corners for tags */
+    transition: background-color 0.3s ease;
+    /* Animation on hover */
+}
+
+.doc-tags li:hover {
+    background-color: #ddd;
+    /* Change color on hover */
+}
+
+.doc-nav-next a,
+.doc-nav-prev a {
+    background-color: #282828;
+    border-radius: 100px;
+    color: #fff;
+    display: inline-flex;
+    height: 50px;
+    margin: 10px;
+    padding: 10px;
+    text-decoration: none;
+    transition: background-color .3s ease;
+    width: 180px;
+    font-size: .8em;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc-nav-prev a:hover,
+.doc-nav-next a:hover {
+    background-color: #444;
+}
+
+.doc-nav-next {
+    text-align: right;
+}
+
+/* Update icon margins for proper alignment */
+.doc-nav-prev i,
+.doc-nav-next i {
+    margin: 0px 10px;
+    /* Remove margin to center icon */
 }
 
 @media screen and (max-width: 970px) {
@@ -160,5 +267,19 @@
         position: absolute;
         left: 25px;
         transition: all 0.5s ease;
+    }
+
+    .doc-navigation {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .doc-nav-prev,
+    .doc-nav-next {
+        max-width: 100%;
+    }
+
+    .doc-nav-next {
+        text-align: left;
     }
 }

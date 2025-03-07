@@ -7,6 +7,7 @@ interface Page {
     page:        string;
     tags:        string[];
     category:    string;
+    order:       number;
     catid:       number;
 }    
 

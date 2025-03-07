@@ -1,9 +1,14 @@
 footer {
     position: relative;
-    z-index: 100;
+    /* Change from fixed to relative */
+    margin-top: auto;
+    /* Optional: ensures it stays at the end of content */
+    left: 0;
+    right: 0;
     padding: 30px 0;
     background-color: #282828;
     color: white;
+    z-index: 100;
 }
 
 footer h4 {
@@ -19,11 +24,6 @@ footer ul {
     margin-top: 0;
 }
 
-ul {
-    list-style: disc;
-    padding-left: 1.5em;
-}
-
 footer a {
     color: #ffc832;
     text-decoration: none;
@@ -32,11 +32,6 @@ footer a {
 footer .attribution {
     text-align: center;
     padding-top: 30px;
-}
-
-.alit-c {
-    align-items: center;
-    text-align: left;
 }
 
 @media screen and (min-width: 60em) {
@@ -83,7 +78,8 @@ footer .attribution {
     display: flex;
 }
 
-.center, .mr-auto {
+.center,
+.mr-auto {
     margin-right: auto;
 }
 

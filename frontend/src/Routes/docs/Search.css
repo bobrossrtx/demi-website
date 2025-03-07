@@ -2,49 +2,233 @@
     font-size: 0.625em;
 }
 
+.search-results-container {
+    margin: 2rem;
+    /* Add margin around the results */
+    padding: 1rem;
+    /* Add padding inside the container */
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Slight background for contrast */
+    border-radius: 8px;
+    /* Slightly rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Add some shadow for depth */
+}
+
+/* Overall container for search results */
 .search-result-link {
     color: white;
+    text-decoration: none;
+    /* Removes underline from links */
 }
 
 .search-result-container {
     margin-top: 2rem;
-    background-color: rgba(0, 0, 0, 0.15);
-    padding: .5rem 2rem;
+    padding: 1rem;
+    /* Increased padding for better spacing */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Softer background */
     border-radius: 1em;
-    border: transparent solid 2px;
-    max-height: 140px;
+    border: solid 2px rgba(255, 255, 255, 0.4);
+    /* Thinner border for elegance */
+    transition: transform 0.2s, box-shadow 0.2s;
+    /* Animation for hover effect */
 }
 
 .search-result-container:hover {
     border-color: white;
+    /* Highlight border on hover */
+    transform: translateY(-2px);
+    /* Elevate slightly on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Add shadow for depth */
 }
 
 .search-page-title {
-    font-size: 2em;
-    margin-bottom: 10px;
+    font-size: 1.8em;
+    /* Slightly smaller font size */
+    margin-bottom: 5px;
+    /* Smaller bottom margin */
 }
 
 .search-page-tags-label {
     font-size: 1em;
+    color: #ccc;
+    /* Lighter color for the tag label */
 }
 
 .search-page-tags {
-    color: white;
-    margin-left: 10px;
-    font-size: 1em;
-    background: rgba(0, 0, 0, 0.237);
-    padding: 0.1em 0.5em;
-    border-radius: .8em;
-    text-decoration: none;
+    color: #ffc832;
+    /* Better contrast for tags */
+    margin-left: 5px;
+    font-size: 0.9em;
+    /* Slightly smaller font size */
+    background: rgba(0, 0, 0, 0.4);
+    /* Different background for tags */
+    padding: 0.2em 0.5em;
+    border-radius: 10px;
+    /* Round corners for tags */
+    transition: background 0.2s;
+    /* Smooth transition for hover */
 }
 
 .search-page-tags:hover {
-    /* text-decoration: underline; */
-    font-size: 1.05em;
+    background: rgba(255, 200, 50, 0.6);
+    /* Change background on hover */
 }
 
-.search-page-tags-label, .search-page-tags {
-    display: inline-block;
+.search-page-description {
+    font-size: 0.9em;
+    /* Smaller size for description */
+    color: #e0e0e0;
+    /* Lighter text for better readability */
+    margin-top: 10px;
+    /* Space above the description */
+}
+
+.beat-fade {
+    animation-iteration-count: infinite;
+    animation: fadeIn ease 1s;
+    -webkit-animation: fadeIn ease 1s;
+    -moz-animation: fadeIn ease 1s;
+    -o-animation: fadeIn ease 1s;
+    -ms-animation: fadeIn ease 1s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-ms-keyframes fadeIn {
+    0% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}.small-fa-icon {
+    font-size: 0.625em;
+}
+
+.search-results-container {
+    margin: 2rem;
+    /* Add margin around the results */
+    padding: 1rem;
+    /* Add padding inside the container */
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Slight background for contrast */
+    border-radius: 8px;
+    /* Slightly rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Add some shadow for depth */
+}
+
+/* Overall container for search results */
+.search-result-link {
+    color: white;
+    text-decoration: none;
+    /* Removes underline from links */
+}
+
+.search-result-container {
+    margin-top: 2rem;
+    padding: 1rem;
+    /* Increased padding for better spacing */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Softer background */
+    border-radius: 1em;
+    border: solid 2px rgba(255, 255, 255, 0.4);
+    /* Thinner border for elegance */
+    transition: transform 0.2s, box-shadow 0.2s;
+    /* Animation for hover effect */
+}
+
+.search-result-container:hover {
+    border-color: white;
+    /* Highlight border on hover */
+    transform: translateY(-2px);
+    /* Elevate slightly on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Add shadow for depth */
+}
+
+.search-page-title {
+    font-size: 1.8em;
+    /* Slightly smaller font size */
+    margin-bottom: 5px;
+    /* Smaller bottom margin */
+}
+
+.search-page-tags-label {
+    font-size: 1em;
+    color: #ccc;
+    /* Lighter color for the tag label */
+}
+
+.search-page-tags {
+    color: #ffc832;
+    /* Better contrast for tags */
+    margin-left: 5px;
+    font-size: 0.9em;
+    /* Slightly smaller font size */
+    background: rgba(0, 0, 0, 0.4);
+    /* Different background for tags */
+    padding: 0.2em 0.5em;
+    border-radius: 10px;
+    /* Round corners for tags */
+    transition: background 0.2s;
+    /* Smooth transition for hover */
+}
+
+.search-page-tags:hover {
+    background: rgba(255, 200, 50, 0.6);
+    /* Change background on hover */
+}
+
+.search-page-description {
+    font-size: 0.9em;
+    /* Smaller size for description */
+    color: #e0e0e0;
+    /* Lighter text for better readability */
+    margin-top: 10px;
+    /* Space above the description */
 }
 
 .beat-fade {
