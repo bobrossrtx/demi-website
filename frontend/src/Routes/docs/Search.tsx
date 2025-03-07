@@ -52,6 +52,9 @@ export default function Search(props: Props) {
     return (
         <div>
             <div className="search-results-container">
+                <h1 className="search-results-title">
+                    Search Results for: {searchQuery}
+                </h1>
                 {" "}
                 {/* New container for results */}
                 {results.length > 0 ? (
