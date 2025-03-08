@@ -107,7 +107,7 @@ export default function Search(props: Props) {
                         className="filter-button"
                         onClick={() => setShowFilters(!showFilters)}
                     >
-                        {showFilters ? "Hide Filters" : "Show Filters"}
+                        {showFilters ? "Hide Filters ▲" : "Show Filters ▼"}
                     </button>
                 </div>
                 {showFilters && (

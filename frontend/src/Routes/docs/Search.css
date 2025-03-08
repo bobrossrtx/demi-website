@@ -289,6 +289,7 @@
     /* Match search container radius */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     /* Match search container shadow */
+    padding: 10px;
 }
 
 .filter-dropdown {

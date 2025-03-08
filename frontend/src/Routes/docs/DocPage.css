@@ -70,7 +70,7 @@
 }
 
 .documentation-page-sidebar li {
-    list-style: disc;
+    list-style: "◄";
     font-size: 1em;
 }
 
