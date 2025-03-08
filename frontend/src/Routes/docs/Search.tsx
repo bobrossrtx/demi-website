@@ -184,7 +184,7 @@ export default function Search(props: Props) {
                                         href={"?query=" + tag}
                                         className="search-page-tags"
                                     >
-                                        {tag} •
+                                        • {tag} •
                                     </a>
                                 ))}
                                 <p className="search-page-description">

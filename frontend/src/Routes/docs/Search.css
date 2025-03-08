@@ -179,7 +179,6 @@
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 20px;
 }
 
 .filter-button:hover {
@@ -241,18 +240,20 @@
     margin-left: 5px;
     font-size: 0.9em;
     /* Slightly smaller font size */
-    background: rgba(0, 0, 0, 0.4);
+    background: #40424b;
     /* Different background for tags */
     padding: 0.2em 0.5em;
     border-radius: 10px;
     /* Round corners for tags */
     transition: background 0.2s;
     /* Smooth transition for hover */
+    text-decoration: none;
 }
 
 .search-page-tags:hover {
     background: rgba(255, 200, 50, 0.6);
     /* Change background on hover */
+    color: #40424b;
 }
 
 .search-page-description {
@@ -270,6 +271,7 @@
     margin: 15px 0;
     width: 100%;
 }
+
 
 .filter-dropdown {
     position: relative;
