@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { createBrowserHistory } from 'history'
-import './SearchBar.css'
+import './SearchBar.scss'
 
 let history = createBrowserHistory();
 

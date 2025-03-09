@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import "./Footer.css"
+import "./Footer.scss"
 import { Link } from 'react-router-dom'
 
 type Props = {}
