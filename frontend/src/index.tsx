@@ -7,7 +7,7 @@ import router from "./Routes/routes";
 
 // Global css
 import 'bootstrap/dist/css/bootstrap.css'
-import "./global.css";
+import "./global.scss";
 
 ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
