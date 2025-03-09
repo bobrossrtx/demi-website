@@ -1,0 +1,123 @@
+// Define variables for common values
+$color-white: #fff;
+$color-black: #000;
+$color-background: #23272e;
+$color-keyword: #c7c066;
+$color-title: #8589f9;
+$color-attr: #c69a54;
+$color-string: #89ca78;
+$color-built-in: #e36209;
+$color-comment: #6a737d;
+$color-name: #22863a;
+$color-subst: #24292e;
+$color-section: #005cc5;
+$color-bullet: #735c0f;
+$color-emphasis: #24292e;
+$color-strong: #24292e;
+$color-addition: #22863a;
+$color-deletion: #b31d28;
+$background-addition: #f0fff4;
+$background-deletion: #ffeef0;
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  border-radius: 1rem;
+}
+
+code.hljs {
+  padding: 3px 5px;
+}
+
+.hljs {
+  color: $color-white;
+  background: $color-background;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: $color-keyword;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: $color-title;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+  color: $color-attr;
+}
+
+.hljs-meta .hljs-string,
+.hljs-regexp,
+.hljs-string {
+  color: $color-string;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: $color-built-in;
+}
+
+.hljs-code,
+.hljs-comment,
+.hljs-formula {
+  color: $color-comment;
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-pseudo,
+.hljs-selector-tag {
+  color: $color-name;
+}
+
+.hljs-subst {
+  color: $color-subst;
+}
+
+.hljs-section {
+  color: $color-section;
+  font-weight: 700;
+}
+
+.hljs-bullet {
+  color: $color-bullet;
+}
+
+.hljs-emphasis {
+  color: $color-emphasis;
+  font-style: italic;
+}
+
+.hljs-strong {
+  color: $color-strong;
+  font-weight: 700;
+}
+
+.hljs-addition {
+  color: $color-addition;
+  background-color: $background-addition;
+}
+
+.hljs-deletion {
+  color: $color-deletion;
+  background-color: $background-deletion;
+}
