@@ -1,5 +1,5 @@
 import React from 'react'
-import './Downloads.css'
+import './Downloads.scss'
 import DownloadButton from '../../Components/Buttons/DownloadButton'
 import { Link } from 'react-router-dom'
 

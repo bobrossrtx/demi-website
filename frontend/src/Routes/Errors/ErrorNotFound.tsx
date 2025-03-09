@@ -1,6 +1,7 @@
 import React from 'react'
 
-import "./Errors.css"
+// Change import from CSS to SCSS
+import "./Errors.scss"
 
 type Props = {}
 

@@ -3,9 +3,10 @@ import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import parseMD from "@demi-lang/parse-md";
 
-import "./DocPage.css";
-import "./Highlighting.css";
-import "../Errors/Errors.css";
+// Change import from CSS to SCSS
+import "./DocPage.scss";
+import "./Highlighting.scss";
+import "../Errors/Errors.scss";
 
 import DocSideBar from "../../Components/doc-sidebar/DocSideBar";
 

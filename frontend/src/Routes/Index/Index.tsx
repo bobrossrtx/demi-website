@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-import './Index.css'
+// Change import from CSS to SCSS
+import './Index.scss'
 import DownloadButton from '../../Components/Buttons/DownloadButton'
 
 type Props = {}
