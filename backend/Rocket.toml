@@ -6,7 +6,7 @@ secret_key="0NdvRhTPcOIkn1WlKgohcLX98fCuKrPMd+9OSpHQDe8="
 # key = ""
 
 [debug]
-address = "127.0.0.1"
+address = "0.0.0.0"
 port = 8000
 workers = 4
 keep_alive = 5
