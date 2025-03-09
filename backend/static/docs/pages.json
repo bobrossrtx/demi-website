@@ -38,5 +38,15 @@
         "tags": ["variables", "basics", "demi", "programming", "guide"],
         "order": 3,
         "catid": 1
+    },
+    {
+        "category": "basics",
+        "title": "control-flow",
+        "showTitle": "Control Flow",
+        "description": "Understanding control flow statements in Demi including conditionals and loops",
+        "page": "basics/control-flow",
+        "tags": ["control flow", "basics", "demi", "programming", "if statements", "loops", "try catch"],
+        "order": 4,
+        "catid": 1
     }
 ]
