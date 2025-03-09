@@ -221,19 +221,30 @@ export default function DocPage(props: Props) {
                     jsonData={jsonData}
                 />
                 <div className={click ? "documentation-page-container sidebar-active" : "documentation-page-container sidebar-inactive"}>
-                    <h1 className="documentation-page-title">Documentation</h1>
+                    <h1 className="documentation-page-title">Welcome to Demi Documentation</h1>
                     <p>
-                        Welcome to Demi, here you can learn the basics and the
-                        fundamentals to programming in Demi. Demi is a fast Deno
-                        runtime featuring different syntax If you would like to
-                        install Demi please follow this{" "}
+                        Welcome to Demi, a modern programming language designed for simplicity and performance.
+                        Here you'll find comprehensive documentation covering everything from basic concepts to
+                        advanced features that make Demi unique.
+                    </p>
+                    <p>
+                        Demi runs on the powerful Deno runtime, offering:
+                        <ul style={{ listStyleType: 'none',}}>
+                            <li>Fast execution and compilation times</li>
+                            <li>Modern JavaScript-like syntax with powerful additions</li>
+                            <li>Built-in security features from Deno</li>
+                        </ul>
+                    </p>
+                    <p>
+                        Ready to get started? Follow our{" "}
                         <a
                             className="default-link"
-                            href="/docs?page=getting-started/installation"
+                            href="/docs?page=getting-started/introduction"
                         >
-                            Guide
-                        </a>
-                        !
+                            Introduction
+                        </a>{" "}
+                        to begin your journey with Demi. Whether you're a beginner or an experienced developer,
+                        our documentation will help you make the most of Demi's features.
                     </p>
                 </div>
             </div>

@@ -59,7 +59,7 @@ $link-hover: #61667b;
         margin: 0;
         position: fixed; // Change to fixed to overlay content
         top: 0;
-        padding-top: 20px;
+        padding-top: 100px;
         height: 100vh;
         font-size: 0.9em;
         z-index: 9; // Ensure it overlays content
@@ -96,18 +96,25 @@ $link-hover: #61667b;
     }
     
     &-container {
-        margin-left: $sidebar-width; // Add margin to account for sidebar
+        margin: 0 $sidebar-width; // Add margin to account for sidebar
         width: calc(100% - $sidebar-width); // Adjust width to account for sidebar
         text-align: center;
         transition: margin 0.3s ease, width 0.3s ease;
         margin-left: 0; // Remove margin to prevent content shift
         overflow-x: hidden; // Hide overflow when sidebar is active
+        padding-left: 100px;  // Add default padding-left
+
+        @media screen and (max-width: 970px) {
+            padding-left: 16px;
+        }
+
         &.active {
             overflow-x: hidden; // Hide overflow when sidebar is active
         }
         &.inactive {
             overflow-x: visible; // Show overflow when sidebar is inactive
         }
+
         &-document {
             padding: 16px;
             width: calc(100% - 4vw);
@@ -116,7 +123,14 @@ $link-hover: #61667b;
             overflow-x: hidden;
             min-height: 100%;
             overflow-y: visible;
-            
+            display: flex;
+            flex-direction: column;
+            padding-left: 100px;
+
+            @media screen and (max-width: 970px) {
+                padding-left: 16px;
+            }
+
             @media screen and (min-width: 1200px) {
                 max-width: 900px;
                 margin: 0 auto;
