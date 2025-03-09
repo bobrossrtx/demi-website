@@ -18,35 +18,35 @@ export interface IProps {
     jsonData: Page[]
 }
 
-
-
 class DocSideBar extends Component<IProps> {
-
     render() {
         return (
            <>
                <div className='sidebar-menu-icon' onClick={this.props.handleClick}>
-                        {this.props.click ? (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)}
-                    </div>
-                    <div className={this.props.click ? 'documentation-page-sidebar sidebar-large' : 'documentation-page-sidebar'}>
-                        {this.props.categories.map(category => (
-                            <>
+                    {this.props.click ? 
+                        (<img className="chevron" src="/static/images/chevleft.svg" alt="Chevron Left" title="chevleft" />) : 
+                        (<img className="chevron" src="/static/images/chevright.svg" alt="Chevron Right" title="chevright" />)
+                    }
+                </div>
+                <div className={this.props.click ? 'documentation-page-sidebar active' : 'documentation-page-sidebar'}>
+                    {this.props.categories.map((category, index) => (
+                        <div key={index}>
                             <h4>{category}</h4>
                             <ul>
-                                {this.props.jsonData.map(page => {
+                                {this.props.jsonData.map((page, pageIndex) => {
                                     if (page.category === category) return (
-                                        <a href={"../docs?page="+page.page}>
+                                        <a key={pageIndex} href={"../docs?page="+page.page}>
                                             <li>
                                                 <p className='document-page-sidebar-item'>{page.showTitle}</p>
                                             </li>
                                         </a>
                                     )
-                                    return <></>
+                                    return null;
                                 })}
                             </ul>
-                            </>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
+                </div>
            </>
         );
     }

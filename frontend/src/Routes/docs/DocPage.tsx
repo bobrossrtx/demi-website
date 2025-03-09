@@ -161,9 +161,9 @@ export default function DocPage(props: Props) {
                             categories={categories}
                             jsonData={jsonData}
                         />
-                        <div className="documentation-page-container-document">
+                        <div className={click ? "documentation-page-container-document sidebar-active" : "documentation-page-container-document sidebar-inactive"}>
                             <h1 className="document-title">
-                                {markdown.metadata["title"]}
+                                {markdown.metadata["title"]}:
                             </h1>
                             <p className="document-description">
                                 {markdown.metadata["description"]}
@@ -190,7 +190,7 @@ export default function DocPage(props: Props) {
                             categories={categories}
                             jsonData={jsonData}
                         />
-                        <div className="documentation-page-container-temp">
+                        <div className={click ? "documentation-page-container-temp sidebar-active" : "documentation-page-container-temp sidebar-inactive"}>
                             {!loaded ? (
                                 <div className="doc-temp">
                                     <h3>
@@ -220,7 +220,7 @@ export default function DocPage(props: Props) {
                     categories={categories}
                     jsonData={jsonData}
                 />
-                <div className="documentation-page-container">
+                <div className={click ? "documentation-page-container sidebar-active" : "documentation-page-container sidebar-inactive"}>
                     <h1 className="documentation-page-title">Documentation</h1>
                     <p>
                         Welcome to Demi, here you can learn the basics and the

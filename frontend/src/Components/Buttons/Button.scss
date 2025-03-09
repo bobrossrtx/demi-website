@@ -6,19 +6,19 @@
     cursor: pointer;
     background: white !important;
     margin-bottom: 1rem;
-}
-
-.btn * {
-    color: #3d414f !important;
-}
-
-.btn:hover {
-    transition: all 0.3s ease-out;
-    background: #3d414f !important;
-    color: white !important;
-}
-
-.btn:hover * {
-    transition: all 0.3s ease-out;
-    color: #fff !important;
+    
+    * {
+        color: #3d414f !important;
+    }
+    
+    &:hover {
+        transition: all 0.3s ease-out;
+        background: #3d414f !important;
+        color: white !important;
+        
+        * {
+            transition: all 0.3s ease-out;
+            color: #fff !important;
+        }
+    }
 }

@@ -110,8 +110,7 @@ export default function Search(props: Props) {
                         {showFilters ? "Hide Filters ▲" : "Show Filters ▼"}
                     </button>
                 </div>
-                {showFilters && (
-                    <div className="filter-dropdown">
+                    <div className={`filter-dropdown ${showFilters ? 'open' : ''}`}>
                         <h4 className="filter-label">Categories</h4>
                         <div className="filter-group">
                             {uniqueCategories.map((category) => (
@@ -151,7 +150,6 @@ export default function Search(props: Props) {
                             ))}
                         </div>
                     </div>
-                )}{" "}
                 {/* New container for results */}
                 {results.length > 0 ? (
                     results.map((page) => (
@@ -176,17 +174,20 @@ export default function Search(props: Props) {
                                     ></i>{" "}
                                     {page.showTitle}
                                 </h2>
-                                <h3 className="search-page-tags-label">
-                                    Tags:{" "}
-                                </h3>
-                                {page.tags.map((tag) => (
-                                    <a
-                                        href={"?query=" + tag}
-                                        className="search-page-tags"
-                                    >
-                                        • {tag} •
-                                    </a>
-                                ))}
+                                <div className="search-page-tags-container">
+                                    <h3 className="search-page-tags-label">
+                                        Tags:{" "}
+                                    </h3>
+                                    {page.tags.map((tag) => (
+                                        <a
+                                            key={tag}
+                                            href={`?query=${tag}`}
+                                            className="search-page-tags"
+                                        >
+                                            {`• ${tag} •`}
+                                        </a>
+                                    ))}
+                                </div>
                                 <p className="search-page-description">
                                     {page.description}
                                 </p>

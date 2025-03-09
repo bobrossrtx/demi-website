@@ -19,11 +19,49 @@ $color-deletion: #b31d28;
 $background-addition: #f0fff4;
 $background-deletion: #ffeef0;
 
-pre code.hljs {
+// pre {
+//   margin: 0;
+//   padding: 0;
+//   background: $color-background;
+//   color: $color-white;
+//   font-size: 1rem;
+//   line-height: 1.5;
+//   font-family: 'Fira Code', monospace;
+//   word-wrap: normal;
+// }
+
+
+// pre code.hljs {
+//   display: block;
+//   overflow-x: auto;
+//   padding: 1em;
+//   border-radius: 1rem;
+//   >span {
+//     word-wrap: normal;
+//   }
+// }
+pre {
+  margin: 0;
+  padding: 0;
+  background: $color-background;
+  color: $color-white;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: 'Fira Code', monospace;
+  word-wrap: normal;
+  border-radius: 1rem;
+  display: block;
+  padding: 1em;
+  overflow-x: auto;
+}
+
+pre code {
   display: block;
   overflow-x: auto;
   padding: 1em;
   border-radius: 1rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 code.hljs {
@@ -33,91 +71,91 @@ code.hljs {
 .hljs {
   color: $color-white;
   background: $color-background;
-}
+  
+  &-doctag,
+  &-keyword,
+  &-meta .hljs-keyword,
+  &-template-tag,
+  &-template-variable,
+  &-type,
+  &-variable.language_ {
+    color: $color-keyword;
+  }
 
-.hljs-doctag,
-.hljs-keyword,
-.hljs-meta .hljs-keyword,
-.hljs-template-tag,
-.hljs-template-variable,
-.hljs-type,
-.hljs-variable.language_ {
-  color: $color-keyword;
-}
+  &-title,
+  &-title.class_,
+  &-title.class_.inherited__,
+  &-title.function_ {
+    color: $color-title;
+  }
 
-.hljs-title,
-.hljs-title.class_,
-.hljs-title.class_.inherited__,
-.hljs-title.function_ {
-  color: $color-title;
-}
+  &-attr,
+  &-attribute,
+  &-literal,
+  &-meta,
+  &-number,
+  &-operator,
+  &-selector-attr,
+  &-selector-class,
+  &-selector-id,
+  &-variable {
+    color: $color-attr;
+  }
 
-.hljs-attr,
-.hljs-attribute,
-.hljs-literal,
-.hljs-meta,
-.hljs-number,
-.hljs-operator,
-.hljs-selector-attr,
-.hljs-selector-class,
-.hljs-selector-id,
-.hljs-variable {
-  color: $color-attr;
-}
+  &-meta .hljs-string,
+  &-regexp,
+  &-string {
+    color: $color-string;
+  }
 
-.hljs-meta .hljs-string,
-.hljs-regexp,
-.hljs-string {
-  color: $color-string;
-}
+  &-built_in,
+  &-symbol {
+    color: $color-built-in;
+  }
 
-.hljs-built_in,
-.hljs-symbol {
-  color: $color-built-in;
-}
+  &-code,
+  &-comment,
+  &-formula {
+    color: $color-comment;
+  }
 
-.hljs-code,
-.hljs-comment,
-.hljs-formula {
-  color: $color-comment;
-}
+  &-name,
+  &-quote,
+  &-selector-pseudo,
+  &-selector-tag {
+    color: $color-name;
+  }
 
-.hljs-name,
-.hljs-quote,
-.hljs-selector-pseudo,
-.hljs-selector-tag {
-  color: $color-name;
-}
+  &-subst {
+    color: $color-subst;
+  }
 
-.hljs-subst {
-  color: $color-subst;
-}
+  &-section {
+    color: $color-section;
+    font-weight: 700;
+  }
 
-.hljs-section {
-  color: $color-section;
-  font-weight: 700;
-}
+  &-bullet {
+    color: $color-bullet;
+  }
 
-.hljs-bullet {
-  color: $color-bullet;
-}
+  &-emphasis {
+    color: $color-emphasis;
+    font-style: italic;
+  }
 
-.hljs-emphasis {
-  color: $color-emphasis;
-  font-style: italic;
-}
+  &-strong {
+    color: $color-strong;
+    font-weight: 700;
+  }
 
-.hljs-strong {
-  color: $color-strong;
-  font-weight: 700;
-}
+  &-addition {
+    color: $color-addition;
+    background-color: $background-addition;
+  }
 
-.hljs-addition {
-  color: $color-addition;
-  background-color: $background-addition;
-}
-
-.hljs-deletion {
-  color: $color-deletion;
-  background-color: $background-deletion;
+  &-deletion {
+    color: $color-deletion;
+    background-color: $background-deletion;
+  }
 }

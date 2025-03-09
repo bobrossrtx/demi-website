@@ -1,160 +1,157 @@
+// Variables
+$sidebar-bg: #282828;
+$sidebar-width: 15vw;
+$sidebar-min-width: 220px;  // Minimum width for sidebar
+$sidebar-max-width: 300px;  // Maximum width for sidebar
+$tag-bg: #f0f0f0;
+$tag-color: #282828;
+$doc-nav-bg: #282828;
+$doc-nav-hover: #444;
+$doc-nav-height: 50px;
+$border-color: #444;
+$link-hover: #61667b;
+
 .container-doc {
-    width: calc(100% - 15vw);
+    width: calc(100% - $sidebar-width);
     align-items: center;
     justify-content: center;
-
     text-align: center;
     margin-top: 20px;
+    
+    @media screen and (max-width: 1200px) {
+        width: 100%;
+    }
 }
 
 .mt-em {
-    margin-top: 10em
+    margin-top: 10em;
 }
 
+// Animation for loading spinner
 .fa-spin-pulse {
-    -webkit-animation-name: fa-spin;
-    animation-name: fa-spin;
-    -webkit-animation-duration: var(--fa-animation-duration, 2s);
-    animation-duration: var(--fa-animation-duration, 2s);
-    -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-    animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-    -webkit-animation-timing-function: var(--fa-animation-timing, linear);
-    animation-timing-function: var(--fa-animation-timing, linear);
+    animation: fa-spin 2s linear infinite;
 }
 
 @keyframes fa-spin {
     0% {
-        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
 
     100% {
-        -webkit-transform: rotate(1turn);
-        transform: rotate(1turn);
+        transform: rotate(360deg);
     }
 }
 
+// Documentation layout
 .documentation-page {
     min-height: calc(100vh - 80px - 200px);
-    /* Adjust height if necessary, keeping footer space in mind */
     display: flex;
     align-items: flex-start;
     align-content: space-between;
     justify-content: flex-start;
     flex-direction: row;
+    
+    &-sidebar {
+        width: clamp($sidebar-min-width, $sidebar-width, $sidebar-max-width);
+        background-color: $sidebar-bg;
+        overflow-y: auto;
+        padding: 10px;
+        margin: 0;
+        position: fixed; // Change to fixed to overlay content
+        top: 0;
+        padding-top: 20px;
+        height: 100vh;
+        font-size: 0.9em;
+        z-index: 9; // Ensure it overlays content
+        transition: width 0.3s ease, transform 0.3s ease;
+        
+        h4 {
+            font-size: 1.5em;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        
+        li {
+            list-style: "◄";
+            font-size: 1em;
+        }
+        
+        a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            
+            &:hover {
+                color: $link-hover;
+            }
+        }
+        
+        @media screen and (min-width: 1600px) {
+            width: $sidebar-max-width;
+        }
+        
+        &.active {
+            transform: translateX(0%); // Move into view when active
+        }
+    }
+    
+    &-container {
+        margin-left: $sidebar-width; // Add margin to account for sidebar
+        width: calc(100% - $sidebar-width); // Adjust width to account for sidebar
+        text-align: center;
+        transition: margin 0.3s ease, width 0.3s ease;
+        margin-left: 0; // Remove margin to prevent content shift
+        overflow-x: hidden; // Hide overflow when sidebar is active
+        &.active {
+            overflow-x: hidden; // Hide overflow when sidebar is active
+        }
+        &.inactive {
+            overflow-x: visible; // Show overflow when sidebar is inactive
+        }
+        &-document {
+            padding: 16px;
+            width: calc(100% - 4vw);
+            margin-left: 2vw;
+            margin-right: 2vw;
+            overflow-x: hidden;
+            min-height: 100%;
+            overflow-y: visible;
+            
+            @media screen and (min-width: 1200px) {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+        }
+        
+        &-temp {
+            padding: 16px;
+            max-width: 70vw;
+            text-align: center;
+            
+            @media screen and (max-width: 970px) {
+                max-width: 90vw;
+            }
+        }
+    }
+    
+    &-title {
+        text-align: center;
+        margin-top: 20px;
+    }
 }
 
-.documentation-page-sidebar {
-    width: 15vw;
-    left: 0;
-    background-color: #282828;
-    overflow-y: auto;
-    padding: 10px;
-    margin: 0;
-    position: sticky;
-    top: 0;
-    /* Start from top of screen */
-    padding-top: 20px;
-    /* Add padding to account for navbar height */
-    height: 100vh;
-    /* Full viewport height */
-    font-size: 0.9em;
-    z-index: 5;
-    /* Lower z-index than navbar */
-}
-
-.documentation-page-sidebar h4 {
-    font-size: 1.5em;
-    margin-top: 10px;
-    margin-bottom: 5px;
-}
-
-.documentation-page-sidebar li {
-    list-style: "◄";
-    font-size: 1em;
-}
-
-.documentation-page-sidebar a {
-    display: block;
-    color: white;
-    text-decoration: none;
-}
-
-.documentation-page-sidebar a:hover {
-    color: #61667b;
-}
-
+// Sidebar specific styles
 .document-page-sidebar-item {
     margin: 0;
     padding: 3px 0;
     font-size: 1em;
 }
 
-.documentation-page-container {
-    width: 100%;
-    text-align: center;
-}
-
-.documentation-page-title {
-    text-align: center;
-}
-
-.documentation-page-title {
-    margin-top: 20px;
-}
-
-.documentation-page-container-document {
-    padding: 16px;
-    width: calc(100% - 17vw);
-    margin-left: 2vw;
-    /* Provide space for the sidebar */
-    overflow-x: hidden;
-    min-height: 100%;
-    overflow-y: visible;
-    /* Let it flow with page scroll */
-}
-
-.documentation-page-container-temp {
-    padding: 16px;
-    max-width: 70vw;
-    text-align: center;
-}
-
-.doc-temp h3 {
-    font-size: 62px;
-}
-
-.doc-temp p {
-    font-size: 24px;
-}
-
-.category-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.category-container a {
-    text-decoration: none;
-    color: #fff;
-}
-
-
-.category-container>a *:hover {
-    color: #000000;
-}
-
-
-.category-container li {
-    list-style-type: none;
-}
-
-.category-container h3 {
-    margin-top: 1em;
-}
-
 .sidebar-menu-icon {
+    position: sticky;
+    top: 0;
     display: none;
+    user-select: none;
 }
 
 .chevron {
@@ -162,124 +159,255 @@
     width: 20px;
 }
 
-/* Documentation navigation buttons */
+// Temporary documentation styles
+.doc-temp {
+    h3 {
+        font-size: 62px;
+    }
+    
+    p {
+        font-size: 24px;
+    }
+}
+
+// Category display
+.category-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    a {
+        text-decoration: none;
+        color: #fff;
+        
+        *:hover {
+            color: #000000;
+        }
+    }
+    
+    li {
+        list-style-type: none;
+    }
+    
+    h3 {
+        margin-top: 1em;
+    }
+}
+
+// Documentation navigation
 .doc-navigation {
     display: flex;
     justify-content: space-between;
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 1px solid #444;
+    border-top: 1px solid $border-color;
     align-items: center;
 }
 
-.doc-nav-prev,
-.doc-nav-next,
-.doc-nav-refresh {
-    max-width: 45%;
+.doc-nav {
+    &-prev,
+    &-next,
+    &-refresh {
+        max-width: 45%;
+    }
+    
+    &-next {
+        text-align: right;
+    }
+    
+    &-prev, &-next {
+        a {
+            background-color: $doc-nav-bg;
+            border-radius: 100px;
+            color: #fff;
+            display: inline-flex;
+            height: $doc-nav-height;
+            margin: 10px;
+            padding: 10px;
+            text-decoration: none;
+            transition: background-color .3s ease;
+            width: 180px;
+            font-size: .8em;
+            align-items: center;
+            justify-content: center;
+            
+            &:hover {
+                background-color: $doc-nav-hover;
+            }
+        }
+        
+        i {
+            margin: 0 10px;
+        }
+    }
 }
 
+// Tags
 .doc-tags {
     margin-top: 20px;
     text-align: center;
-}
-
-.doc-tags h4 {
-    font-size: 1.25em;
-    margin-bottom: 10px;
-}
-
-.doc-tags ul {
-    list-style-type: none;
-    /* Removes default bullet points */
-    padding: 0;
-    /* Removes default padding */
-}
-
-.doc-tags li {
-    display: inline-block;
-    /* Align tags horizontally */
-    background-color: #f0f0f0;
-    color: #282828;
-    margin: 5px;
-    padding: 5px 10px;
-    border-radius: 20px;
-    /* Rounded corners for tags */
-    transition: background-color 0.3s ease;
-    /* Animation on hover */
-}
-
-.doc-tags li:hover {
-    background-color: #ddd;
-    /* Change color on hover */
-}
-
-.doc-nav-next a,
-.doc-nav-prev a {
-    background-color: #282828;
-    border-radius: 100px;
-    color: #fff;
-    display: inline-flex;
-    height: 50px;
-    margin: 10px;
-    padding: 10px;
-    text-decoration: none;
-    transition: background-color .3s ease;
-    width: 180px;
-    font-size: .8em;
-    align-items: center;
-    justify-content: center;
-}
-
-.doc-nav-prev a:hover,
-.doc-nav-next a:hover {
-    background-color: #444;
-}
-
-.doc-nav-next {
-    text-align: right;
-}
-
-/* Update icon margins for proper alignment */
-.doc-nav-prev i,
-.doc-nav-next i {
-    margin: 0px 10px;
-    /* Remove margin to center icon */
+    
+    h4 {
+        font-size: 1.25em;
+        margin-bottom: 10px;
+    }
+    
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    li {
+        display: inline-block;
+        background-color: $tag-bg;
+        color: $tag-color;
+        margin: 5px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        transition: background-color 0.3s ease;
+        
+        &:hover {
+            background-color: darken($tag-bg, 10%);
+        }
+    }
 }
 
 @media screen and (max-width: 970px) {
     .sidebar-menu-icon {
-        position: absolute;
+        position: sticky;
+        top: 0;
         display: flex;
-        height: 100%;
-        width: 25px;
-        background-color: #282828;
+        height: 100vh;
+        width: 50px; // Slightly wider for easier tapping
+        background-color: $sidebar-bg;
         justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: background-color 0.3s ease;
+        
+        &:hover {
+            background-color: $doc-nav-hover;
+        }
+        
+        // Vertical text label
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        color: white;
+        font-size: 0.9em;
+        letter-spacing: 2px;
     }
-
+    
     .documentation-page-sidebar {
-        left: -1000px;
-        transition: all 0.5s ease;
+        position: sticky;
+        width: 0px;
+        left: -100px;
+        height: 100vh;
+        z-index: 9;
+        transform: translateX(-100%);
+        
+        &.active {
+            width: min(80%, 300px); // Use whichever is smaller
+            transform: translateX(0%)
+        }
     }
+    
+    .documentation-page-container {
+        width: calc(90%);
+        padding: 10px; // Add padding to prevent overlap
+        &.sidebar-active {
+            overflow-x: hidden; // Hide overflow when sidebar is active
+        }
+        &.sidebar-inactive {
+            overflow-x: visible; // Show overflow when sidebar is inactive
+        }
+        
+        &-document {
+            width: 90vw;
+            margin-right: 20px;
 
-    .sidebar-large {
-        display: block;
-        width: 100%;
-        position: absolute;
-        left: 25px;
-        transition: all 0.5s ease;
+            &.sidebar-active {
+                overflow-x: hidden; // Hide overflow when sidebar is active
+            }
+            &.sidebar-inactive {
+                overflow-x: visible; // Show overflow when sidebar is inactive
+            }
+
+            >* {
+                overflow: hidden;
+            }    
+        }
+
+        *>pre {
+            word-wrap: normal;
+        }
     }
-
-    .doc-navigation {
-        flex-direction: column;
-        gap: 15px;
+    
+    .doc-nav {
+        &-prev, &-next {
+            a {
+                width: 140px;
+                font-size: 0.7em;
+                height: 40px;
+            }
+        }
     }
+}
 
-    .doc-nav-prev,
-    .doc-nav-next {
-        max-width: 100%;
+@media screen and (max-width: 600px) {
+    .documentation-page-container {
+        width: calc(100% - 50px); // Adjust width to account for sidebar
+        padding: 10px; // Add padding to prevent overlap
+        &.sidebar-active {
+            overflow-x: hidden; // Hide overflow when sidebar is active
+        }
+        &.sidebar-inactive {
+            overflow-x: visible; // Show overflow when sidebar is inactive
+        }
+        &-document {
+            width: 90vw;
+            margin-right: 20px;
+            &.sidebar-active {
+                overflow-x: hidden; // Hide overflow when sidebar is active
+            }
+            &.sidebar-inactive {
+                overflow-x: visible; // Show overflow when sidebar is inactive
+            }
+            >* {
+                overflow: hidden;
+            }
+        }
+        *>pre {
+            word-wrap: normal;
+        }
     }
+    .doc-nav {
+        &-prev, &-next {
+            a {
+                width: 140px;
+                font-size: 0.7em;
+                height: 40px;
+            }
+        }
+    }
+    .documentation-page-sidebar {
+        // width: min(90%, 280px);
+        font-size: 0.85em;
+    }
+}
 
-    .doc-nav-next {
-        text-align: left;
+@media screen and (min-width: 970px) {
+    .documentation-page-sidebar {
+        width: clamp($sidebar-min-width, $sidebar-width, $sidebar-max-width);
+        transform: translateX(0%); // Ensure sidebar is visible by default
+    }
+    .documentation-page-container {
+        margin-left: $sidebar-width; // Add margin to account for sidebar
+        width: calc(100% - $sidebar-width); // Adjust width to account for sidebar
+        overflow-x: visible; // Ensure overflow is visible
+    }
+    .documentation-page-container-document {
+        margin-left: $sidebar-width; // Add margin to account for sidebar
+        width: calc(100% - $sidebar-width); // Adjust width to account for sidebar
     }
 }

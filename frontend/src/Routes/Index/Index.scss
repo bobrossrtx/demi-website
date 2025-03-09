@@ -1,6 +1,8 @@
-.download-container>.current-version {
-    position: absolute;
-    margin-top: 10px;
+.download-container {
+    > .current-version {
+        position: absolute;
+        margin-top: 10px;
+    }
 }
 
 .idx-download-button {

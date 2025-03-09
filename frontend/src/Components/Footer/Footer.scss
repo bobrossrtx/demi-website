@@ -1,101 +1,75 @@
+// Variables
+$footer-bg: #282828;
+$footer-color: white;
+$link-color: #ffc832;
+
 footer {
     position: relative;
-    /* Change from fixed to relative */
     margin-top: auto;
-    /* Optional: ensures it stays at the end of content */
     left: 0;
     right: 0;
     padding: 30px 0;
-    background-color: #282828;
-    color: white;
+    background-color: $footer-bg;
+    color: $footer-color;
     z-index: 100;
-}
-
-footer h4 {
-    font-size: 1.2em;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 2rem;
-}
-
-footer ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 0;
-}
-
-footer a {
-    color: #ffc832;
-    text-decoration: none;
-}
-
-footer .attribution {
-    text-align: center;
-    padding-top: 30px;
-}
-
-@media screen and (min-width: 60em) {
-    .mw9-l {
-        max-width: 96rem;
+    
+    h4 {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 2rem;
     }
-
-    .pv0-l {
-        padding-top: 0;
-        padding-bottom: 0;
+    
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0;
     }
-
-    .measure-wide-l {
-        max-width: 34em;
+    
+    a {
+        color: $link-color;
+        text-decoration: none;
     }
-
-    .ph4-l {
-        padding-left: 2rem;
-        padding-right: 2rem;
+    
+    .attribution {
+        text-align: center;
+        padding-top: 30px;
     }
 }
 
-@media screen and (min-width: 48.4375em) {
-    .flex-row-ns {
-        flex-direction: row !important;
+.footer-icons {
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: .5em;
     }
-
-    .pv2-ns {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+    
+    img {
+        filter: invert(100%) sepia(0%) saturate(17%) hue-rotate(217deg) brightness(103%) contrast(104%);
+        width: 2em;
     }
 }
 
-.pv2 {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+// Layout utilities
+.flex {
+    display: flex;
 }
 
 .flex-col {
     flex-direction: column;
 }
 
-.flex {
-    display: flex;
+.center {
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.center,
 .mr-auto {
     margin-right: auto;
 }
 
-.center {
-    margin-left: auto;
-}
-
-.f3 {
-    font-size: 1.5rem;
-}
-
-.ph3 {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
+// Width utilities
 .w-100 {
     width: 100%;
 }
@@ -108,15 +82,50 @@ footer .attribution {
     max-width: 64rem;
 }
 
-.footer-icons a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: .5em;
+// Padding utilities
+.ph3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
-.footer-icons img {
-    filter: invert(100%) sepia(0%) saturate(17%) hue-rotate(217deg) brightness(103%) contrast(104%);
-    width: 2em;
+.pv2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
 
+// Typography utilities
+.f3 {
+    font-size: 1.5rem;
+}
+
+// Media queries
+@media screen and (min-width: 48.4375em) {
+    .flex-row-ns {
+        flex-direction: row !important;
+    }
+    
+    .pv2-ns {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+}
+
+@media screen and (min-width: 60em) {
+    .mw9-l {
+        max-width: 96rem;
+    }
+    
+    .pv0-l {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    
+    .measure-wide-l {
+        max-width: 34em;
+    }
+    
+    .ph4-l {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
 }

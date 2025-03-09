@@ -1,19 +1,19 @@
 .search-container {
     height: 35px;
     margin-top: 22px;
-}
-
-.search-container .search-bar {
-    height: 100%;
-    background: transparent;
-    border-radius: 50em;
-    border: 2px solid #3c404d;
-    color: white;
-    padding-left: 15px;
-    transition: border 0.2s ease-in-out;
-}
-
-.search-container .search-bar:focus {
-    outline: none;
-    border-color: white;
+    
+    .search-bar {
+        height: 100%;
+        background: transparent;
+        border-radius: 50em;
+        border: 2px solid #3c404d;
+        color: white;
+        padding-left: 15px;
+        transition: border 0.2s ease-in-out;
+        
+        &:focus {
+            outline: none;
+            border-color: white;
+        }
+    }
 }
