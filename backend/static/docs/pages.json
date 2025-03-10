@@ -48,5 +48,15 @@
         "tags": ["control flow", "basics", "demi", "programming", "if statements", "loops", "try catch"],
         "order": 4,
         "catid": 1
+    },
+    {
+        "category": "basics",
+        "title": "functions",
+        "showTitle": "Functions",
+        "description": "Understanding functions in Demi - declaration, parameters, and return values",
+        "page": "basics/functions",
+        "tags": ["functions", "basics", "demi", "programming", "guide"],
+        "order": 5,
+        "catid": 1
     }
 ]
