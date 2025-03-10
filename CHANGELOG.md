@@ -13,11 +13,13 @@
 - Add documentation generator prompt template
 - Add changelog generation system
 - Update pages.json structure for new documentation entries
+- Added MIT License File
 
 ### 🔄 Changes
 - Standardize documentation formatting across all pages
 - Implement consistent code example formatting with output comments
 - Reorganize documentation category structure
+- Updated README with project overview and setup instructions
 
 ## Before 1.0.0
 
