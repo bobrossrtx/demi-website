@@ -48,5 +48,35 @@
         "tags": ["control flow", "basics", "demi", "programming", "if statements", "loops", "try catch"],
         "order": 4,
         "catid": 1
+    },
+    {
+        "category": "basics",
+        "title": "functions",
+        "showTitle": "Functions",
+        "description": "Understanding functions in Demi including declaration, parameters, and return values",
+        "page": "basics/functions",
+        "tags": ["functions", "basics", "demi", "programming", "guide", "parameters", "return values"],
+        "order": 5,
+        "catid": 1
+    },
+    {
+        "category": "basics",
+        "title": "error-handling",
+        "showTitle": "Error Handling",
+        "description": "Understanding error handling in Demi including try-catch blocks and error types",
+        "page": "basics/error-handling",
+        "tags": ["error handling", "basics", "demi", "programming", "guide", "try catch", "exceptions", "errors"],
+        "order": 6,
+        "catid": 1
+    },
+    {
+        "category": "Standard Library",
+        "title": "overview",
+        "showTitle": "Standard Library Overview",
+        "description": "An overview of the Demi standard library and its core modules",
+        "page": "standard-library/overview",
+        "tags": ["standard library", "demi", "programming", "guide", "built-in functions", "modules"],
+        "order": 7,
+        "catid": 2
     }
 ]
