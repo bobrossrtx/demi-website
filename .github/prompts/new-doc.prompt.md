@@ -25,6 +25,7 @@ catid: {CATEGORY_ID}
 - Use "---" as section separators
 - Use H3 (###) for main sections
 - Use H4 (####) for subsections
+- Include a brief description of subsection (or main section if no subsections)
 - Include code examples in ```demi blocks
 - Add expected outputs as comments with "# Output: "
 - Use bullet points for lists
