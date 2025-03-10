@@ -58,5 +58,15 @@
         "tags": ["functions", "basics", "demi", "programming", "guide"],
         "order": 5,
         "catid": 1
+    },
+    {
+        "category": "basics",
+        "title": "error-handling",
+        "showTitle": "Error Handling",
+        "description": "Understanding error handling and debugging in Demi",
+        "page": "basics/error-handling",
+        "tags": ["error handling", "debugging", "basics", "demi", "programming", "guide", "errors"],
+        "order": 6,
+        "catid": 1
     }
 ]
