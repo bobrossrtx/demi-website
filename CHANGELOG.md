@@ -3,6 +3,7 @@
 ## 1.0.0 (2024-03-09)
 
 ### 📚 Documentation
+- Add Functions documentation covering basic syntax, parameters, and return values
 - Add comprehensive control flow documentation including conditionals and loops
 - Create documentation template system for consistent docs generation
 - Add documentation generation prompt for standardized documentation creation
