@@ -21,6 +21,7 @@ export default class Footer extends Component<Props, State> {
                 <li><Link to="/docs">Documentation</Link></li>
                 <li><Link to="/faq">Frequently Asked Questions</Link></li>
                 <li><Link to="https://discord.gg/vvhkhGkuGF">Ask a Question on the Discord Forum</Link></li>
+                <li><Link to="/contact">Contact Us</Link></li>
               </ul>
             </div>
             <div className="flex flex-col mw8 w-100 measure-wide-l pv2 pv5-m pv2-ns ph4-m ph4-l" id="get-help" data-np-autofill-form-type="other" data-np-checked="1" data-np-watching="1">
