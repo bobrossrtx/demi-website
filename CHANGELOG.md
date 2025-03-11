@@ -3,6 +3,7 @@
 ## 1.0.0 (2024-03-09)
 
 ### 📚 Documentation
+- Implement contact form with email sending functionality and add styling
 - Add Error Handling documentation covering built-in error types and assertions
 - Add Functions documentation covering basic syntax, parameters, and return values
 - Add comprehensive control flow documentation including conditionals and loops
