@@ -4,21 +4,22 @@
     border: none;
     font-size: 18px;
     cursor: pointer;
-    background: white !important;
+    background: #282828 !important;
     margin-bottom: 1rem;
-    
-    * {
-        color: #3d414f !important;
+    color: #ffc832 !important;
+
+    i {
+        color: #ffc832 !important;
     }
     
     &:hover {
         transition: all 0.3s ease-out;
-        background: #3d414f !important;
-        color: white !important;
+        background: #ffc832 !important;
+        color: #282828 !important;
         
         * {
             transition: all 0.3s ease-out;
-            color: #fff !important;
+            color: #282828 !important;
         }
     }
 }

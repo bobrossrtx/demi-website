@@ -40,16 +40,19 @@ button > i {
     
     > tr {
         > td, > th {
-            border: 1px solid $border-color;
+            border: 4px solid $table-odd-bg;
             padding: 8px;
         }
         
-        &:nth-child(odd) {
-            background-color: $table-odd-bg;
+        &:first-child {
+            background-color: #ffc832;
+            color: $table-odd-bg;
         }
         
-        &:nth-child(even) {
+        &:not(:first-child) {
             background-color: $table-even-bg;
+            
+            font-weight: bold;
         }
     }
     

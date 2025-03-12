@@ -66,13 +66,14 @@ $link-hover: #61667b;
         transition: width 0.3s ease, transform 0.3s ease;
         
         h4 {
+            color: #ffc832;
             font-size: 1.5em;
             margin-top: 10px;
             margin-bottom: 5px;
         }
         
         li {
-            list-style: "◄";
+            list-style: "◄ ";
             font-size: 1em;
         }
         
@@ -81,8 +82,9 @@ $link-hover: #61667b;
             color: white;
             text-decoration: none;
             
+            transition: color 0.3s ease;
             &:hover {
-                color: $link-hover;
+                color: #ffc832;
             }
         }
         

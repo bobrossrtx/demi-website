@@ -50,7 +50,7 @@
     flex-wrap: nowrap !important;
     
     &-logo {
-        color: #fff;
+        color: #ffc832;
         justify-self: start;
         margin-left: 20px;
         cursor: pointer;
@@ -91,15 +91,15 @@
     }
     
     &-links {
-        color: #fff;
+        color: #ffc832;
         text-decoration: none;
         padding: .2em 1rem;
         height: 35px;
         border-radius: 50em;
-        transition: all 0.2s ease-in-out;
-        
+
+        transition: all 0.3s ease-in-out;
         &:hover {
-            background: white;
+            background: #ffc832;
             color: #3d414f;
         }
         
