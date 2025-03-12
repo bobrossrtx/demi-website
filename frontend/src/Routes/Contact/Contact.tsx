@@ -25,8 +25,10 @@ export default function Contact({ }: Props) {
       process.env.REACT_APP_EMAILJS_USER_ID!
     ).then((result) => {
       console.log(result.text);
+      window.location.href = '/contact/sent?success=true';
     }, (error) => {
       console.log(error.text);
+      window.location.href = '/contact/sent?success=false';
     });
   };
 

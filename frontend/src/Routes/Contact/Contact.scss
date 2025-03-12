@@ -2,62 +2,76 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background: rgba(40, 40, 40, 0.4); /* Semi-transparent background */
+  background: rgba(40, 40, 40, 0.4);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px); /* Glassy effect */
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
-}
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
-h1 {
-  text-align: center;
-  color: #fff !important; /* Changed to white for better contrast */
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-
-  div {
-    margin-bottom: 15px;
+  h1 {
+    text-align: center;
+    color: #fff !important;
+    margin-bottom: 20px;
   }
 
-  label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #fff; /* Changed to white for better contrast */
-  }
+  form {
+    display: flex;
+    flex-direction: column;
 
-  input, textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Semi-transparent border */
-    border-radius: 5px;
-    font-size: 16px;
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
-    color: #fff; /* White text color */
-    transition: border-color 0.3s;
-
-    &:focus {
-      border-color: #007bff;
-      outline: none;
+    div {
+      margin-bottom: 15px;
     }
-  }
 
-  button {
-    padding: 10px 20px;
-    background-color: #282828; /* Changed to match the specified color */
-    color: #ffd700; /* Changed to yellow text color */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #fff;
+    }
 
-    &:hover {
-      background-color: #ffd700; /* Darker shade on hover */
-      color: #1e1e1e
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #282828;
+      color: #ffd700;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #ffd700;
+        color: #1e1e1e;
+      }
+    }
+
+    @media screen and (max-width: 960px) {
+      // Ensure the button is visible
+      button {
+        display: block;
+        margin: 20px auto;
+        width: 80%; // Make the button wider on mobile
+        max-width: 200px;
+      }
+      
+      // Make sure container has enough height
+      min-height: 300px;
     }
   }
 }

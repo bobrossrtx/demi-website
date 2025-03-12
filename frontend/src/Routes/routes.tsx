@@ -15,6 +15,7 @@ import Search from "./docs/Search";
 import Downloads from "./Downloads/Downloads";
 import DocPage from "./docs/DocPage";
 import ErrorNotFound from "./Errors/ErrorNotFound";
+import Sent from "./Contact/Sent";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             {
                 path: "/contact",
                 element: <Contact />
+            },
+            {
+                path: "/contact/sent",
+                element: <Sent />
             },
             {
                 path: "/docs",

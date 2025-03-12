@@ -262,28 +262,71 @@ $link-hover: #61667b;
 .doc-tags {
     margin-top: 20px;
     text-align: center;
+    width: 100%;
     
     h4 {
         font-size: 1.25em;
         margin-bottom: 10px;
     }
     
-    ul {
-        list-style-type: none;
-        padding: 0;
+    .doc-tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
     }
     
-    li {
+    .doc-tag {
         display: inline-block;
-        background-color: $tag-bg;
-        color: $tag-color;
-        margin: 5px;
-        padding: 5px 10px;
+        background-color: $sidebar-bg;
+        color: #ffc832;
+        margin: 3px;
+        padding: 5px 12px;
         border-radius: 20px;
-        transition: background-color 0.3s ease;
+        font-size: 0.9em;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
         
         &:hover {
-            background-color: darken($tag-bg, 10%);
+            background-color: lighten($sidebar-bg, 10%);
+            transform: translateY(-2px);
+        }
+    }
+}
+
+@media screen and (max-width: 970px) {
+    .doc-navigation {
+        flex-direction: column;
+        align-items: center;
+        
+        .doc-nav-prev,
+        .doc-nav-next {
+            max-width: 100%;
+            width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            
+            a {
+                width: 180px;
+            }
+        }
+        
+        .doc-nav-next {
+            text-align: center;
+        }
+        
+        .doc-tags {
+            margin-top: 20px;
+            width: 100%;
+            border-top: 1px solid $border-color;
+            padding-top: 15px;
+            
+            .doc-tag-list {
+                justify-content: center;
+                padding: 0 10px;
+            }
         }
     }
 }

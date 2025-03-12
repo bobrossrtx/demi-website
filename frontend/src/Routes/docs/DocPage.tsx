@@ -94,13 +94,19 @@ export default function DocPage(props: Props) {
                 </div>
                 <div className="doc-tags">
                     {prevPage && prevPage.tags && prevPage.tags.length > 0 && (
-                        <div>
+                        <div className="doc-tag-container">
                             <h4>Tags:</h4>
-                            <ul>
+                            <div className="doc-tag-list">
                                 {prevPage.tags.map((tag, index) => (
-                                    <li key={index}>{tag}</li>
+                                    <a 
+                                        key={index}
+                                        href={`/search?q=${encodeURIComponent(tag)}`}
+                                        className="doc-tag"
+                                    >
+                                        #{tag}
+                                    </a>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     )}
                 </div>
