@@ -25,6 +25,10 @@ jobs:
             --yes
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      - run: flyctl deploy --remote-only --wait-timeout 300
+      - run: |
+          flyctl deploy --remote-only --wait-timeout 300 \
+            --env REACT_APP_EMAILJS_SERVICE_ID=${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }} \
+            --env REACT_APP_EMAILJS_TEMPLATE_ID=${{ secrets.REACT_APP_EMAILJS_TEMPLATE_ID }} \
+            --env REACT_APP_EMAILJS_USER_ID=${{ secrets.REACT_APP_EMAILJS_USER_ID }}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
