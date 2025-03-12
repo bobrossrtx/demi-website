@@ -100,7 +100,7 @@ export default function DocPage(props: Props) {
                                 {prevPage.tags.map((tag, index) => (
                                     <a 
                                         key={index}
-                                        href={`/search?q=${encodeURIComponent(tag)}`}
+                                        href={`/search?query=${encodeURIComponent(tag)}`}
                                         className="doc-tag"
                                     >
                                         #{tag}
