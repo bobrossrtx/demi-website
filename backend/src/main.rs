@@ -1,4 +1,3 @@
-#![feature(decl_macro)]
 #[macro_use]
 extern crate rocket;
 
@@ -6,6 +5,14 @@ extern crate rocket;
 /// RUST IMPORTS ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 pub mod doc_filters;
+mod middleware;
+
+use auth::auth::{generate_reset_token, get_profile, reset_password, verify_admin};
+use middleware::admin::AdminUser;
+
+mod models;
+mod auth;
+mod utils;
 
 extern crate serde;
 
@@ -16,6 +23,12 @@ use rocket::fairing::{Fairing, Info, Kind};
 use rocket::fs::NamedFile;
 use rocket::http::Header;
 use rocket::{Request, Response};
+use dotenv::dotenv;
+use auth::admin::admin_dashboard;
+use std::env;
+use crate::models::user::User;
+use mongodb::Client;
+use crate::auth::auth::{register, login};
 
 ////////////////////////////////////////////////////////////
 /// CORS CONFIGURATION /////////////////////////////////////
@@ -105,9 +118,26 @@ async fn images(file: PathBuf) -> Option<NamedFile> {
 }
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
+    dotenv().ok();
+    println!("Environment variables loaded:");
+    for (key, value) in env::vars() {
+        println!("{}: {}", key, value);
+    }
+
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+    
+    let client = Client::with_uri_str(&database_url).await.expect("Failed to initialize client");
+    let db = client.database("demi_db");
+    let user_collection = db.collection::<User>("users");
+
     rocket::build()
         .attach(CORS)
+        .manage(user_collection)
+        .manage(jwt_secret)
+        .mount("/api/auth", routes![register, login, verify_admin, generate_reset_token, reset_password, get_profile])
+        .mount("/api/admin", routes![admin_dashboard])
         .mount("/api", routes![getdocs, docpages])
         .mount("/static", routes![files, downloads, images])
         .mount("/", routes![index, fallback_url])
