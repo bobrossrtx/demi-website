@@ -9,6 +9,7 @@ type MenuItem = {
 }
 
 type Props = {
+  title: string;
   menuItems: Array<MenuItem>
 }
 

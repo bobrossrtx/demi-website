@@ -1,216 +1,127 @@
 :root {
-    --primary: #1888ff;
-}
-
-// Dropdown styles
-.dropdown {
-    &-menu {
-        background: red;
-        width: 200px;
-        position: absolute;
-        top: 80px;
-        list-style: none;
-        text-align: start;
-        
-        li {
-            background: #1888ff;
-            cursor: pointer;
-            
-            &:hover {
-                background: #5cabff;
-            }
-        }
-        
-        &.clicked {
-            display: none;
-        }
-    }
-    
-    &-link {
-        display: block;
-        height: 100%;
-        width: 100%;
-        text-decoration: none;
-        color: #fff;
-        padding: 16px;
-    }
+  --primary: #1888ff;
 }
 
 // Navbar styles
 .navbar {
-    position: absolute;
-    z-index: 100;
-    background: linear-gradient(90deg, rgb(40, 40, 40) 0%, rgb(40, 40, 40) 100%);
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    padding: 0rem;
-    flex-wrap: nowrap !important;
-    
-    &-logo {
-        color: #ffc832;
-        justify-self: start;
-        margin-left: 20px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 2rem;
-        
-        &-img {
-            position: relative;
-            height: 50px;
-            width: 50px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-    }
+  background: #282828;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px !important;
+  z-index: 10;
+  position: sticky;
+  top: 0;
 }
 
-.fa-firstdraft {
-    margin-left: 0.5rem;
-    font-size: 1.6rem;
+.navbar-logo-container {
+  display: flex;
+  align-items: center;
 }
 
-.nav {
-    &-menu {
-        display: grid;
-        grid-template-columns: repeat(5, auto);
-        grid-gap: 10px;
-        list-style: none;
-        text-align: center;
-        width: 70vw;
-        justify-content: end;
-        margin-top: 1rem;
-    }
-    
-    &-item {
-        display: flex;
-        align-items: center;
-        height: 80px;
-    }
-    
-    &-links {
-        color: #ffc832;
-        text-decoration: none;
-        padding: .2em 1rem;
-        height: 35px;
-        border-radius: 50em;
-
-        transition: all 0.3s ease-in-out;
-        &:hover {
-            background: #ffc832;
-            color: #3d414f;
-        }
-        
-        &-mobile {
-            display: none;
-        }
-    }
+.navbar-logo {
+  color: #ffc832;
+  justify-self: flex-start;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
-.fa-bars {
-    color: #fff;
+.navbar-logo-img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
 }
 
 .menu-icon {
-    display: none;
+  display: none;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  color: #ffc832;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
+  cursor: pointer;
+
+  i {
+    margin-left: 5px;
+  }
+}
+
+.nav-links:hover {
+  border-bottom: 3px solid #ffc832;
 }
 
 // Media queries
 @media screen and (max-width: 960px) {
-    .fa-caret-down {
-        display: none;
-    }
-    
-    .NavbarItems {
-        position: relative;
-    }
-    
-    .nav-menu {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: 64px;
-        left: -100%;
-        opacity: 1;
-        transition: all 0.5s ease;
-        justify-content: flex-start;
-        text-align: center;
-        
-        &.active {
-            background: linear-gradient(90deg, rgb(40, 40, 40) 0%, rgb(40, 40, 40) 100%);
-            left: 0;
-            opacity: 1;
-            transition: all 0.5s ease;
-            z-index: 1;
-        }
-    }
-    
-    .nav-links {
-        text-align: center;
-        padding: 2rem;
-        width: 100%;
-        display: table;
-        margin-top: 15px;
-        margin-right: 25px;
-        
-        &:hover {
-            background: white;
-            text-decoration: overline;
-            text-decoration-thickness: 5px;
-        }
-        
-        &-mobile {
-            display: block;
-            text-align: center;
-            padding: 1.5rem;
-            margin: 2rem auto;
-            border-radius: 4px;
-            width: 80%;
-            background: var(--primary);
-            text-decoration: none;
-            color: #fff;
-            font-size: 1.5rem;
-            
-            &:hover {
-                background: #fff;
-                color: var(--primary);
-                transition: 250ms;
-            }
-        }
-    }
-    
-    .navbar-logo {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translate(25%, 25%);
-        margin-bottom: 2rem;
-    }
-    
-    .menu-icon {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(-100%, 50%);
-        font-size: 1.8rem;
-        cursor: pointer;
-    }
-    
-    .fa-times {
-        color: #fff;
-        font-size: 2rem;
-    }
-    
-    button {
-        display: none;
-    }
-    
-    .nav-item {
-        margin-top: 20px;
-    }
+  .navbar {
+    position: relative;
+  }
+
+  .menu-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 60%);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 80px;
+    left: -100%;
+    opacity: 1;
+    transition: all 0.5s ease;
+    background: #282828;
+  }
+
+  .nav-menu.active {
+    background: #282828;
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+
+  .nav-links {
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    display: table;
+  }
+
+  .nav-links:hover {
+    border: none;
+  }
 }

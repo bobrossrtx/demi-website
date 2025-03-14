@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom';
 import "./Navbar.scss"
 import Dropdown from './Dropdown';
 import SearchBar from './SearchBar';
@@ -9,8 +9,16 @@ type Props = {}
 
 const Navbar = (props: Props) => {
   const [click, setClick] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
+
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, [location]);
 
   return (
     <>
@@ -41,6 +49,33 @@ const Navbar = (props: Props) => {
             </Link>
           </li>
           <SearchBar placeholder='🔎︎ Search Docs' />
+            {!isLoggedIn ? (
+            <>
+              <li className='nav-item'>
+              <Link to="/login" className='nav-links' onClick={closeMobileMenu}>
+                Log In
+              </Link>
+              </li>
+              <li className='nav-item'>
+              <Link to="/register" className='nav-links' onClick={closeMobileMenu}>
+                Register
+              </Link>
+              </li>
+            </>
+            ) : (
+            <>
+              <li className='nav-item'>
+              <Link to="/profile" className='nav-links' onClick={closeMobileMenu}>
+                Profile
+              </Link>
+              </li>
+              <li className='nav-item'>
+              <Link to="/logout" className='nav-links' onClick={closeMobileMenu}>
+                Log Out
+              </Link>
+              </li>
+            </>
+            )}
         </ul>
       </nav>
     </>

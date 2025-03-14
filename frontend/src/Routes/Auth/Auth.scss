@@ -1,0 +1,176 @@
+$primary-color: #282828;
+$accent-color: #ffc832;
+$text-color: #ffffff;
+$error-color: #ff4d4d;
+$card-bg: #1a1a1a;
+$input-bg: #282828;
+$shadow-color: rgba(0, 0, 0, 0.5);
+
+.auth-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: $accent-color;
+    color: $primary-color;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    
+    &:hover {
+      background-color: darken($accent-color, 10%);
+    }
+    
+    &:active {
+      transform: translateY(2px);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: $primary-color;
+  min-height: 55vh;
+  
+  .auth-card {
+    width: 100%;
+    max-width: 450px;
+    background-color: $card-bg;
+    border-radius: 8px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 4px 12px $shadow-color;
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      
+      h1 {
+        color: $accent-color;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        color: $text-color;
+        opacity: 0.8;
+      }
+    }
+    
+    .auth-message {
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+
+      &.error {
+      background-color: rgba($error-color, 0.2);
+      color: $error-color;
+      }
+
+      &.success {
+      background-color: rgba($accent-color, 0.2);
+      color: $accent-color;
+      }
+    }
+    
+    .auth-form {
+      .form-group {
+        margin-bottom: 1.5rem;
+        
+        label {
+          display: block;
+          color: $text-color;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+        }
+        
+        input {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid rgba($text-color, 0.2);
+          border-radius: 4px;
+          background-color: $input-bg;
+          color: $text-color;
+          font-size: 1rem;
+          
+          &:focus {
+            outline: none;
+            border-color: $accent-color;
+          }
+        }
+      }
+      
+    }
+    
+    .auth-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      color: $text-color;
+      
+      a {
+        color: $accent-color;
+        text-decoration: none;
+        font-weight: 500;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// Fix for disappearing register button at medium screen sizes
+@media (max-width: 960px) {
+  .auth-container {
+    min-height: 85vh; // Ensure container has enough height
+    align-items: flex-start; // Align from the top on mobile
+    padding-top: 3rem;
+    
+    .auth-card {
+      .auth-form {
+        .auth-button {
+          display: block !important; // Force display
+          width: 100% !important; 
+          max-width: none !important;
+          margin-bottom: 1rem;
+          position: relative; // Ensure proper stacking
+          z-index: 5; // Higher z-index to prevent being hidden
+        }
+      }
+      
+      .auth-footer {
+        // Ensure footer with register link is visible
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 5;
+        
+        a {
+          display: inline-block;
+          padding: 0.25rem 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 520px) {
+  .auth-container {
+    padding: 1rem;
+    
+    .auth-card {
+      padding: 2rem 1.5rem;
+    }
+  }
+}
