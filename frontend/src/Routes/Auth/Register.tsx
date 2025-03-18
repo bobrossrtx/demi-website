@@ -42,7 +42,8 @@ const Register: React.FC = () => {
         body: JSON.stringify({
           username: userData.username,
           email: userData.email,
-          password: userData.password
+          password: userData.password,
+          bio: "No Bio Available",
         })
       });
   
