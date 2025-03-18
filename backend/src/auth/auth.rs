@@ -4,10 +4,13 @@ use rocket::request::{FromRequest, Outcome, Request};
 use rocket::State;
 use mongodb::Collection;
 use crate::models::user::{LoginResponse, User, LoginRequest, PasswordResetRequest, RegistrationRequest};
-use mongodb::bson::doc;
+use mongodb::bson::{doc, DateTime};
 use crate::auth::jwt::verify_token; // Make sure this import exists
 use log::info;
 use serde::{Deserialize, Serialize};
+use rocket::fs::TempFile;
+use rocket::form::Form;
+use crate::utils::cloudinary::{delete_image_from_cloudinary, upload_image_to_cloudinary_from_file};
 
 #[derive(Deserialize)]
 pub struct EmailRequest {
@@ -25,6 +28,20 @@ pub struct UserProfile {
     pub email: String,
     pub bio: String,
     pub profile_picture: String,
+    pub profile_picture_public_id: String,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct ProfilePictureResponse {
+    pub profile_picture: String,
+    pub profile_picture_public_id: String,
+}
+
+#[derive(FromForm)]
+pub struct ProfilePictureUpload<'f> {
+    profile_picture: TempFile<'f>,
 }
 
 #[post("/register", data = "<user>")]
@@ -51,6 +68,7 @@ pub async fn login(
                 updated_at: user.updated_at,
                 username: user.username,
                 profile_picture: user.profile_picture,
+                profile_picture_public_id: user.profile_picture_public_id,
             };
             Ok(Json(response))
         }
@@ -100,11 +118,8 @@ impl<'r> FromRequest<'r> for AuthHeader<'r> {
 #[get("/verify-admin")]
 pub async fn verify_admin(jwt_secret: &State<String>, auth_header: AuthHeader<'_>) -> Result<Status, (Status, String)> {
     let token = auth_header.0.trim_start_matches("Bearer ");
-    info!("Token: {}", token);
-    info!("JWT Secret: {}", jwt_secret.inner());
     match verify_token(token, jwt_secret.inner()) {
         Ok(claims) => {
-            info!("Claims: {:?}", claims);
             if claims.is_admin {
                 Ok(Status::Ok)
             } else {
@@ -118,19 +133,123 @@ pub async fn verify_admin(jwt_secret: &State<String>, auth_header: AuthHeader<'_
     }
 }
 
-#[get("/profile/<user_id>")]
-pub async fn get_profile(user_id: String, user_collection: &State<Collection<User>>) -> Result<Json<UserProfile>, (Status, String)> {
-    match user_collection.find_one(doc! { "_id": user_id }).await {
+#[get("/profile/<user_id_or_username>")]
+pub async fn get_profile(user_id_or_username: &str, user_collection: &State<Collection<User>>) -> Result<Json<UserProfile>, (Status, String)> {
+    let filter = if user_id_or_username.starts_with("id:") {
+        doc! { "_id": &user_id_or_username[3..] }
+    } else {
+        doc! { "username": user_id_or_username }
+    };
+
+    match user_collection.find_one(filter).await {
         Ok(Some(user)) => {
             let profile = UserProfile {
                 name: user.username,
                 email: user.email,
                 bio: user.bio.unwrap_or_else(|| "No bio available".to_string()),
                 profile_picture: if user.profile_picture.is_empty() { "No profile picture available".to_string() } else { user.profile_picture },
+                profile_picture_public_id: user.profile_picture_public_id,
+                created_at: user.created_at,
+                updated_at: user.updated_at,
             };
             Ok(Json(profile))
         }
         Ok(None) => Err((Status::NotFound, "User not found".to_string())),
         Err(_) => Err((Status::InternalServerError, "Internal server error".to_string())),
+    }
+}
+
+#[put("/profile/<user_id>", data = "<profile>")]
+pub async fn edit_profile(
+    user_id: &str,
+    profile: Json<UserProfile>,
+    user_collection: &State<Collection<User>>,
+) -> Result<Json<UserProfile>, (Status, String)> {
+    let update_doc = doc! {
+        "$set": {
+            "username": &profile.name,
+            "email": &profile.email,
+            "bio": &profile.bio,
+            "profile_picture": &profile.profile_picture,
+            "profile_picture_public_id": &profile.profile_picture_public_id,
+            "updated_at": chrono::Utc::now().to_string(),
+        }
+    };
+
+    match user_collection.update_one(doc! { "_id": user_id }, update_doc).await {
+        Ok(_) => {
+            let updated_user = user_collection.find_one(doc! { "_id": user_id }).await.unwrap().unwrap();
+            let updated_profile = UserProfile {
+                name: updated_user.username,
+                email: updated_user.email,
+                bio: updated_user.bio.unwrap_or_else(|| "No bio available".to_string()),
+                profile_picture: if updated_user.profile_picture.is_empty() { "No profile picture available".to_string() } else { updated_user.profile_picture },
+                profile_picture_public_id: updated_user.profile_picture_public_id,
+                created_at: updated_user.created_at,
+                updated_at: updated_user.updated_at
+            };
+            Ok(Json(updated_profile))
+        }
+        Err(_) => Err((Status::InternalServerError, "Failed to update profile".to_string())),
+    }
+}
+
+#[put("/profile/edit/<user_id>/profile_picture", data = "<profile_picture>")]
+pub async fn update_profile_picture(
+    user_id: &str,
+    mut profile_picture: Form<ProfilePictureUpload<'_>>,
+    user_collection: &State<Collection<User>>,
+) -> Result<Json<ProfilePictureResponse>, (Status, String)> {
+    // Save the file to a temporary location
+    let temp_path = format!("/tmp/{}", uuid::Uuid::new_v4());
+    profile_picture.profile_picture.persist_to(&temp_path).await.unwrap();
+
+    let file_path = temp_path.as_str();
+
+    // Upload the image to Cloudinary
+    match upload_image_to_cloudinary_from_file(file_path).await {
+        Ok((url, public_id)) => {
+            // Update the user's profile picture in the database
+            let update_result = user_collection.update_one(
+                doc! { "_id": user_id },
+                doc! { "$set": { "profile_picture": url.clone(), "profile_picture_public_id": public_id.clone() } }
+            ).await;
+
+            match update_result {
+                Ok(_) => Ok(Json(ProfilePictureResponse { profile_picture: url, profile_picture_public_id: public_id })),
+                Err(_) => Err((Status::InternalServerError, "Failed to update profile picture".to_string())),
+            }
+        }
+        Err(_) => Err((Status::InternalServerError, "Failed to upload image".to_string())),
+    }
+}
+
+#[delete("/profile/<user_id>/profile_picture")]
+pub async fn delete_profile_picture(
+    user_id: &str,
+    user_collection: &State<Collection<User>>,
+) -> Result<Status, (Status, String)> {
+    // Fetch the user's current profile picture URL
+    let user = user_collection.find_one(doc! { "_id": user_id }).await.map_err(|_| (Status::InternalServerError, "Database error".to_string()))?;
+    
+    if let Some(user) = user {
+        // Delete the image from Cloudinary
+        if let Err(_) = delete_image_from_cloudinary(&user.profile_picture_public_id).await {
+            eprintln!("Failed to delete image from Cloudinary");
+            return Err((Status::InternalServerError, "Failed to delete image from Cloudinary".to_string()));
+        }
+
+        // Update the user's profile picture URL in the database
+        let update_result = user_collection.update_one(
+            doc! { "_id": user_id },
+            doc! { "$set": { "profile_picture": "", "profile_picture_public_id": "" } }
+        ).await;
+
+        match update_result {
+            Ok(_) => Ok(Status::Ok),
+            Err(_) => Err((Status::InternalServerError, "Failed to update profile picture".to_string())),
+        }
+    } else {
+        Err((Status::NotFound, "User not found".to_string()))
     }
 }

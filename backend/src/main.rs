@@ -7,8 +7,7 @@ extern crate rocket;
 pub mod doc_filters;
 mod middleware;
 
-use auth::auth::{generate_reset_token, get_profile, reset_password, verify_admin};
-use middleware::admin::AdminUser;
+use auth::auth::{delete_profile_picture, edit_profile, generate_reset_token, get_profile, reset_password, update_profile_picture, verify_admin};
 
 mod models;
 mod auth;
@@ -29,6 +28,8 @@ use std::env;
 use crate::models::user::User;
 use mongodb::Client;
 use crate::auth::auth::{register, login};
+use rocket::data::{ByteUnit, Limits};
+use rocket::config::Config;
 
 ////////////////////////////////////////////////////////////
 /// CORS CONFIGURATION /////////////////////////////////////
@@ -121,9 +122,6 @@ async fn images(file: PathBuf) -> Option<NamedFile> {
 async fn rocket() -> _ {
     dotenv().ok();
     println!("Environment variables loaded:");
-    for (key, value) in env::vars() {
-        println!("{}: {}", key, value);
-    }
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
@@ -132,11 +130,22 @@ async fn rocket() -> _ {
     let db = client.database("demi_db");
     let user_collection = db.collection::<User>("users");
 
-    rocket::build()
+    let config = Config::figment()
+        .merge(("address", "0.0.0.0"))
+        .merge(("port", 8000))
+        .merge(("workers", 4))
+        .merge(("keep_alive", 5))
+        .merge(("limits", Limits::new()
+            .limit("forms", ByteUnit::Byte(10 * 1024 * 1024))
+            .limit("data", ByteUnit::Byte(20 * 1024 * 1024))
+            .limit("data-form", ByteUnit::Byte(10 * 1024 * 1024))
+            .limit("file", ByteUnit::Byte(10 * 1024 * 1024))));
+
+    rocket::custom(config)
         .attach(CORS)
         .manage(user_collection)
         .manage(jwt_secret)
-        .mount("/api/auth", routes![register, login, verify_admin, generate_reset_token, reset_password, get_profile])
+        .mount("/api/auth", routes![register, login, verify_admin, generate_reset_token, reset_password, get_profile, edit_profile, update_profile_picture, delete_profile_picture])
         .mount("/api/admin", routes![admin_dashboard])
         .mount("/api", routes![getdocs, docpages])
         .mount("/static", routes![files, downloads, images])

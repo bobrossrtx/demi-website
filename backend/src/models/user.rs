@@ -7,7 +7,7 @@ use jsonwebtoken::{encode, Header, EncodingKey};
 use chrono;
 
 use crate::auth::jwt::verify_token;
-use crate::utils::cloudinary::upload_image_to_cloudinary;
+use crate::utils::cloudinary::upload_image_to_cloudinary_from_url;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
@@ -18,11 +18,12 @@ pub struct User {
     pub password: String,
     #[serde(default)]
     pub is_admin: bool,
-    pub created_at: Option<bson::DateTime>,
-    pub updated_at: Option<bson::DateTime>,
+    pub created_at: String,
+    pub updated_at: String,
     pub bio: Option<String>,
     pub name: Option<String>,
     pub profile_picture: String, // Add profile picture field
+    pub profile_picture_public_id: String, // Add public ID for the profile picture
 }
 
 #[derive(Debug, Deserialize)]
@@ -37,12 +38,13 @@ pub struct LoginResponse {
     pub email: String,
     pub name: Option<String>,
     pub bio: Option<String>,
-    pub created_at: Option<bson::DateTime>,
-    pub updated_at: Option<bson::DateTime>,
+    pub created_at: String,
+    pub updated_at: String,
     pub token: String,
     pub username: String,
     pub is_admin: bool,
-    pub profile_picture: String
+    pub profile_picture: String,
+    pub profile_picture_public_id: String, // Add public ID for the profile picture
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -92,9 +94,12 @@ impl User {
 
                 // Upload default profile picture to Cloudinary
                 println!("Uploading default profile picture to Cloudinary...");
-                let profile_picture_url = match upload_image_to_cloudinary("http://127.0.0.1:8000/static/images/default-avatar.jpg").await {
-                    Ok(url) => {
+                let pub_id;
+
+                let profile_picture_url = match upload_image_to_cloudinary_from_url("http://127.0.0.1:8000/static/images/default-avatar.jpg").await {
+                    Ok((url, public_id)) => {
                         println!("Profile picture uploaded successfully: {}", url);
+                        pub_id = public_id;
                         url
                     },
                     Err(err) => {
@@ -109,11 +114,12 @@ impl User {
                     email: registration_request.email.clone(),
                     password: hashed_password,
                     is_admin: registration_request.is_admin,
-                    created_at: Some(bson::DateTime::now()),
-                    updated_at: Some(bson::DateTime::now()),
+                    created_at: bson::DateTime::now().to_string(),
+                    updated_at: bson::DateTime::now().to_string(),
                     bio: registration_request.bio.clone(),
                     name: registration_request.name.clone(),
                     profile_picture: profile_picture_url, // Set profile picture URL
+                    profile_picture_public_id: pub_id, // Set default public ID
                 };
 
                 match db.insert_one(new_user).await {
@@ -163,6 +169,7 @@ impl User {
             updated_at: stored_user.updated_at,
             id: stored_user.id.clone(),
             profile_picture: stored_user.profile_picture,
+            profile_picture_public_id: stored_user.profile_picture_public_id,
         })
     }
 
