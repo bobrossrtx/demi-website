@@ -19,4 +19,10 @@ Please summarize the recent changes and activities we have done in the project. 
 6. **Other Activities**
     - List and describe any other relevant activities or changes.
 
+7. **Review Checklist:**
+    - List and describe any checklist tasks that must be completed before creating a pull request
+
+8. **Plans For Tomorrow**
+    - List any plans for tomorrow
+
 Make sure to provide clear and concise descriptions for each item.
