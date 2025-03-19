@@ -123,6 +123,21 @@ $danger-color: #ff4d4d;
             }
         }
 
+        .delete-profile-label {
+            display: block;
+            margin: 10px 0;
+            text-align: left;
+            .delete-profile-input {
+                width: 100%;
+                padding: 10px;
+                margin-top: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 1em;
+            }
+        }
+        
+
         .profile-picture-preview {
             position: relative;
             margin: 0 auto 20px;

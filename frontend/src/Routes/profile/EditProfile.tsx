@@ -99,6 +99,15 @@ const EditProfile: React.FC = () => {
         setError('');
         setPasswordError('');
 
+        
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(profile.email)) {
+            setError('Invalid email format');
+            setLoading(false);
+            return;
+        }
+
         // Check for password errors first
         if (passwordData.previous_password || passwordData.new_password || passwordData.confirm_new_password) {
             if (!passwordData.previous_password || !passwordData.new_password || !passwordData.confirm_new_password) {
@@ -375,20 +384,20 @@ const EditProfile: React.FC = () => {
                             
                             {deleteError && <div className="error-message">{deleteError}</div>}
                             
-                            <label className="profile-label">
+                            <label className="delete-profile-label">
                                 Current Password:
                                 <input
-                                    className="profile-input"
+                                    className="delete-profile-input"
                                     type="password"
                                     name="password"
                                     value={deletePasswordData.password}
                                     onChange={handleDeletePasswordChange}
                                 />
                             </label>
-                            <label className="profile-label">
+                            <label className="delete-profile-label">
                                 Confirm Password:
                                 <input
-                                    className="profile-input"
+                                    className="delete-profile-input"
                                     type="password"
                                     name="confirmPassword"
                                     value={deletePasswordData.confirmPassword}

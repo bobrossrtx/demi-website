@@ -24,6 +24,13 @@ pub struct User {
     pub name: Option<String>,
     pub profile_picture: String, // Add profile picture field
     pub profile_picture_public_id: String, // Add public ID for the profile picture
+    #[serde(default = "default_email_private")]
+    pub email_private: bool, // Changed to default to true
+}
+
+// Add a function to provide the default value
+fn default_email_private() -> bool {
+    true
 }
 
 #[derive(Debug, Deserialize)]
@@ -45,6 +52,7 @@ pub struct LoginResponse {
     pub is_admin: bool,
     pub profile_picture: String,
     pub profile_picture_public_id: String, // Add public ID for the profile picture
+    pub email_private: bool, // Include email privacy setting
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -120,6 +128,7 @@ impl User {
                     name: registration_request.name.clone(),
                     profile_picture: profile_picture_url, // Set profile picture URL
                     profile_picture_public_id: pub_id, // Set default public ID
+                    email_private: true, // Explicitly set to true for new registrations
                 };
 
                 match db.insert_one(new_user).await {
@@ -170,6 +179,7 @@ impl User {
             id: stored_user.id.clone(),
             profile_picture: stored_user.profile_picture,
             profile_picture_public_id: stored_user.profile_picture_public_id,
+            email_private: stored_user.email_private, // Include email privacy setting
         })
     }
 

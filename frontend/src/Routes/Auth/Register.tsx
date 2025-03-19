@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import PasswordStrengthBar, { calculatePasswordStrength } from '../../Components/PasswordStrengthBar/PasswordStrengthBar';
 import './Auth.scss';
 
 const Register: React.FC = () => {
@@ -26,9 +27,49 @@ const Register: React.FC = () => {
     setLoading(true);
     setError('');
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userData.email)) {
+      setError('Invalid email format');
+      setLoading(false);
+      return;
+    }
+
     // Validate passwords match
     if (userData.password !== userData.confirmPassword) {
       setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    // Validate new password
+    const password = userData.password;
+    const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const numberRegex = /[0-9]/;
+    const letterRegex = /[a-zA-Z]/;
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      setLoading(false);
+      return;
+    }
+
+    if (!specialCharacterRegex.test(password)) {
+      setError('Password must contain at least 1 special character');
+      setLoading(false);
+      return;
+    }
+
+    if (!numberRegex.test(password) || !letterRegex.test(password)) {
+      setError('Password must contain both numbers and letters');
+      setLoading(false);
+      return;
+    }
+
+    if (!uppercaseRegex.test(password) || !lowercaseRegex.test(password)) {
+      setError('Password must contain both uppercase and lowercase letters');
       setLoading(false);
       return;
     }
@@ -127,6 +168,7 @@ const Register: React.FC = () => {
               onChange={handleChange}
               required
             />
+            <PasswordStrengthBar strength={calculatePasswordStrength(userData.password)} />
           </div>
           
           <div className="form-group">

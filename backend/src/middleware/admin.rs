@@ -28,18 +28,19 @@ impl<'r> FromRequest<'r> for AdminUser {
     }
 }
 
-async fn is_admin(request: &Request<'_>) -> Result<(), Status> {
-    let jwt_secret = request.rocket().state::<String>().unwrap();
-    let auth_header = request.headers().get_one("Authorization").and_then(|header| header.strip_prefix("Bearer "));
+// Unused for now
+// async fn is_admin(request: &Request<'_>) -> Result<(), Status> {
+//     let jwt_secret = request.rocket().state::<String>().unwrap();
+//     let auth_header = request.headers().get_one("Authorization").and_then(|header| header.strip_prefix("Bearer "));
 
-    if let Some(token) = auth_header {
-        let token_data = decode::<Claims>(&token, &DecodingKey::from_secret(jwt_secret.as_ref()), &Validation::default()).ok();
-        if let Some(data) = token_data {
-            if data.claims.is_admin {
-                return Ok(());
-            }
-        }
-    }
+//     if let Some(token) = auth_header {
+//         let token_data = decode::<Claims>(&token, &DecodingKey::from_secret(jwt_secret.as_ref()), &Validation::default()).ok();
+//         if let Some(data) = token_data {
+//             if data.claims.is_admin {
+//                 return Ok(());
+//             }
+//         }
+//     }
 
-    Err(Status::Unauthorized)
-}
+//     Err(Status::Unauthorized)
+// }

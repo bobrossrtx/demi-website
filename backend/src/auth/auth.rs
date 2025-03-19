@@ -31,6 +31,7 @@ pub struct ErrorResponse {
 pub struct UserProfile {
     pub name: String,
     pub email: String,
+    pub email_private: bool,
     pub bio: String,
     pub profile_picture: String,
     pub profile_picture_public_id: String,
@@ -85,6 +86,7 @@ pub async fn login(
                 username: user.username,
                 profile_picture: user.profile_picture,
                 profile_picture_public_id: user.profile_picture_public_id,
+                email_private: user.email_private,
             };
             Ok(Json(response))
         }
@@ -159,9 +161,18 @@ pub async fn get_profile(user_id_or_username: &str, user_collection: &State<Coll
 
     match user_collection.find_one(filter).await {
         Ok(Some(user)) => {
+            let is_own_profile = user_id_or_username.starts_with("id:");
+            // If email is private and it's not the user's own profile, hide the email
+            let email_to_display = if user.email_private && !is_own_profile {
+                "Email hidden for privacy".to_string()
+            } else {
+                user.email
+            };
+            
             let profile = UserProfile {
                 name: user.username,
-                email: user.email,
+                email: email_to_display,
+                email_private: user.email_private,
                 bio: user.bio.unwrap_or_else(|| "No bio available".to_string()),
                 profile_picture: if user.profile_picture.is_empty() { "No profile picture available".to_string() } else { user.profile_picture },
                 profile_picture_public_id: user.profile_picture_public_id,
@@ -188,6 +199,7 @@ pub async fn edit_profile(
             "bio": &profile.bio,
             "profile_picture": &profile.profile_picture,
             "profile_picture_public_id": &profile.profile_picture_public_id,
+            "email_private": profile.email_private,
             "updated_at": chrono::Utc::now().to_string(),
         }
     };
@@ -198,6 +210,7 @@ pub async fn edit_profile(
             let updated_profile = UserProfile {
                 name: updated_user.username,
                 email: updated_user.email,
+                email_private: updated_user.email_private,
                 bio: updated_user.bio.unwrap_or_else(|| "No bio available".to_string()),
                 profile_picture: if updated_user.profile_picture.is_empty() { "No profile picture available".to_string() } else { updated_user.profile_picture },
                 profile_picture_public_id: updated_user.profile_picture_public_id,
@@ -240,6 +253,7 @@ pub async fn update_profile_picture(
     }
 }
 
+#[allow(unused)] // This route is unused (probably wont get used, but its there if needed)
 #[delete("/profile/<user_id>/profile_picture")]
 pub async fn delete_profile_picture(
     user_id: &str,

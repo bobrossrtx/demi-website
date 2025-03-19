@@ -5,6 +5,7 @@ import './Profile.scss';
 interface UserProfile {
     name: string;
     email: string;
+    email_private: boolean;
     bio: string;
     profile_picture: string;
     profile_picture_public_id: string;
@@ -75,7 +76,12 @@ const Profile: React.FC = () => {
                             <p key={index}>{line}</p>
                         ))}
                     </div>
-                    <p>Email: {profile?.email}</p>
+                    {/* Only show email if viewing own profile or if email is not private */}
+                    {!profile?.email_private || username === localStorage.getItem('user_id') ? (
+                        <p>Email: {profile?.email}</p>
+                    ) : (
+                        <p>Email: Private</p>
+                    )}
                     <p>Member since: {profile?.created_at?.split(" ")[0] ?? 'N/A'}</p>
                     {!username && (
                         <button 
