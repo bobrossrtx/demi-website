@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.1 (2025-03-19)
+
+### ✨ New Features
+- Implement user account creation functionality.
+- Implement profile editing functionality.
+
+### 🐛 Bug Fixes
+- Fix various bugs related to user authentication and profile management.
+
+### 🔄 Changes
+- Enhance the user registration process.
+- Improve the profile editing interface for better user experience.
+
+### ⚙️ Internal
+- Refactor code to improve maintainability and readability.
+
+### 📚 Documentation
+- Planned to add a password strength bar to the registration page.
+- Upcoming tasks for tomorrow include working on admin pages, settings, and potentially starting on the forum and post handling.
+
 ## 1.0.0 (2024-03-09)
 
 ### 📚 Documentation
