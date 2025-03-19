@@ -4,7 +4,7 @@ use rocket::request::{FromRequest, Outcome, Request};
 use rocket::State;
 use mongodb::Collection;
 use crate::models::user::{LoginResponse, User, LoginRequest, PasswordResetRequest, RegistrationRequest};
-use mongodb::bson::{doc, DateTime};
+use mongodb::bson::doc;
 use crate::auth::jwt::verify_token; // Make sure this import exists
 use log::info;
 use serde::{Deserialize, Serialize};
@@ -20,6 +20,11 @@ pub struct EmailRequest {
 #[derive(Serialize, Deserialize)]
 pub struct TokenResponse {
     token: String,
+}
+
+#[derive(Serialize)]
+pub struct ErrorResponse {
+    message: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -42,6 +47,17 @@ pub struct ProfilePictureResponse {
 #[derive(FromForm)]
 pub struct ProfilePictureUpload<'f> {
     profile_picture: TempFile<'f>,
+}
+
+#[derive(Deserialize)]
+pub struct ChangePasswordRequest {
+    current_password: String,
+    new_password: String,
+}
+
+#[derive(Deserialize)]
+pub struct DeleteProfileRequest {
+    password: String,
 }
 
 #[post("/register", data = "<user>")]
@@ -251,5 +267,118 @@ pub async fn delete_profile_picture(
         }
     } else {
         Err((Status::NotFound, "User not found".to_string()))
+    }
+}
+
+#[put("/change-password/<user_id>", data = "<change_request>")]
+pub async fn change_password(
+    user_id: &str,
+    change_request: Json<ChangePasswordRequest>,
+    user_collection: &State<Collection<User>>,
+    auth_header: AuthHeader<'_>
+) -> Result<Status, (Status, Json<ErrorResponse>)> {
+    // Verify the authentication token
+    let token = auth_header.0.trim_start_matches("Bearer ");
+    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+    
+    match verify_token(token, &jwt_secret) {
+        Ok(claims) => {
+            // Make sure the user is changing their own password or is an admin
+            if claims.sub != user_id && !claims.is_admin {
+                return Err((Status::Forbidden, Json(ErrorResponse { message: "Unauthorized to change this user's password".to_string() })));
+            }
+            
+            // Fetch the user from the database
+            let user_result = user_collection.find_one(doc! { "_id": user_id }).await;
+            
+            match user_result {
+                Ok(Some(user)) => {
+                    // Verify the current password
+                    match bcrypt::verify(&change_request.current_password, &user.password) {
+                        Ok(true) => {
+                            // Hash the new password
+                            let hashed_password = match bcrypt::hash(&change_request.new_password, bcrypt::DEFAULT_COST) {
+                                Ok(hashed) => hashed,
+                                Err(_) => return Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to hash new password".to_string() }))),
+                            };
+                            
+                            // Update the password in the database
+                            let update_result = user_collection.update_one(
+                                doc! { "_id": user_id },
+                                doc! { "$set": { "password": hashed_password } }
+                            ).await;
+                            
+                            match update_result {
+                                Ok(_) => Ok(Status::Ok),
+                                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to update password".to_string() }))),
+                            }
+                        },
+                        Ok(false) => {
+                            Err((Status::Unauthorized, Json(ErrorResponse { message: "Current password is incorrect".to_string() })))
+                        },
+                        Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Password verification failed".to_string() }))),
+                    }
+                },
+                Ok(None) => Err((Status::NotFound, Json(ErrorResponse { message: "User not found".to_string() }))),
+                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Database error".to_string() }))),
+            }
+        },
+        Err(_) => Err((Status::Unauthorized, Json(ErrorResponse { message: "Invalid authentication token".to_string() }))),
+    }
+}
+
+#[delete("/profile/<user_id>", data = "<delete_request>")]
+pub async fn delete_profile(
+    user_id: &str,
+    delete_request: Json<DeleteProfileRequest>,
+    user_collection: &State<Collection<User>>,
+    auth_header: AuthHeader<'_>
+) -> Result<Status, (Status, Json<ErrorResponse>)> {
+    // Verify the authentication token
+    let token = auth_header.0.trim_start_matches("Bearer ");
+    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+    
+    match verify_token(token, &jwt_secret) {
+        Ok(claims) => {
+            // Make sure the user is deleting their own account or is an admin
+            if claims.sub != user_id && !claims.is_admin {
+                return Err((Status::Forbidden, Json(ErrorResponse { message: "Unauthorized to delete this user's profile".to_string() })));
+            }
+            
+            // Fetch the user from the database
+            let user_result = user_collection.find_one(doc! { "_id": user_id }).await;
+            
+            match user_result {
+                Ok(Some(user)) => {
+                    // Verify the password
+                    match bcrypt::verify(&delete_request.password, &user.password) {
+                        Ok(true) => {
+                            // Delete the profile picture from Cloudinary if it exists
+                            if !user.profile_picture_public_id.is_empty() {
+                                if let Err(_) = delete_image_from_cloudinary(&user.profile_picture_public_id).await {
+                                    eprintln!("Failed to delete profile picture from Cloudinary during account deletion");
+                                    // Continue with account deletion even if image deletion fails
+                                }
+                            }
+                            
+                            // Delete the user from the database
+                            let delete_result = user_collection.delete_one(doc! { "_id": user_id }).await;
+                            
+                            match delete_result {
+                                Ok(_) => Ok(Status::Ok),
+                                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to delete profile".to_string() }))),
+                            }
+                        },
+                        Ok(false) => {
+                            Err((Status::Unauthorized, Json(ErrorResponse { message: "Password is incorrect".to_string() })))
+                        },
+                        Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Password verification failed".to_string() }))),
+                    }
+                },
+                Ok(None) => Err((Status::NotFound, Json(ErrorResponse { message: "User not found".to_string() }))),
+                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Database error".to_string() }))),
+            }
+        },
+        Err(_) => Err((Status::Unauthorized, Json(ErrorResponse { message: "Invalid authentication token".to_string() }))),
     }
 }

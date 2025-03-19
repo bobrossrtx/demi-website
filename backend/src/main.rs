@@ -6,30 +6,32 @@ extern crate rocket;
 ////////////////////////////////////////////////////////////
 pub mod doc_filters;
 mod middleware;
-
-use auth::auth::{delete_profile_picture, edit_profile, generate_reset_token, get_profile, reset_password, update_profile_picture, verify_admin};
-
 mod models;
 mod auth;
 mod utils;
 
 extern crate serde;
 
-use std;
+use std::env;
 use std::path::{Path, PathBuf};
 
+use dotenv::dotenv;
+use mongodb::Client;
+
+// Rocket
+use rocket::config::Config;
+use rocket::data::{ByteUnit, Limits};
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::fs::NamedFile;
 use rocket::http::Header;
 use rocket::{Request, Response};
-use dotenv::dotenv;
+
+// Routes
+use auth::auth_routes;
 use auth::admin::admin_dashboard;
-use std::env;
+
+// Models
 use crate::models::user::User;
-use mongodb::Client;
-use crate::auth::auth::{register, login};
-use rocket::data::{ByteUnit, Limits};
-use rocket::config::Config;
 
 ////////////////////////////////////////////////////////////
 /// CORS CONFIGURATION /////////////////////////////////////
@@ -145,7 +147,7 @@ async fn rocket() -> _ {
         .attach(CORS)
         .manage(user_collection)
         .manage(jwt_secret)
-        .mount("/api/auth", routes![register, login, verify_admin, generate_reset_token, reset_password, get_profile, edit_profile, update_profile_picture, delete_profile_picture])
+        .mount("/api/auth", auth_routes())
         .mount("/api/admin", routes![admin_dashboard])
         .mount("/api", routes![getdocs, docpages])
         .mount("/static", routes![files, downloads, images])
