@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import emailjs from 'emailjs-com';
 import PasswordStrengthBar, { calculatePasswordStrength } from '../../Components/PasswordStrengthBar/PasswordStrengthBar';
 import './Auth.scss';
 
@@ -75,6 +76,7 @@ const Register: React.FC = () => {
     }
 
     try {
+      // Register the user and get the verification token
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -87,35 +89,33 @@ const Register: React.FC = () => {
           bio: "No Bio Available",
         })
       });
-  
-      // Check if the response is JSON or plain text
-      const contentType = response.headers.get('content-type');
-  
-      let errorMessage = 'Registration failed';
-  
-      if (contentType && contentType.includes('application/json')) {
-        // Handle JSON response
+
+      if (!response.ok) {
         const data = await response.json();
-    
-        if (!response.ok) {
-          errorMessage = data.message || errorMessage;
-          throw new Error(errorMessage);
-        }
-    
-        // Success case - JSON response
-        navigate('/login?message=Registration successful! Please log in.');
-      } else {
-        // Handle text response
-        const textData = await response.text();
-    
-        if (!response.ok) {
-          errorMessage = textData || errorMessage;
-          throw new Error(errorMessage);
-        }
-    
-        // Success case - text response
-        navigate('/login?message=Registration successful! Please log in.');
+        throw new Error(data.message || 'Registration failed');
       }
+
+      const { token } = await response.json();
+
+      // Send the verification email
+      const templateParams = {
+        subject: 'Verify Your Account',
+        name: userData.username,
+        to_email: userData.email,
+        first_line: `Dear ${userData.username},`,
+        second_line: 'Thank you for registering. Please verify your account by clicking the link below:',
+        last_line: 'Best regards, Demi Team',
+        verification_link: `${window.location.origin}/verify-account?token=${token}`,
+      };
+
+      await emailjs.send(
+        process.env.REACT_APP_EMAILJS_SERVICE_ID!,
+        'template_rzeeiid',
+        templateParams,
+        process.env.REACT_APP_EMAILJS_USER_ID!
+      );
+
+      navigate('/login?message=Registration successful! Please check your email to verify your account.&status=success');
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {

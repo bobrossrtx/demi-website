@@ -147,6 +147,7 @@ async fn rocket() -> _ {
         .attach(CORS)
         .manage(user_collection)
         .manage(jwt_secret)
+        .attach(auth::attach_rate_limiter())
         .mount("/api/auth", auth_routes())
         .mount("/api/admin", routes![admin_dashboard])
         .mount("/api", routes![getdocs, docpages])

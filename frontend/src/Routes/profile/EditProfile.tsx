@@ -233,7 +233,7 @@ const EditProfile: React.FC = () => {
             const userId = localStorage.getItem('user_id');
 
             // Delete the old profile picture
-            if (profile.profile_picture_public_id) {
+            if (profile.profile_picture_public_id !== '' && profile.profile_picture_public_id !== ".tmpOhIOAf.jpg") {
                 const response = await fetch(`/api/auth/profile/${userId}/profile_picture`, {
                     method: 'DELETE',
                     headers: {

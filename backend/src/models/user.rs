@@ -11,7 +11,7 @@ use crate::utils::cloudinary::upload_image_to_cloudinary_from_url;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    #[serde(rename = "_id")]
+    #[serde(rename = "id")]
     pub id: String,
     pub username: String,
     pub email: String,
@@ -26,11 +26,18 @@ pub struct User {
     pub profile_picture_public_id: String, // Add public ID for the profile picture
     #[serde(default = "default_email_private")]
     pub email_private: bool, // Changed to default to true
+    #[serde(default = "default_verified")]
+    pub verified: bool, // Add verified field to track account verification status
 }
 
 // Add a function to provide the default value
 fn default_email_private() -> bool {
     true
+}
+
+// Add a function to provide the default value for verified
+fn default_verified() -> bool {
+    false
 }
 
 #[derive(Debug, Deserialize)]
@@ -53,6 +60,9 @@ pub struct LoginResponse {
     pub profile_picture: String,
     pub profile_picture_public_id: String, // Add public ID for the profile picture
     pub email_private: bool, // Include email privacy setting
+    pub verified: bool, // Include verification status
+    pub verified_at: Option<String>, // Include verification timestamp
+    // pub verification_token: Option<String>, // Include verification token
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -83,7 +93,7 @@ impl User {
     pub async fn register(
         registration_request: Json<RegistrationRequest>,
         db: &Collection<User>,
-    ) -> Result<Status, (Status, String)> {
+    ) -> Result<User, (Status, String)> { // Change return type to Result<User, (Status, String)>
         // Check if username already exists
         match db.find_one(doc! { "username": &registration_request.username }).await {
             Ok(Some(_)) => {
@@ -99,11 +109,11 @@ impl User {
                         return Err((Status::InternalServerError, "Failed to hash password".to_string()));
                     }
                 };
-
+    
                 // Upload default profile picture to Cloudinary
                 println!("Uploading default profile picture to Cloudinary...");
                 let pub_id;
-
+    
                 let profile_picture_url = match upload_image_to_cloudinary_from_url("http://127.0.0.1:8000/static/images/default-avatar.jpg").await {
                     Ok((url, public_id)) => {
                         println!("Profile picture uploaded successfully: {}", url);
@@ -115,7 +125,7 @@ impl User {
                         return Err((Status::InternalServerError, "Failed to upload profile picture".to_string()));
                     }
                 };
-
+    
                 let new_user = User {
                     id: bson::oid::ObjectId::new().to_hex(),
                     username: registration_request.username.clone(),
@@ -129,10 +139,11 @@ impl User {
                     profile_picture: profile_picture_url, // Set profile picture URL
                     profile_picture_public_id: pub_id, // Set default public ID
                     email_private: true, // Explicitly set to true for new registrations
+                    verified: false, // Default to false for new registrations
                 };
-
-                match db.insert_one(new_user).await {
-                    Ok(_) => Ok(Status::Created),
+    
+                match db.insert_one(&new_user).await {
+                    Ok(_) => Ok(new_user), // Return the new_user object
                     Err(err) => {
                         eprintln!("MongoDB insertion error: {:?}", err);
                         Err((Status::InternalServerError, format!("Database error: {:?}", err)))
@@ -163,6 +174,11 @@ impl User {
             is_admin: stored_user.is_admin,
             exp: (chrono::Utc::now() + chrono::Duration::hours(24)).timestamp() as usize,
         };
+
+        // Check if the user is verified
+        if !stored_user.verified {
+            return Err((Status::Forbidden, "User account is not verified".to_string()));
+        }
     
         let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_secret.as_ref()))
             .map_err(|_| (Status::InternalServerError, "Token creation error".to_string()))?;
@@ -180,6 +196,8 @@ impl User {
             profile_picture: stored_user.profile_picture,
             profile_picture_public_id: stored_user.profile_picture_public_id,
             email_private: stored_user.email_private, // Include email privacy setting
+            verified: stored_user.verified, // Include verification status
+            verified_at: None, // Include verification timestamp
         })
     }
 
@@ -217,7 +235,7 @@ impl User {
         let hashed_password = hash(&reset_data.new_password, DEFAULT_COST)
             .map_err(|_| (Status::InternalServerError, "Password hashing error".to_string()))?;
     
-        let filter = doc! { "_id": bson::oid::ObjectId::parse_str(&claims.sub).unwrap() };
+        let filter = doc! { "id": bson::oid::ObjectId::parse_str(&claims.sub).unwrap() };
         let update = doc! { "$set": { "password": hashed_password } };
     
         db.update_one(filter, update).await

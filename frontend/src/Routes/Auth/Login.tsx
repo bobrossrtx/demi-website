@@ -36,7 +36,14 @@ const Login: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Invalid credentials');
+        // Handle different error statuses
+        if (response.status === 401) {
+          throw new Error('Invalid username or password');
+        } else if (response.status === 403) {
+          throw new Error('Account not verified');
+        } else if (response.status === 500) {
+          throw new Error('Server error, please try again later');
+        }
       }
 
       const data = await response.json();
@@ -90,6 +97,19 @@ const Login: React.FC = () => {
               required
             />
           </div>
+
+            {/* show the ?message= and ?status= */}
+            {(window.location.search.includes('message=') && window.location.search.includes('status=')) && (
+            <div
+              className={`auth-message ${
+              new URLSearchParams(window.location.search).get('status') === 'error'
+                ? 'error'
+                : 'success'
+              }`}
+            >
+              {new URLSearchParams(window.location.search).get('message')}
+            </div>
+            )}
           
           <button 
             type="submit" 

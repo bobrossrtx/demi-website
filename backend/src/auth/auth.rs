@@ -2,15 +2,20 @@ use rocket::serde::json::Json;
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
 use rocket::State;
-use mongodb::Collection;
+use mongodb::{bson, Collection};
 use crate::models::user::{LoginResponse, User, LoginRequest, PasswordResetRequest, RegistrationRequest};
 use mongodb::bson::doc;
 use crate::auth::jwt::verify_token; // Make sure this import exists
+
+pub const SECURE_COST: u32 = 12; // Set a secure cost value for bcrypt
 use log::info;
 use serde::{Deserialize, Serialize};
 use rocket::fs::TempFile;
 use rocket::form::Form;
 use crate::utils::cloudinary::{delete_image_from_cloudinary, upload_image_to_cloudinary_from_file};
+use jsonwebtoken::{encode, Header, EncodingKey};
+use crate::auth::jwt::Claims;
+use crate::middleware::rate_limiter::RateLimiter;
 
 #[derive(Deserialize)]
 pub struct EmailRequest {
@@ -61,23 +66,74 @@ pub struct DeleteProfileRequest {
     password: String,
 }
 
+
 #[post("/register", data = "<user>")]
-pub async fn register(user: Json<RegistrationRequest>, user_collection: &State<Collection<User>>) -> Result<Status, (Status, String)> {
-    User::register(user, user_collection).await
+pub async fn register(
+    user: Json<RegistrationRequest>,
+    user_collection: &State<Collection<User>>,
+    jwt_secret: &State<String>,
+    rate_limiter: &RateLimiter,
+) -> Result<Json<TokenResponse>, (Status, String)> {
+    // Rate limiter check
+    let client_id = "register"; // Use a unique identifier for this route
+    if !rate_limiter.check_rate_limit(client_id) {
+        return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
+    }
+
+    // Generate a unique ID for the user
+    let user_id = bson::oid::ObjectId::new().to_hex();
+
+    // Create the new user object
+    let new_user = User {
+        id: user_id.clone(), // Use the same ID for the database and the token
+        username: user.username.clone(),
+        email: user.email.clone(),
+        password: bcrypt::hash(&user.password, SECURE_COST).map_err(|_| (Status::InternalServerError, "Failed to hash password".to_string()))?,
+        is_admin: false,
+        created_at: bson::DateTime::now().to_string(),
+        updated_at: bson::DateTime::now().to_string(),
+        bio: Some("No Bio Available".to_string()),
+        name: None,
+        profile_picture: "https://res.cloudinary.com/demi-website/image/upload/v1742299570/.tmpOhIOAf.jpg".to_string(),
+        profile_picture_public_id: ".tmpOhIOAf.jpg".to_string(),
+        email_private: true,
+        verified: false,
+    };
+
+    // Insert the user into the database
+    user_collection.insert_one(&new_user).await.map_err(|_| (Status::InternalServerError, "Failed to save user".to_string()))?;
+
+    // Generate a verification token
+    let claims = Claims {
+        sub: new_user.id.clone(),
+        is_admin: false,
+        exp: (chrono::Utc::now() + chrono::Duration::minutes(30)).timestamp() as usize, // Set expiry to 30 minutes from now
+    };
+    let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_secret.inner().as_ref()))
+        .map_err(|_| (Status::InternalServerError, "Failed to generate token".to_string()))?;
+
+    Ok(Json(TokenResponse { token }))
 }
 
 #[post("/login", data = "<login_request>")]
 pub async fn login(
     login_request: Json<LoginRequest>,
     user_collection: &State<Collection<User>>,
-    jwt_secret: &State<String>
+    jwt_secret: &State<String>,
+    rate_limiter: &RateLimiter,
 ) -> Result<Json<LoginResponse>, (Status, String)> {
+    // Rate limiter check
+    let client_id = "login"; // Use a unique identifier for this route
+    if !rate_limiter.check_rate_limit(client_id) {
+        return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
+    }
+
     match User::login(login_request, user_collection, jwt_secret.inner()).await {
         Ok(user) => {
             let response = LoginResponse {
+                id: user.id.to_string(), // Convert ObjectId to hex string
                 token: user.token,
                 is_admin: user.is_admin,
-                id: user.id.to_string(), // Convert ObjectId to hex string
                 email: user.email,
                 name: user.name,
                 bio: user.bio,
@@ -87,6 +143,8 @@ pub async fn login(
                 profile_picture: user.profile_picture,
                 profile_picture_public_id: user.profile_picture_public_id,
                 email_private: user.email_private,
+                verified: user.verified,
+                verified_at: user.verified_at,
             };
             Ok(Json(response))
         }
@@ -98,8 +156,15 @@ pub async fn login(
 pub async fn generate_reset_token(
     email_request: Json<EmailRequest>,
     user_collection: &State<Collection<User>>,
-    jwt_secret: &State<String>
+    jwt_secret: &State<String>,
+    rate_limiter: &RateLimiter,
 ) -> Result<Json<TokenResponse>, (Status, String)> {
+    // Rate limiter check
+    let client_id = "generate-reset-token"; // Use a unique identifier for this route
+    if !rate_limiter.check_rate_limit(client_id) {
+        return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
+    }
+
     match User::generate_password_reset_token(email_request.email.clone(), user_collection, jwt_secret.inner()).await {
         Ok(token) => Ok(Json(TokenResponse { token })),
         Err((status, e)) => Err((status, e))
@@ -110,8 +175,15 @@ pub async fn generate_reset_token(
 pub async fn reset_password(
     reset_data: Json<PasswordResetRequest>,
     user_collection: &State<Collection<User>>,
-    jwt_secret: &State<String>
+    jwt_secret: &State<String>,
+    rate_limiter: &RateLimiter,
 ) -> Result<Status, (Status, String)> {
+    // Rate limiter check
+    let client_id = "reset-password"; // Use a unique identifier for this route
+    if !rate_limiter.check_rate_limit(client_id) {
+        return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
+    }
+
     match User::reset_password(reset_data, user_collection, jwt_secret.inner()).await {
         Ok(_) => Ok(Status::Ok),
         Err((_, message)) => Err((Status::BadRequest, message))
@@ -154,7 +226,7 @@ pub async fn verify_admin(jwt_secret: &State<String>, auth_header: AuthHeader<'_
 #[get("/profile/<user_id_or_username>")]
 pub async fn get_profile(user_id_or_username: &str, user_collection: &State<Collection<User>>) -> Result<Json<UserProfile>, (Status, String)> {
     let filter = if user_id_or_username.starts_with("id:") {
-        doc! { "_id": &user_id_or_username[3..] }
+        doc! { "id": &user_id_or_username[3..] }
     } else {
         doc! { "username": user_id_or_username }
     };
@@ -204,20 +276,29 @@ pub async fn edit_profile(
         }
     };
 
-    match user_collection.update_one(doc! { "_id": user_id }, update_doc).await {
+    match user_collection.update_one(doc! { "id": user_id }, update_doc).await {
         Ok(_) => {
-            let updated_user = user_collection.find_one(doc! { "_id": user_id }).await.unwrap().unwrap();
-            let updated_profile = UserProfile {
-                name: updated_user.username,
-                email: updated_user.email,
-                email_private: updated_user.email_private,
-                bio: updated_user.bio.unwrap_or_else(|| "No bio available".to_string()),
-                profile_picture: if updated_user.profile_picture.is_empty() { "No profile picture available".to_string() } else { updated_user.profile_picture },
-                profile_picture_public_id: updated_user.profile_picture_public_id,
-                created_at: updated_user.created_at,
-                updated_at: updated_user.updated_at
-            };
-            Ok(Json(updated_profile))
+            match user_collection.find_one(doc! { "id": user_id }).await {
+                Ok(Some(updated_user)) => {
+                    let updated_profile = UserProfile {
+                        name: updated_user.username,
+                        email: updated_user.email,
+                        email_private: updated_user.email_private,
+                        bio: updated_user.bio.unwrap_or_else(|| "No bio available".to_string()),
+                        profile_picture: if updated_user.profile_picture.is_empty() {
+                            "https://res.cloudinary.com/demi-website/image/upload/v1742299570/.tmpOhIOAf.jpg".to_string()
+                        } else {
+                            updated_user.profile_picture
+                        },
+                        profile_picture_public_id: updated_user.profile_picture_public_id,
+                        created_at: updated_user.created_at,
+                        updated_at: updated_user.updated_at,
+                    };
+                    Ok(Json(updated_profile))
+                }
+                Ok(None) => Err((Status::NotFound, "User not found".to_string())),
+                Err(_) => Err((Status::InternalServerError, "Failed to retrieve updated user".to_string())),
+            }
         }
         Err(_) => Err((Status::InternalServerError, "Failed to update profile".to_string())),
     }
@@ -240,7 +321,7 @@ pub async fn update_profile_picture(
         Ok((url, public_id)) => {
             // Update the user's profile picture in the database
             let update_result = user_collection.update_one(
-                doc! { "_id": user_id },
+                doc! { "id": user_id },
                 doc! { "$set": { "profile_picture": url.clone(), "profile_picture_public_id": public_id.clone() } }
             ).await;
 
@@ -253,16 +334,21 @@ pub async fn update_profile_picture(
     }
 }
 
-#[allow(unused)] // This route is unused (probably wont get used, but its there if needed)
+
 #[delete("/profile/<user_id>/profile_picture")]
 pub async fn delete_profile_picture(
     user_id: &str,
     user_collection: &State<Collection<User>>,
 ) -> Result<Status, (Status, String)> {
     // Fetch the user's current profile picture URL
-    let user = user_collection.find_one(doc! { "_id": user_id }).await.map_err(|_| (Status::InternalServerError, "Database error".to_string()))?;
+    let user = user_collection.find_one(doc! { "id": user_id }).await.map_err(|_| (Status::InternalServerError, "Database error".to_string()))?;
     
-    if let Some(user) = user {
+    if let Some(user) = user {       
+        // Confirm that the profile picture isn't default
+        if user.profile_picture == "https://res.cloudinary.com/demi-website/image/upload/v1742299570/.tmpOhIOAf.jpg" {
+            return Err((Status::BadRequest, "Cannot delete default profile picture".to_string()));
+        }
+
         // Delete the image from Cloudinary
         if let Err(_) = delete_image_from_cloudinary(&user.profile_picture_public_id).await {
             eprintln!("Failed to delete image from Cloudinary");
@@ -271,7 +357,7 @@ pub async fn delete_profile_picture(
 
         // Update the user's profile picture URL in the database
         let update_result = user_collection.update_one(
-            doc! { "_id": user_id },
+            doc! { "id": user_id },
             doc! { "$set": { "profile_picture": "", "profile_picture_public_id": "" } }
         ).await;
 
@@ -303,7 +389,7 @@ pub async fn change_password(
             }
             
             // Fetch the user from the database
-            let user_result = user_collection.find_one(doc! { "_id": user_id }).await;
+            let user_result = user_collection.find_one(doc! { "id": user_id }).await;
             
             match user_result {
                 Ok(Some(user)) => {
@@ -311,14 +397,14 @@ pub async fn change_password(
                     match bcrypt::verify(&change_request.current_password, &user.password) {
                         Ok(true) => {
                             // Hash the new password
-                            let hashed_password = match bcrypt::hash(&change_request.new_password, bcrypt::DEFAULT_COST) {
+                            let hashed_password = match bcrypt::hash(&change_request.new_password, SECURE_COST) {
                                 Ok(hashed) => hashed,
                                 Err(_) => return Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to hash new password".to_string() }))),
                             };
                             
                             // Update the password in the database
                             let update_result = user_collection.update_one(
-                                doc! { "_id": user_id },
+                                doc! { "id": user_id },
                                 doc! { "$set": { "password": hashed_password } }
                             ).await;
                             
@@ -360,7 +446,7 @@ pub async fn delete_profile(
             }
             
             // Fetch the user from the database
-            let user_result = user_collection.find_one(doc! { "_id": user_id }).await;
+            let user_result = user_collection.find_one(doc! { "id": user_id }).await;
             
             match user_result {
                 Ok(Some(user)) => {
@@ -376,7 +462,7 @@ pub async fn delete_profile(
                             }
                             
                             // Delete the user from the database
-                            let delete_result = user_collection.delete_one(doc! { "_id": user_id }).await;
+                            let delete_result = user_collection.delete_one(doc! { "id": user_id }).await;
                             
                             match delete_result {
                                 Ok(_) => Ok(Status::Ok),
@@ -394,5 +480,49 @@ pub async fn delete_profile(
             }
         },
         Err(_) => Err((Status::Unauthorized, Json(ErrorResponse { message: "Invalid authentication token".to_string() }))),
+    }
+}
+
+#[get("/verify-account?<token>")]
+pub async fn verify_account(
+    token: &str,
+    user_collection: &State<Collection<User>>,
+    jwt_secret: &State<String>,
+) -> Result<Status, (Status, String)> {
+    // Decode and verify the token
+    match verify_token(token, jwt_secret.inner()) {
+        Ok(claims) => {
+            // Log the sub claim for debugging
+            println!("Token sub claim: {}", claims.sub);
+
+            // Query the database using the `id` field
+            println!("Querying database with id: {}", claims.sub);
+            match user_collection
+                .update_one(
+                    doc! { "id": &claims.sub },
+                    doc! { "$set": { "verified": true, "verified_at": chrono::Utc::now().to_string() } }
+                )
+                .await
+            {
+                Ok(update_result) => {
+                    println!("Update result: {:?}", update_result);
+                    if update_result.matched_count == 0 {
+                        println!("No user found with id: {}", claims.sub);
+                        Err((Status::NotFound, "User not found".to_string()))
+                    } else {
+                        println!("User with id: {} successfully verified", claims.sub);
+                        Ok(Status::Ok)
+                    }
+                }
+                Err(err) => {
+                    eprintln!("Database update error: {:?}", err);
+                    Err((Status::InternalServerError, "Failed to verify account".to_string()))
+                }
+            }
+        }
+        Err(err) => {
+            eprintln!("Token verification error: {:?}", err);
+            Err((Status::Unauthorized, "Invalid or expired token".to_string()))
+        }
     }
 }

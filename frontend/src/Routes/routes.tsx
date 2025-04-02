@@ -26,6 +26,7 @@ import Logout from "./Auth/Logout";
 import ForgotPassword from "./Auth/ForgotPassword";
 import Profile from "./profile/Profile";
 import EditProfile from "./profile/EditProfile";
+import VerifyAccount from "./Auth/VerifyAccount";
 
 const router = createBrowserRouter([
     {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
             {   // This is the route for the register page
                 path: "/register",
                 element: <Register />
+            },
+            {
+                path: "/verify-account",
+                element: <VerifyAccount />
             },
             {   // This is the route for the password reset
                 path: "/forgot-password",
