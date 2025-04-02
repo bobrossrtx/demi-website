@@ -15,6 +15,20 @@ export default class Index extends Component<Props, State> {
     return (
       <div className='container'>
         <h1>Demi</h1>
+        <h2>Welcome To Demi</h2>
+        <div className="dev-note">
+          <p>
+            <i className="fas fa-exclamation-triangle"></i>
+            <strong> Demi is currently in development and not ready for production use.</strong>
+            <br />
+            <div className="update-note">
+              <p>
+                New profile feature is being worked on and will be available soon.
+                This will allow you to create a profile and access the Demi community forum.
+              </p>
+            </div>
+          </p>
+        </div>
         <hr />
         <section className="intro-container">
           <h2>What is it?</h2>
