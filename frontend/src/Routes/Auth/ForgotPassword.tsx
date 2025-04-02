@@ -35,14 +35,18 @@ const ForgotPassword: React.FC = () => {
 
             const { token: generated_token } = await response.json();
 
+            const geoResponse = await fetch('https://ipapi.co/json/');
+            const geoData = await geoResponse.json();
+
             const templateParams = {
                 subject: 'Password Reset Request',
                 name: email,
                 to_email: email,
                 first_line: 'Dear User,',
-                second_line: 'We received a request to reset your password. Please click the link below to reset your password.',
-                last_line: 'Best regards, Demi Team',
+                second_line: `We received a request to reset your password from (${geoData.ip}) ${geoData.city}, ${geoData.region}, ${geoData.country_name}. If this was you, please click the link below to reset your password.`,
+                third_line: "If you did not request a password reset, please ignore this email, and your password will remain unchanged.",
                 reset_link: `${window.location.origin}/forgot-password?token=${generated_token}`,
+                last_line: 'Best regards, Demi Team',
             };
 
             await emailjs.send(
