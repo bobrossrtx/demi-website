@@ -1,9 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import emailjs from 'emailjs-com';
 import './Auth.scss';
+import PasswordStrengthBar, { calculatePasswordStrength } from '../../Components/PasswordStrengthBar/PasswordStrengthBar';
 
 const ForgotPassword: React.FC = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAuthentication = async () => {
+            try {
+                const response = await fetch('/api/auth/is_authenticated', {
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (data.authenticated) {
+                    navigate('/');
+                }
+            } catch (error) {
+                console.error('Error checking authentication:', error);
+            }
+        };
+
+        checkAuthentication();
+    }, [navigate]);
+
     const [email, setEmail] = useState('');
     const [new_password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -128,6 +149,7 @@ const ForgotPassword: React.FC = () => {
                                     required
                                 />
                             </div>
+                            <PasswordStrengthBar strength={calculatePasswordStrength(new_password)} />
                             <div className="form-group">
                                 <label>Confirm Password</label>
                                 <input

@@ -26,7 +26,7 @@
   "scripts": {
     "start": "BROWSER=none HOST=0.0.0.0 react-scripts start",
     "build": "react-scripts build",
-    "watch-build": "nodemon --watch src --ext js,jsx,ts,tsx,scss,css,json --exec 'npm run build'",
+    "watch": "nodemon --watch src --ext js,jsx,ts,tsx,scss,css,json --exec 'npm run build'",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -5,7 +5,27 @@ import './Auth.scss';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+
+  React.useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch('/api/auth/is_authenticated', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (data.authenticated) {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+      }
+    };
+
+    checkAuthentication();
+  }, [navigate]);
+
+  const { login, isAuthenticated } = useAuth();
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
@@ -23,6 +43,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Attempting to log in with credentials:", credentials);
     setLoading(true);
     setError(null);
 
@@ -35,29 +56,19 @@ const Login: React.FC = () => {
         body: JSON.stringify(credentials),
       });
 
-      if (!response.ok) {
-        // Handle different error statuses
-        if (response.status === 401) {
-          throw new Error('Invalid username or password');
-        } else if (response.status === 403) {
-          throw new Error('Account not verified');
-        } else if (response.status === 500) {
-          throw new Error('Server error, please try again later');
-        }
-      }
-
-      const data = await response.json();
-      console.log(data)
-      login(data.token, data.is_admin, data.id);
-
-      // Check if user is admin
-      if (data.is_admin) {
-        navigate('/admin/dashboard');
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login successful:", data);
+        login(data.token, data.isAdmin);
+        navigate('/profile');
       } else {
-        navigate('/');
+        const errorData = await response.json();
+        console.error("Login failed:", errorData);
+        setError(errorData.message || 'Login failed');
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+    } catch (error) {
+      console.error("Error during login:", error);
+      setError('An unexpected error occurred');
     } finally {
       setLoading(false);
     }

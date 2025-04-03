@@ -3,8 +3,29 @@ import { useNavigate, Link } from 'react-router-dom';
 import emailjs from 'emailjs-com';
 import PasswordStrengthBar, { calculatePasswordStrength } from '../../Components/PasswordStrengthBar/PasswordStrengthBar';
 import './Auth.scss';
+import { useAuth } from '../../context/AuthContext';
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch('/api/auth/is_authenticated', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (data.authenticated) {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+      }
+    };
+
+    checkAuthentication();
+  }, [navigate]);
+
   const [userData, setUserData] = useState({
     username: '',
     email: '',
@@ -13,7 +34,6 @@ const Register: React.FC = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -90,9 +110,15 @@ const Register: React.FC = () => {
         })
       });
 
+      // Handle different error statuses
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Registration failed');
+        if (response.status === 409) {
+          throw new Error('Username or email already exists');
+        } else if (response.status === 500) {
+          throw new Error('Server error, please try again later');
+        } else {
+          throw new Error('Registration failed');
+        }
       }
 
       const { token } = await response.json();

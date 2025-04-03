@@ -62,6 +62,7 @@ pub struct LoginResponse {
     pub email_private: bool, // Include email privacy setting
     pub verified: bool, // Include verification status
     pub verified_at: Option<String>, // Include verification timestamp
+    pub refresh_token: Option<String>, // Include refresh token
     // pub verification_token: Option<String>, // Include verification token
 }
 
@@ -91,9 +92,24 @@ pub struct RegistrationRequest {
 
 impl User {
     pub async fn register(
-        registration_request: Json<RegistrationRequest>,
+        registration_request: RegistrationRequest,
         db: &Collection<User>,
     ) -> Result<User, (Status, String)> { // Change return type to Result<User, (Status, String)>
+        // Check if email already exists
+        match db.find_one(doc! { "email": &registration_request.email }).await {
+            Ok(Some(_)) => {
+                // Email already exists
+                return Err((Status::Conflict, "Email already exists".to_string()));
+            }
+            Ok(None) => {
+                // Email is available, proceed with username check
+            }
+            Err(err) => {
+                eprintln!("MongoDB find error: {:?}", err);
+                return Err((Status::InternalServerError, format!("Database error: {:?}", err)));
+            }
+        }
+
         // Check if username already exists
         match db.find_one(doc! { "username": &registration_request.username }).await {
             Ok(Some(_)) => {
@@ -109,11 +125,11 @@ impl User {
                         return Err((Status::InternalServerError, "Failed to hash password".to_string()));
                     }
                 };
-    
+
                 // Upload default profile picture to Cloudinary
                 println!("Uploading default profile picture to Cloudinary...");
                 let pub_id;
-    
+
                 let profile_picture_url = match upload_image_to_cloudinary_from_url("http://127.0.0.1:8000/static/images/default-avatar.jpg").await {
                     Ok((url, public_id)) => {
                         println!("Profile picture uploaded successfully: {}", url);
@@ -125,7 +141,7 @@ impl User {
                         return Err((Status::InternalServerError, "Failed to upload profile picture".to_string()));
                     }
                 };
-    
+
                 let new_user = User {
                     id: bson::oid::ObjectId::new().to_hex(),
                     username: registration_request.username.clone(),
@@ -141,7 +157,7 @@ impl User {
                     email_private: true, // Explicitly set to true for new registrations
                     verified: false, // Default to false for new registrations
                 };
-    
+
                 match db.insert_one(&new_user).await {
                     Ok(_) => Ok(new_user), // Return the new_user object
                     Err(err) => {
@@ -198,6 +214,7 @@ impl User {
             email_private: stored_user.email_private, // Include email privacy setting
             verified: stored_user.verified, // Include verification status
             verified_at: None, // Include verification timestamp
+            refresh_token: None, // Include refresh token
         })
     }
 
@@ -228,10 +245,18 @@ impl User {
         reset_data: Json<PasswordResetRequest>,
         db: &Collection<User>,
         jwt_secret: &str,
+        cookies: &rocket::http::CookieJar<'_>,
     ) -> Result<Status, (Status, String)> {
-        let token = reset_data.token.trim_start_matches("Bearer ");
-        let claims = verify_token(token, jwt_secret).map_err(|_| (Status::Unauthorized, "Invalid token".to_string()))?;
-    
+        let refresh_token = match cookies.get("refresh_token") {
+            Some(cookie) => cookie.value().to_string(),
+            None => return Err((Status::Unauthorized, "Refresh token not found".to_string())),
+        };
+
+        let claims = match verify_token(&refresh_token, jwt_secret) {
+            Ok(claims) => claims,
+            Err(_) => return Err((Status::Unauthorized, "Invalid or expired refresh token".to_string())),
+        };
+
         let hashed_password = hash(&reset_data.new_password, DEFAULT_COST)
             .map_err(|_| (Status::InternalServerError, "Password hashing error".to_string()))?;
     

@@ -13,9 +13,9 @@ impl<'r> FromRequest<'r> for AdminUser {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let jwt_secret = request.rocket().state::<String>().unwrap();
-        let auth_header = request.headers().get_one("Authorization").and_then(|header| header.strip_prefix("Bearer "));
+        let token = request.cookies().get("refresh_token").map(|cookie| cookie.value());
 
-        if let Some(token) = auth_header {
+        if let Some(token) = token {
             let token_data = decode::<Claims>(&token, &DecodingKey::from_secret(jwt_secret.as_ref()), &Validation::default()).ok();
             if let Some(data) = token_data {
                 if data.claims.is_admin {

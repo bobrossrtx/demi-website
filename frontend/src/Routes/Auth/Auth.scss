@@ -83,13 +83,13 @@ $shadow-color: rgba(0, 0, 0, 0.5);
       text-align: center;
 
       &.error {
-      background-color: rgba($error-color, 0.2);
-      color: $error-color;
+        background-color: rgba($error-color, 0.2);
+        color: $error-color;
       }
 
       &.success {
-      background-color: rgba($accent-color, 0.2);
-      color: $accent-color;
+        background-color: rgb(28 255 0 / 20%);
+        color: rgb(74 184 26);
       }
     }
     

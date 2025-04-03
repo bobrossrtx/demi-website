@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
-import "./Navbar.scss"
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import "./Navbar.scss";
 import Dropdown from './Dropdown';
 import SearchBar from './SearchBar';
-import logo from './images/demilang-logo.png'
+import logo from './images/demilang-logo.png';
 
 type Props = {}
 
 const Navbar = (props: Props) => {
   const [click, setClick] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-  }, [location]);
+  const handleLogout = () => {
+    logout();
+    closeMobileMenu();
+  };
 
   return (
     <>
@@ -49,7 +49,7 @@ const Navbar = (props: Props) => {
             </Link>
           </li>
           <SearchBar placeholder='🔎︎ Search Docs' />
-            {!isLoggedIn ? (
+            {!isAuthenticated ? (
             <>
               <li className='nav-item'>
               <Link to="/login" className='nav-links' onClick={closeMobileMenu}>
@@ -66,13 +66,13 @@ const Navbar = (props: Props) => {
             <>
               <li className='nav-item'>
               <Link to="/profile" className='nav-links' onClick={closeMobileMenu}>
-                Profile
+                {user?.username || "Profile"}
               </Link>
               </li>
               <li className='nav-item'>
-              <Link to="/logout" className='nav-links' onClick={closeMobileMenu}>
+                <Link to="/" className='nav-links' onClick={handleLogout}>
                 Log Out
-              </Link>
+                </Link>
               </li>
             </>
             )}

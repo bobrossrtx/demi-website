@@ -60,20 +60,19 @@ $accent-color: #ffc832;
         -webkit-backdrop-filter: blur(10px);
         width: 100%;
         max-width: 600px;
-        min-width: 250px;
+        min-width: 350px;
     }
 
-    h2 {
+    h3 {
         font-size: 2rem;
         color: #ffffff;
         margin-bottom: 0px;
         background-color: #28282814;
         border-radius: 10px 10px 0px 0px;
-        padding-bottom: 10px;
-        padding-top: 10px;
+        padding: 10px;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        width: 200px;
+        min-width: 200px;
     }
 
     p {

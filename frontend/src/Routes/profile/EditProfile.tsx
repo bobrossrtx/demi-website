@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './EditProfile.scss';
 import PasswordStrengthBar, { calculatePasswordStrength } from '../../Components/PasswordStrengthBar/PasswordStrengthBar';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface UserProfile {
-    name: string;
+    username: string;
     email: string;
     email_private: boolean;
     bio: string;
@@ -11,11 +13,14 @@ interface UserProfile {
     profile_picture_public_id: string;
     created_at: string | null;
     updated_at: string | null;
+    verified: boolean;
 }
 
 const EditProfile: React.FC = () => {
+    const navigate = useNavigate();
+
     const [profile, setProfile] = useState<UserProfile>({
-        name: '',
+        username: '',
         email: '',
         email_private: false,
         bio: '',
@@ -23,6 +28,7 @@ const EditProfile: React.FC = () => {
         profile_picture_public_id: '',
         created_at: '',
         updated_at: '',
+        verified: false,
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -45,32 +51,49 @@ const EditProfile: React.FC = () => {
     const [deleteError, setDeleteError] = useState('');
 
     useEffect(() => {
-        const fetchProfile = async () => {
+        const checkAuthAndFetchProfile = async () => {
+            setLoading(true);
+            setError('');
             try {
-                const userId = localStorage.getItem('user_id');
-                const response = await fetch(`/api/auth/profile/id:${userId}`, {
+                // 1. Check authentication status
+                const authResponse = await fetch('/api/auth/is_authenticated', {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    credentials: 'include',
+                });
+                const authData = await authResponse.json();
+
+                if (!authData.authenticated) {
+                    console.log("User not authenticated, redirecting to login.");
+                    navigate('/login');
+                    return; // Stop execution if not authenticated
+                }
+
+                // 2. If authenticated, fetch user data for editing
+                const response = await fetch('/api/auth/user-by-refresh-token', {
+                    method: 'POST',
+                    credentials: 'include',
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch profile');
+                    throw new Error('Failed to fetch user data for editing');
                 }
 
-                const data = await response.json();
-                setProfile(data);
-                setPreviewImage(data.profile_picture);
-                setLoading(false);
-            } catch (error) {
-                setError('Error fetching profile. Please try again.');
+                const userData = await response.json();
+                console.log("User data fetched successfully for editing:", userData);
+                setProfile(userData);
+                setPreviewImage(userData.profile_picture);
+
+            } catch (error: any) {
+                console.error('Error during auth check or profile fetch:', error);
+                setError(error.message || 'Error loading profile editor. Please try again.');
+                // Optionally navigate away or show a more specific error
+            } finally {
                 setLoading(false);
             }
         };
 
-        fetchProfile();
-    }, []);
+        checkAuthAndFetchProfile();
+    }, [navigate]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -97,62 +120,21 @@ const EditProfile: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setPasswordError('');
-
-        
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(profile.email)) {
-            setError('Invalid email format');
-            setLoading(false);
-            return;
-        }
-
-        // Check for password errors first
-        if (passwordData.previous_password || passwordData.new_password || passwordData.confirm_new_password) {
-            if (!passwordData.previous_password || !passwordData.new_password || !passwordData.confirm_new_password) {
-                setPasswordError('All password fields must be filled out');
-                return;
-            }
-
-            if (passwordData.new_password !== passwordData.confirm_new_password) {
-                setPasswordError('New passwords do not match');
-                return;
-            }
-
-            // Validate new password
-            const password = passwordData.new_password;
-            const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
-            const numberRegex = /[0-9]/;
-            const letterRegex = /[a-zA-Z]/;
-            const uppercaseRegex = /[A-Z]/;
-            const lowercaseRegex = /[a-z]/;
-
-            if (password.length < 8) {
-                setPasswordError('Password must be at least 8 characters long');
-                return;
-            }
-
-            if (!specialCharacterRegex.test(password)) {
-                setPasswordError('Password must contain at least 1 special character');
-                return;
-            }
-
-            if (!numberRegex.test(password) || !letterRegex.test(password)) {
-                setPasswordError('Password must contain both numbers and letters');
-                return;
-            }
-
-            if (!uppercaseRegex.test(password) || !lowercaseRegex.test(password)) {
-                setPasswordError('Password must contain both uppercase and lowercase letters');
-                return;
-            }
-        }
 
         try {
-            // First, update the profile information
-            const userId = localStorage.getItem('user_id');
-            const response = await fetch(`/api/auth/profile/${userId}`, {
+            const response = await fetch('/api/auth/user-by-refresh-token', {
+                method: 'POST',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+
+            const userData = await response.json();
+            const userId = userData.id;
+
+            const updateResponse = await fetch(`/api/auth/profile/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -160,52 +142,14 @@ const EditProfile: React.FC = () => {
                 body: JSON.stringify(profile),
             });
 
-            if (!response.ok) {
+            if (!updateResponse.ok) {
                 throw new Error('Failed to update profile');
             }
 
-            // Then, handle password change if all password fields are filled
-            if (passwordData.previous_password && passwordData.new_password && passwordData.confirm_new_password) {
-                const passwordResponse = await fetch(`/api/auth/change-password/${userId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({
-                        current_password: passwordData.previous_password,
-                        new_password: passwordData.new_password
-                    }),
-                });
-
-                if (!passwordResponse.ok) {
-                    const errorText = await passwordResponse.text();
-                    try {
-                        const errorData = JSON.parse(errorText);
-                        if (passwordResponse.status === 401) {
-                            setPasswordError(errorData.message || 'Current password is incorrect');
-                        } else {
-                            throw new Error(errorData.message || 'Failed to change password');
-                        }
-                    } catch {
-                        throw new Error('Failed to parse error response');
-                    }
-                    return;
-                }
-            }
-
-            // Redirect to profile page on success
             window.location.href = '/profile';
         } catch (error) {
-            if (error instanceof Error) {
-                if (error.message.includes('password')) {
-                    setPasswordError(error.message);
-                } else {
-                    setError('Error updating profile. Please try again.');
-                }
-            } else {
-                setError('An unexpected error occurred.');
-            }
+            setError('Error updating profile. Please try again.');
+            console.error('Error updating profile:', error);
         }
     };
 
@@ -298,26 +242,44 @@ const EditProfile: React.FC = () => {
         }
 
         try {
-            const userId = localStorage.getItem('user_id');
-            const response = await fetch(`/api/auth/profile/${userId}`, {
+            const response = await fetch('/api/auth/user-by-refresh-token', {
+                method: 'POST',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+
+            const userData = await response.json();
+            const userId = userData.id;
+
+            const deleteResponse = await fetch(`/api/auth/profile/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
                     password: deletePasswordData.password
                 }),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
+            if (!deleteResponse.ok) {
+                const errorData = await deleteResponse.json();
                 throw new Error(errorData.message || 'Failed to delete profile');
             }
 
-            // Clear local storage and redirect to home page
-            localStorage.removeItem('token');
-            localStorage.removeItem('user_id');
+            // Call logout function to clear the refresh token
+            const logoutResponse = await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+            });
+
+            // Check if logout was successful
+            if (!logoutResponse.ok) {
+                throw new Error('Failed to log out');
+            }
+
             window.location.href = '/';
         } catch (error) {
             if (error instanceof Error) {
@@ -431,12 +393,12 @@ const EditProfile: React.FC = () => {
                 <div className="edit-profile-details">
                     <div className="left">
                         <label className="profile-label">
-                            Name:
+                            Username:
                             <input
                                 className="profile-input"
                                 type="text"
-                                name="name"
-                                value={profile.name}
+                                name="username"
+                                value={profile.username}
                                 onChange={handleChange}
                             />
                         </label>

@@ -1,21 +1,24 @@
 use rocket::serde::json::Json;
+use rocket::http::{Cookie, CookieJar};
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
 use rocket::State;
-use mongodb::{bson, Collection};
+use mongodb::Collection;
 use crate::models::user::{LoginResponse, User, LoginRequest, PasswordResetRequest, RegistrationRequest};
-use mongodb::bson::doc;
-use crate::auth::jwt::verify_token; // Make sure this import exists
-
-pub const SECURE_COST: u32 = 12; // Set a secure cost value for bcrypt
+use mongodb::bson::doc; // Import the `doc` macro
+use crate::auth::jwt::{Claims, verify_token, validate_refresh_token};
+use crate::middleware::rate_limiter::RateLimiter;
+use crate::utils::cloudinary::{delete_image_from_cloudinary, upload_image_to_cloudinary_from_file};
+use jsonwebtoken::{encode, Header, EncodingKey};
 use log::info;
 use serde::{Deserialize, Serialize};
 use rocket::fs::TempFile;
 use rocket::form::Form;
-use crate::utils::cloudinary::{delete_image_from_cloudinary, upload_image_to_cloudinary_from_file};
-use jsonwebtoken::{encode, Header, EncodingKey};
-use crate::auth::jwt::Claims;
-use crate::middleware::rate_limiter::RateLimiter;
+use serde_json::Value;
+use rocket::serde::json::json;
+
+// Define the secure cost for bcrypt
+const SECURE_COST: u32 = 12;
 
 #[derive(Deserialize)]
 pub struct EmailRequest {
@@ -34,7 +37,7 @@ pub struct ErrorResponse {
 
 #[derive(Serialize, Deserialize)]
 pub struct UserProfile {
-    pub name: String,
+    pub username: String,
     pub email: String,
     pub email_private: bool,
     pub bio: String,
@@ -80,39 +83,22 @@ pub async fn register(
         return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
     }
 
-    // Generate a unique ID for the user
-    let user_id = bson::oid::ObjectId::new().to_hex();
+    match User::register(user.into_inner(), user_collection).await {
+        Ok(new_user) => {
+            let claims = Claims {
+                sub: new_user.id.clone(),
+                is_admin: new_user.is_admin,
+                exp: (chrono::Utc::now() + chrono::Duration::minutes(30)).timestamp() as usize,
+                token_type: "access".to_string(), // Set token type to "access"
+            };
 
-    // Create the new user object
-    let new_user = User {
-        id: user_id.clone(), // Use the same ID for the database and the token
-        username: user.username.clone(),
-        email: user.email.clone(),
-        password: bcrypt::hash(&user.password, SECURE_COST).map_err(|_| (Status::InternalServerError, "Failed to hash password".to_string()))?,
-        is_admin: false,
-        created_at: bson::DateTime::now().to_string(),
-        updated_at: bson::DateTime::now().to_string(),
-        bio: Some("No Bio Available".to_string()),
-        name: None,
-        profile_picture: "https://res.cloudinary.com/demi-website/image/upload/v1742299570/.tmpOhIOAf.jpg".to_string(),
-        profile_picture_public_id: ".tmpOhIOAf.jpg".to_string(),
-        email_private: true,
-        verified: false,
-    };
+            let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_secret.inner().as_ref()))
+                .map_err(|_| (Status::InternalServerError, "Failed to generate token".to_string()))?;
 
-    // Insert the user into the database
-    user_collection.insert_one(&new_user).await.map_err(|_| (Status::InternalServerError, "Failed to save user".to_string()))?;
-
-    // Generate a verification token
-    let claims = Claims {
-        sub: new_user.id.clone(),
-        is_admin: false,
-        exp: (chrono::Utc::now() + chrono::Duration::minutes(30)).timestamp() as usize, // Set expiry to 30 minutes from now
-    };
-    let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_secret.inner().as_ref()))
-        .map_err(|_| (Status::InternalServerError, "Failed to generate token".to_string()))?;
-
-    Ok(Json(TokenResponse { token }))
+            Ok(Json(TokenResponse { token }))
+        }
+        Err((status, message)) => Err((status, message)),
+    }
 }
 
 #[post("/login", data = "<login_request>")]
@@ -121,18 +107,53 @@ pub async fn login(
     user_collection: &State<Collection<User>>,
     jwt_secret: &State<String>,
     rate_limiter: &RateLimiter,
+    cookies: &CookieJar<'_>, // Added CookieJar for setting cookies
 ) -> Result<Json<LoginResponse>, (Status, String)> {
+    info!("Login endpoint hit with username: {}", login_request.username);
+
     // Rate limiter check
     let client_id = "login"; // Use a unique identifier for this route
     if !rate_limiter.check_rate_limit(client_id) {
+        info!("Rate limit exceeded for client_id: {}", client_id);
         return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
     }
 
     match User::login(login_request, user_collection, jwt_secret.inner()).await {
         Ok(user) => {
+            info!("User logged in successfully: {}", user.email);
+
+            let access_claims = Claims {
+                sub: user.id.clone(),
+                is_admin: user.is_admin,
+                exp: (chrono::Utc::now() + chrono::Duration::minutes(15)).timestamp() as usize,
+                token_type: "access".to_string(),
+            };
+
+            let refresh_claims = Claims {
+                sub: user.id.clone(),
+                is_admin: user.is_admin,
+                exp: (chrono::Utc::now() + chrono::Duration::days(7)).timestamp() as usize,
+                token_type: "refresh".to_string(),
+            };
+
+            let access_token = encode(&Header::default(), &access_claims, &EncodingKey::from_secret(jwt_secret.inner().as_ref()))
+                .map_err(|_| (Status::InternalServerError, "Failed to generate access token".to_string()))?;
+
+            let refresh_token = encode(&Header::default(), &refresh_claims, &EncodingKey::from_secret(jwt_secret.inner().as_ref()))
+                .map_err(|_| (Status::InternalServerError, "Failed to generate refresh token".to_string()))?;
+
+            // Set the refresh token as a secure, HTTP-only cookie
+            let mut cookie = Cookie::new("refresh_token", refresh_token.clone());
+            cookie.set_http_only(true);
+            cookie.set_secure(true);
+            cookie.set_path("/");
+            cookies.add(cookie);
+
+            info!("Refresh token set in cookies for user: {}", user.email);
+
             let response = LoginResponse {
-                id: user.id.to_string(), // Convert ObjectId to hex string
-                token: user.token,
+                id: user.id.to_string(),
+                token: access_token,
                 is_admin: user.is_admin,
                 email: user.email,
                 name: user.name,
@@ -145,10 +166,14 @@ pub async fn login(
                 email_private: user.email_private,
                 verified: user.verified,
                 verified_at: user.verified_at,
+                refresh_token: Some(refresh_token), // Still included in the response for now
             };
             Ok(Json(response))
         }
-        Err((status, message)) => Err((status, message)),
+        Err((status, message)) => {
+            info!("Login failed with status: {:?}, message: {}", status, message);
+            Err((status, message))
+        }
     }
 }
 
@@ -177,14 +202,14 @@ pub async fn reset_password(
     user_collection: &State<Collection<User>>,
     jwt_secret: &State<String>,
     rate_limiter: &RateLimiter,
+    cookies: &CookieJar<'_>,
 ) -> Result<Status, (Status, String)> {
     // Rate limiter check
     let client_id = "reset-password"; // Use a unique identifier for this route
     if !rate_limiter.check_rate_limit(client_id) {
         return Err((Status::TooManyRequests, "Too many requests. Please try again later.".to_string()));
     }
-
-    match User::reset_password(reset_data, user_collection, jwt_secret.inner()).await {
+    match User::reset_password(reset_data, user_collection, jwt_secret.inner(), cookies).await {
         Ok(_) => Ok(Status::Ok),
         Err((_, message)) => Err((Status::BadRequest, message))
     }
@@ -206,25 +231,56 @@ impl<'r> FromRequest<'r> for AuthHeader<'r> {
 }
 
 #[get("/verify-admin")]
-pub async fn verify_admin(jwt_secret: &State<String>, auth_header: AuthHeader<'_>) -> Result<Status, (Status, String)> {
-    let token = auth_header.0.trim_start_matches("Bearer ");
-    match verify_token(token, jwt_secret.inner()) {
+pub async fn verify_admin(jwt_secret: &State<String>, cookies: &CookieJar<'_>) -> Result<Status, (Status, String)> {
+    let refresh_token = match cookies.get("refresh_token") {
+        Some(cookie) => cookie.value().to_string(),
+        None => return Err((Status::Unauthorized, "Refresh token not found".to_string())),
+    };
+
+    match verify_token(&refresh_token, jwt_secret.inner()) {
         Ok(claims) => {
-            if claims.is_admin {
-                Ok(Status::Ok)
-            } else {
-                Err((Status::Forbidden, "User is not an admin".to_string()))
+            if !claims.is_admin {
+                return Err((Status::Forbidden, "User is not an admin".to_string()));
             }
-        },
-        Err(err) => {
-            info!("Error: {:?}", err);
-            Err((Status::Unauthorized, format!("Invalid token: {}", token)))
-        },
-    }
+        }
+        Err(_) => return Err((Status::Unauthorized, "Invalid or expired refresh token".to_string())),
+    };
+
+    Ok(Status::Ok)
 }
 
 #[get("/profile/<user_id_or_username>")]
-pub async fn get_profile(user_id_or_username: &str, user_collection: &State<Collection<User>>) -> Result<Json<UserProfile>, (Status, String)> {
+pub async fn get_profile(
+    user_id_or_username: &str,
+    user_collection: &State<Collection<User>>,
+    cookies: &CookieJar<'_>,
+    jwt_secret: &State<String>,
+) -> Result<Json<UserProfile>, (Status, String)> {
+    info!("Fetching profile for: {}", user_id_or_username);
+
+    // Attempt to verify the access token first
+    let access_token = cookies.get("access_token").map(|cookie| cookie.value().to_string());
+    let mut user_id = None;
+
+    if let Some(token) = access_token {
+        if let Ok(claims) = verify_token(&token, jwt_secret.inner()) {
+            user_id = Some(claims.sub);
+        }
+    }
+
+    // If access token is invalid or not provided, verify the refresh token
+    if user_id.is_none() {
+        let refresh_token = cookies.get("refresh_token").map(|cookie| cookie.value().to_string());
+
+        if let Some(token) = refresh_token {
+            if let Ok(claims) = verify_token(&token, jwt_secret.inner()) {
+                if claims.token_type == "refresh" {
+                    user_id = Some(claims.sub.clone());
+                }
+            }
+        }
+    }
+
     let filter = if user_id_or_username.starts_with("id:") {
         doc! { "id": &user_id_or_username[3..] }
     } else {
@@ -233,16 +289,33 @@ pub async fn get_profile(user_id_or_username: &str, user_collection: &State<Coll
 
     match user_collection.find_one(filter).await {
         Ok(Some(user)) => {
-            let is_own_profile = user_id_or_username.starts_with("id:");
-            // If email is private and it's not the user's own profile, hide the email
+            info!("User found: {}", user.username);
+
+            let is_own_profile = user_id_or_username.starts_with("id:") && user_id.as_deref() == Some(&user_id_or_username[3..]);
             let email_to_display = if user.email_private && !is_own_profile {
                 "Email hidden for privacy".to_string()
             } else {
                 user.email
             };
-            
+
+            // Only return public details if not the user's own profile
+            if !is_own_profile {
+                let public_profile = UserProfile {
+                    username: user.username,
+                    email: email_to_display,
+                    email_private: user.email_private,
+                    bio: user.bio.unwrap_or_else(|| "No bio available".to_string()),
+                    profile_picture: if user.profile_picture.is_empty() { "No profile picture available".to_string() } else { user.profile_picture },
+                    profile_picture_public_id: user.profile_picture_public_id,
+                    created_at: user.created_at,
+                    updated_at: user.updated_at,
+                };
+                return Ok(Json(public_profile));
+            }
+
+            // Return full profile for the user's own profile
             let profile = UserProfile {
-                name: user.username,
+                username: user.username,
                 email: email_to_display,
                 email_private: user.email_private,
                 bio: user.bio.unwrap_or_else(|| "No bio available".to_string()),
@@ -253,8 +326,14 @@ pub async fn get_profile(user_id_or_username: &str, user_collection: &State<Coll
             };
             Ok(Json(profile))
         }
-        Ok(None) => Err((Status::NotFound, "User not found".to_string())),
-        Err(_) => Err((Status::InternalServerError, "Internal server error".to_string())),
+        Ok(None) => {
+            info!("No user found for: {}", user_id_or_username);
+            Err((Status::NotFound, "User not found".to_string()))
+        }
+        Err(_) => {
+            info!("Database error while fetching profile for: {}", user_id_or_username);
+            Err((Status::InternalServerError, "Internal server error".to_string()))
+        }
     }
 }
 
@@ -266,7 +345,7 @@ pub async fn edit_profile(
 ) -> Result<Json<UserProfile>, (Status, String)> {
     let update_doc = doc! {
         "$set": {
-            "username": &profile.name,
+            "username": &profile.username,
             "email": &profile.email,
             "bio": &profile.bio,
             "profile_picture": &profile.profile_picture,
@@ -281,7 +360,7 @@ pub async fn edit_profile(
             match user_collection.find_one(doc! { "id": user_id }).await {
                 Ok(Some(updated_user)) => {
                     let updated_profile = UserProfile {
-                        name: updated_user.username,
+                        username: updated_user.username,
                         email: updated_user.email,
                         email_private: updated_user.email_private,
                         bio: updated_user.bio.unwrap_or_else(|| "No bio available".to_string()),
@@ -375,22 +454,38 @@ pub async fn change_password(
     user_id: &str,
     change_request: Json<ChangePasswordRequest>,
     user_collection: &State<Collection<User>>,
-    auth_header: AuthHeader<'_>
+    cookies: &CookieJar<'_>,
+    jwt_secret: &State<String>,
 ) -> Result<Status, (Status, Json<ErrorResponse>)> {
-    // Verify the authentication token
-    let token = auth_header.0.trim_start_matches("Bearer ");
-    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-    
-    match verify_token(token, &jwt_secret) {
+    // Retrieve the refresh token from cookies
+    let refresh_token = match cookies.get("refresh_token") {
+        Some(cookie) => cookie.value().to_string(),
+        None => {
+            return Err((
+                Status::Unauthorized,
+                Json(ErrorResponse {
+                    message: "Refresh token not found".to_string(),
+                }),
+            ))
+        }
+    };
+
+    // Verify the refresh token
+    match verify_token(&refresh_token, jwt_secret.inner()) {
         Ok(claims) => {
-            // Make sure the user is changing their own password or is an admin
+            // Ensure the user is changing their own password or is an admin
             if claims.sub != user_id && !claims.is_admin {
-                return Err((Status::Forbidden, Json(ErrorResponse { message: "Unauthorized to change this user's password".to_string() })));
+                return Err((
+                    Status::Forbidden,
+                    Json(ErrorResponse {
+                        message: "Unauthorized to change this user's password".to_string(),
+                    }),
+                ));
             }
-            
+
             // Fetch the user from the database
             let user_result = user_collection.find_one(doc! { "id": user_id }).await;
-            
+
             match user_result {
                 Ok(Some(user)) => {
                     // Verify the current password
@@ -399,31 +494,68 @@ pub async fn change_password(
                             // Hash the new password
                             let hashed_password = match bcrypt::hash(&change_request.new_password, SECURE_COST) {
                                 Ok(hashed) => hashed,
-                                Err(_) => return Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to hash new password".to_string() }))),
+                                Err(_) => {
+                                    return Err((
+                                        Status::InternalServerError,
+                                        Json(ErrorResponse {
+                                            message: "Failed to hash new password".to_string(),
+                                        }),
+                                    ))
+                                }
                             };
-                            
+
                             // Update the password in the database
-                            let update_result = user_collection.update_one(
-                                doc! { "id": user_id },
-                                doc! { "$set": { "password": hashed_password } }
-                            ).await;
-                            
+                            let update_result = user_collection
+                                .update_one(
+                                    doc! { "id": user_id },
+                                    doc! { "$set": { "password": hashed_password } },
+                                )
+                                .await;
+
                             match update_result {
                                 Ok(_) => Ok(Status::Ok),
-                                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to update password".to_string() }))),
+                                Err(_) => Err((
+                                    Status::InternalServerError,
+                                    Json(ErrorResponse {
+                                        message: "Failed to update password".to_string(),
+                                    }),
+                                )),
                             }
-                        },
-                        Ok(false) => {
-                            Err((Status::Unauthorized, Json(ErrorResponse { message: "Current password is incorrect".to_string() })))
-                        },
-                        Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Password verification failed".to_string() }))),
+                        }
+                        Ok(false) => Err((
+                            Status::Unauthorized,
+                            Json(ErrorResponse {
+                                message: "Current password is incorrect".to_string(),
+                            }),
+                        )),
+                        Err(_) => Err((
+                            Status::InternalServerError,
+                            Json(ErrorResponse {
+                                message: "Password verification failed".to_string(),
+                            }),
+                        )),
                     }
-                },
-                Ok(None) => Err((Status::NotFound, Json(ErrorResponse { message: "User not found".to_string() }))),
-                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Database error".to_string() }))),
+                }
+                Ok(None) => Err((
+                    Status::NotFound,
+                    Json(ErrorResponse {
+                        message: "User not found".to_string(),
+                    }),
+                )),
+                Err(_) => Err((
+                    Status::InternalServerError,
+                    Json(ErrorResponse {
+                        message: "Database error".to_string(),
+                    }),
+                )),
             }
-        },
-        Err(_) => Err((Status::Unauthorized, Json(ErrorResponse { message: "Invalid authentication token".to_string() }))),
+        }
+        Err(_) => Err((
+            Status::Unauthorized,
+            Json(ErrorResponse {
+                message: "Invalid or expired refresh token".to_string(),
+            }),
+        )),
     }
 }
 
@@ -432,22 +564,37 @@ pub async fn delete_profile(
     user_id: &str,
     delete_request: Json<DeleteProfileRequest>,
     user_collection: &State<Collection<User>>,
-    auth_header: AuthHeader<'_>
+    cookies: &CookieJar<'_>,
+    jwt_secret: &State<String>,
 ) -> Result<Status, (Status, Json<ErrorResponse>)> {
-    // Verify the authentication token
-    let token = auth_header.0.trim_start_matches("Bearer ");
-    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-    
-    match verify_token(token, &jwt_secret) {
+    // Retrieve the refresh token from cookies
+    let refresh_token = match cookies.get("refresh_token") {
+        Some(cookie) => cookie.value().to_string(),
+        None => {
+            return Err((
+                Status::Unauthorized,
+                Json(ErrorResponse {
+                    message: "Refresh token not found".to_string(),
+                }),
+            ))
+        }
+    };
+
+    match verify_token(&refresh_token, jwt_secret.inner()) {
         Ok(claims) => {
-            // Make sure the user is deleting their own account or is an admin
+            // Ensure the user is deleting their own account or is an admin
             if claims.sub != user_id && !claims.is_admin {
-                return Err((Status::Forbidden, Json(ErrorResponse { message: "Unauthorized to delete this user's profile".to_string() })));
+                return Err((
+                    Status::Forbidden,
+                    Json(ErrorResponse {
+                        message: "Unauthorized to delete this user's profile".to_string(),
+                    }),
+                ));
             }
-            
+
             // Fetch the user from the database
             let user_result = user_collection.find_one(doc! { "id": user_id }).await;
-            
+
             match user_result {
                 Ok(Some(user)) => {
                     // Verify the password
@@ -455,31 +602,113 @@ pub async fn delete_profile(
                         Ok(true) => {
                             // Delete the profile picture from Cloudinary if it exists
                             if !user.profile_picture_public_id.is_empty() {
-                                if let Err(_) = delete_image_from_cloudinary(&user.profile_picture_public_id).await {
-                                    eprintln!("Failed to delete profile picture from Cloudinary during account deletion");
+                                if let Err(_) =
+                                    delete_image_from_cloudinary(&user.profile_picture_public_id)
+                                        .await
+                                {
+                                    eprintln!(
+                                        "Failed to delete profile picture from Cloudinary during account deletion"
+                                    );
                                     // Continue with account deletion even if image deletion fails
                                 }
                             }
-                            
+
                             // Delete the user from the database
-                            let delete_result = user_collection.delete_one(doc! { "id": user_id }).await;
-                            
+                            let delete_result =
+                                user_collection.delete_one(doc! { "id": user_id }).await;
+
                             match delete_result {
                                 Ok(_) => Ok(Status::Ok),
-                                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Failed to delete profile".to_string() }))),
+                                Err(_) => Err((
+                                    Status::InternalServerError,
+                                    Json(ErrorResponse {
+                                        message: "Failed to delete profile".to_string(),
+                                    }),
+                                )),
                             }
-                        },
-                        Ok(false) => {
-                            Err((Status::Unauthorized, Json(ErrorResponse { message: "Password is incorrect".to_string() })))
-                        },
-                        Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Password verification failed".to_string() }))),
+                        }
+                        Ok(false) => Err((
+                            Status::Unauthorized,
+                            Json(ErrorResponse {
+                                message: "Password is incorrect".to_string(),
+                            }),
+                        )),
+                        Err(_) => Err((
+                            Status::InternalServerError,
+                            Json(ErrorResponse {
+                                message: "Password verification failed".to_string(),
+                            }),
+                        )),
                     }
-                },
-                Ok(None) => Err((Status::NotFound, Json(ErrorResponse { message: "User not found".to_string() }))),
-                Err(_) => Err((Status::InternalServerError, Json(ErrorResponse { message: "Database error".to_string() }))),
+                }
+                Ok(None) => Err((
+                    Status::NotFound,
+                    Json(ErrorResponse {
+                        message: "User not found".to_string(),
+                    }),
+                )),
+                Err(_) => Err((
+                    Status::InternalServerError,
+                    Json(ErrorResponse {
+                        message: "Database error".to_string(),
+                    }),
+                )),
             }
-        },
-        Err(_) => Err((Status::Unauthorized, Json(ErrorResponse { message: "Invalid authentication token".to_string() }))),
+        }
+        Err(_) => Err((
+            Status::Unauthorized,
+            Json(ErrorResponse {
+                message: "Invalid or expired refresh token".to_string(),
+            }),
+        )),
+    }
+}
+
+#[post("/refresh-token")]
+pub async fn refresh_token(
+    cookies: &CookieJar<'_>, // Use CookieJar to access cookies
+    jwt_secret: &State<String>,
+) -> Result<Json<TokenResponse>, (Status, String)> {
+    info!("Refresh token endpoint hit");
+
+    let refresh_token = match cookies.get("refresh_token") {
+        Some(cookie) => {
+            info!("Refresh token found in cookies");
+            cookie.value().to_string()
+        }
+        None => {
+            info!("No refresh token found in cookies");
+            return Err((Status::Unauthorized, "Refresh token not found".to_string()));
+        }
+    };
+
+    match verify_token(&refresh_token, jwt_secret.inner()) {
+        Ok(claims) => {
+            info!("Refresh token verified for user: {}", claims.sub);
+
+            if claims.token_type != "refresh" {
+                info!("Invalid token type: {}", claims.token_type);
+                return Err((Status::Unauthorized, "Invalid token type".to_string()));
+            }
+
+            let new_access_claims = Claims {
+                sub: claims.sub.clone(),
+                is_admin: claims.is_admin,
+                exp: (chrono::Utc::now() + chrono::Duration::minutes(15)).timestamp() as usize, // New short-lived access token
+                token_type: "access".to_string(),
+            };
+
+            let new_access_token = encode(&Header::default(), &new_access_claims, &EncodingKey::from_secret(jwt_secret.inner().as_ref()))
+                .map_err(|_| (Status::InternalServerError, "Failed to generate new access token".to_string()))?;
+
+            info!("New access token generated for user: {}", claims.sub);
+
+            Ok(Json(TokenResponse { token: new_access_token }))
+        }
+        Err(_) => {
+            info!("Invalid or expired refresh token");
+            Err((Status::Unauthorized, "Invalid or expired refresh token".to_string()))
+        }
     }
 }
 
@@ -525,4 +754,77 @@ pub async fn verify_account(
             Err((Status::Unauthorized, "Invalid or expired token".to_string()))
         }
     }
+}
+
+#[post("/user-by-refresh-token")]
+pub async fn user_by_refresh_token(
+    cookies: &CookieJar<'_>,
+    jwt_secret: &State<String>,
+    user_collection: &State<Collection<User>>,
+) -> Result<Json<User>, (Status, String)> {
+    info!("User by refresh token endpoint hit");
+
+    let refresh_token = match cookies.get("refresh_token") {
+        Some(cookie) => {
+            info!("Refresh token found in cookies");
+            cookie.value().to_string()
+        }
+        None => {
+            info!("No refresh token found in cookies");
+            return Err((Status::Unauthorized, "Refresh token not found".to_string()));
+        }
+    };
+
+    match verify_token(&refresh_token, jwt_secret.inner()) {
+        Ok(claims) => {
+            info!("Refresh token verified for user: {}", claims.sub);
+
+            if claims.token_type != "refresh" {
+                info!("Invalid token type: {}", claims.token_type);
+                return Err((Status::Unauthorized, "Invalid token type".to_string()));
+            }
+
+            match user_collection.find_one(doc! { "id": &claims.sub }).await {
+                Ok(Some(user)) => Ok(Json(user)),
+                Ok(None) => Err((Status::NotFound, "User not found".to_string())),
+                Err(_) => Err((Status::InternalServerError, "Database error".to_string())),
+            }
+        }
+        Err(_) => {
+            info!("Invalid or expired refresh token");
+            Err((Status::Unauthorized, "Invalid or expired refresh token".to_string()))
+        }
+    }
+}
+
+#[post("/logout")]
+pub async fn logout(cookies: &CookieJar<'_>) -> Status {
+    // Remove the refresh_token cookie
+    if cookies.get("refresh_token").is_some() {
+        cookies.remove(Cookie::build("refresh_token").build());
+        info!("Refresh token cookie removed successfully.");
+    } else {
+        info!("No refresh token cookie found to remove.");
+    }
+
+    Status::Ok
+}
+
+#[get("/is_authenticated")]
+pub async fn is_authenticated(cookies: &CookieJar<'_>) -> Json<Value> {
+    if let Some(refresh_token) = cookies.get("refresh_token") {
+        let token = refresh_token.value();
+
+        // Validate the refresh token
+        match validate_refresh_token(token).await {
+            Ok(user_id) => {
+                return Json(json!({ "authenticated": true, "user_id": user_id }));
+            }
+            Err(_) => {
+                return Json(json!({ "authenticated": false }));
+            }
+        }
+    }
+
+    Json(json!({ "authenticated": false }))
 }

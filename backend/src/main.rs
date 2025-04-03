@@ -83,9 +83,10 @@ async fn docpages(page: PathBuf) -> Option<NamedFile> {
 /// FRONTEND INTERACTION ///////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-#[get("/<_..>", rank = 5)]
+#[get("/<_..>", rank = 5)] 
 async fn index() -> Option<NamedFile> {
     let paged_directory_path = format!("{}/../frontend/build", env!("CARGO_MANIFEST_DIR"));
+
     NamedFile::open(Path::new(&paged_directory_path).join("index.html"))
         .await
         .ok()
@@ -96,8 +97,17 @@ pub(crate) fn fallback_url() -> &'static str {
     "Hey, this is the fallback url"
 }
 
+
 #[get("/<file..>", rank = 2)]
 async fn files(file: PathBuf) -> Option<NamedFile> {
+    // specific case for manifest.json, logo192, logo512, robots.txt, favicon.ico
+    if file.to_str() == Some("manifest.json") || file.to_str() == Some("logo192.png") || file.to_str() == Some("logo512.png") || file.to_str() == Some("robots.txt") || file.to_str() == Some("favicon.ico") {
+        let paged_directory_path = format!("{}/../frontend/build", env!("CARGO_MANIFEST_DIR"));
+        return NamedFile::open(Path::new(&paged_directory_path).join(file))
+            .await
+            .ok();
+    }
+
     let paged_directory_path = format!("{}/../frontend/build/static", env!("CARGO_MANIFEST_DIR"));
     NamedFile::open(Path::new(&paged_directory_path).join(file))
         .await
@@ -123,7 +133,6 @@ async fn images(file: PathBuf) -> Option<NamedFile> {
 #[launch]
 async fn rocket() -> _ {
     dotenv().ok();
-    println!("Environment variables loaded:");
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
