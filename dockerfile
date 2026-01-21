@@ -3,8 +3,11 @@ FROM ubuntu:22.04
 WORKDIR /demi-website
 
 RUN apt-get update
-RUN apt-get -y install curl gnupg
-RUN apt-get -y install nodejs npm
+RUN apt-get -y install curl gnupg ca-certificates
+
+# Install Node.js 20.x (LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
