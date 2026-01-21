@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .container {
     display: flex;
     flex-direction: column;
@@ -13,24 +15,24 @@
 
     h2 {
         color: var(--primary-color);
-        margin-bottom: 1.5rem;
-        font-size: 2rem;
+        margin-bottom: $margin-md;
+        font-size: $font-size-4xl;
     }
 
     p {
-        margin-bottom: 1.5rem;
+        margin-bottom: $margin-md;
         line-height: 1.6;
     }
 
     button {
-        padding: 10px 20px;
-        background-color: #282828;
+        padding: $spacing-md $spacing-xl;
+        background-color: $bg-dark;
         color: #ffd700;
         border: none;
-        border-radius: 5px;
+        border-radius: $border-radius-md;
         cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s;
+        font-size: $font-size-sm;
+        transition: background-color $transition-fast;
   
         &:hover {
           background-color: #ffd700;
