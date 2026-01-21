@@ -1,4 +1,6 @@
-// Define variables for common values
+@use '../../styles/variables' as *;
+
+// Syntax highlighting color scheme (kept as local variables for theme customization)
 $color-white: #fff;
 $color-black: #000;
 $color-background: #23272e;
