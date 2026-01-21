@@ -1,0 +1,135 @@
+@use '../../styles/variables' as *;
+
+.notification {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: $padding-lg;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacing-lg;
+  border: 2px solid;
+  animation: slideIn 0.3s ease-out;
+  position: relative;
+  
+  &-content {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-md;
+    flex: 1;
+  }
+  
+  &-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  &-text {
+    flex: 1;
+  }
+  
+  &-title {
+    display: block;
+    margin-bottom: $spacing-xs;
+    font-size: 1.1rem;
+  }
+  
+  &-message {
+    line-height: 1.6;
+  }
+  
+  &-close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: $border-radius-sm;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    i {
+      font-size: 1.2rem;
+    }
+  }
+  
+  // Info
+  &-info {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.4);
+    color: $text-primary;
+    
+    .notification-icon {
+      color: #3b82f6;
+    }
+  }
+  
+  // Warning
+  &-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: $text-primary;
+    
+    .notification-icon {
+      color: #f59e0b;
+    }
+  }
+  
+  // Error
+  &-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: $text-primary;
+    
+    .notification-icon {
+      color: #ef4444;
+    }
+  }
+  
+  // Success
+  &-success {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: $text-primary;
+    
+    .notification-icon {
+      color: #22c55e;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .notification {
+    padding: $padding-md;
+    
+    &-icon {
+      font-size: 1.2rem;
+    }
+    
+    &-title {
+      font-size: 1rem;
+    }
+    
+    &-message {
+      font-size: 0.95rem;
+    }
+  }
+}
