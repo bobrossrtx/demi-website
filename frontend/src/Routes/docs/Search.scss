@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .small-fa-icon {
     font-size: 0.625em;
 }
@@ -6,15 +8,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #444;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $padding-md;
+    border-bottom: $border-width-sm $border-style $border-dark;
 }
 
 .search-results-container {
-    margin: 2rem;
+    margin: $margin-lg;
     /* Add margin around the results */
-    padding: 1rem;
+    padding: $margin-sm;
     /* Add padding inside the container */
     background-color: rgba(255, 255, 255, 0.05);
     /* Slight background for contrast */
@@ -26,26 +28,26 @@
 
 /* Overall container for search results */
 .search-result-link {
-    color: white;
+    color: $text-primary;
     text-decoration: none;
     /* Removes underline from links */
 }
 
 .search-result-container {
-    margin-bottom: 1rem;
-    padding: 1rem;
+    margin-bottom: $margin-sm;
+    padding: $margin-sm;
     /* Increased padding for better spacing */
     background-color: rgba(255, 255, 255, 0.1);
     /* Softer background */
     border-radius: 1em;
-    border: solid 2px rgba(255, 255, 255, 0.4);
+    border: $border-style 2px rgba(255, 255, 255, 0.4);
     /* Thinner border for elegance */
     transition: transform 0.2s, box-shadow 0.2s;
     /* Animation for hover effect */
 }
 
 .search-result-container:hover {
-    border-color: white;
+    border-color: $text-primary;
     /* Highlight border on hover */
     transform: translateY(-2px);
     /* Elevate slightly on hover */
@@ -56,7 +58,7 @@
 .search-page-title {
     font-size: 1.8em;
     /* Slightly smaller font size */
-    margin-bottom: 5px;
+    margin-bottom: $spacing-xs;
     /* Smaller bottom margin */
 }
 
@@ -69,34 +71,123 @@
 .search-page-tags-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 5px;
-    align-items: baseline;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+    align-items: center;
     
-    a {
-        display: inline-block;
-        white-space: nowrap;
+    .tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-xs;
     }
 }
 
 .search-page-tags {
-    color: #ffc832;
-    /* Better contrast for tags */
-    margin-left: 5px;
-    font-size: 0.9em;
-    /* Slightly smaller font size */
-    background: rgba(0, 0, 0, 0.4);
-    /* Different background for tags */
-    padding: 0.2em 0.5em;
-    border-radius: 10px;
-    /* Round corners for tags */
-    transition: background 0.2s;
-    /* Smooth transition for hover */
+    color: $primary-color;
+    font-size: 0.85em;
+    background: rgba($primary-color, 0.15);
+    padding: 4px 10px;
+    border-radius: $border-radius-sm;
+    display: inline-block;
+    white-space: nowrap;
+    transition: all 0.2s;
+    
+    &:hover {
+        background: rgba($primary-color, 0.3);
+        transform: translateY(-2px);
+    }
 }
 
-.search-page-tags:hover {
-    background: rgba(255, 200, 50, 0.6);
-    /* Change background on hover */
+.result-meta {
+    display: flex;
+    gap: $spacing-lg;
+    margin-top: $spacing-md;
+    font-size: 0.9em;
+    color: $text-secondary;
+    padding-top: $spacing-md;
+    border-top: 1px solid rgba($border-dark, 0.3);
+
+    .meta-category {
+        font-weight: 600;
+        color: $primary-color;
+    }
+
+    .matched-fields {
+        font-style: italic;
+    }
+}
+
+.result-header-section {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    .result-type-badge {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: $border-radius-sm;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+
+        &.doc {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        &.faq {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+    }
+}
+
+.results-info {
+    padding: $padding-md;
+    background: rgba($primary-color, 0.1);
+    border-radius: $border-radius-md;
+    margin-bottom: $spacing-lg;
+    
+    p {
+        margin: 0;
+        color: $text-secondary;
+        
+        strong {
+            color: $primary-color;
+            font-weight: 600;
+        }
+    }
+}
+
+.no-results {
+    text-align: center;
+    padding: $padding-xl;
+    
+    i {
+        font-size: 3rem;
+        color: rgba($primary-color, 0.3);
+        margin-bottom: $spacing-lg;
+        display: block;
+    }
+    
+    h1 {
+        color: $text-primary;
+        margin-bottom: $spacing-md;
+    }
+    
+    p {
+        color: $text-secondary;
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+}
+
+.search-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
 }
 
 .search-page-description {
