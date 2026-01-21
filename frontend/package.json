@@ -8,6 +8,7 @@
     "@types/node": "^16.18.59",
     "@types/react": "^18.2.29",
     "@types/react-dom": "^18.2.13",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "bootstrap": "^5.3.2",
     "emailjs-com": "^3.2.0",
     "history": "^5.3.0",
@@ -17,6 +18,7 @@
     "react-markdown": "^9.0.0",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
+    "react-syntax-highlighter": "^16.1.0",
     "rehype-highlight": "^7.0.0",
     "typescript": "^4.9.5"
   },
