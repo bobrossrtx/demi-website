@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from "react";
 import "./Search.scss";
+import { smartSearch, SearchableItem, SearchResult } from "../../helpers/searchUtil";
+import { faqItems } from "../../helpers/searchData";
 
 type Props = {};
 
-export default function Search(props: Props) {
-    interface Page {
-        title: string;
-        showTitle: string;
-        description: string;
-        page: string;
-        tags: string[];
-        category: string;
-    }
+interface DocsPage {
+    title: string;
+    showTitle: string;
+    description: string;
+    page: string;
+    tags: string[];
+    category: string;
+}
 
+export default function Search(props: Props) {
     const [activeFilters, setActiveFilters] = useState<{
         categories: string[];
         tags: string[];
-    }>({ categories: [], tags: [] });
+        types: string[];
+    }>({ categories: [], tags: [], types: [] });
 
     const [showFilters, setShowFilters] = useState(false);
-
-    const toggleFilters = () => {
-        setShowFilters(!showFilters);
-    };
-
-    const [jsonData, setJsonData] = useState<Page[]>([]);
-    const [statusCode, setStatusCode] = useState("");
+    const [jsonData, setJsonData] = useState<DocsPage[]>([]);
+    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
     const queryParameters = new URLSearchParams(window.location.search);
     const searchQuery = queryParameters.get("query") || "";
@@ -37,23 +35,57 @@ export default function Search(props: Props) {
         })
             .then((response) => {
                 if (response.status === 200) {
-                    setStatusCode("200");
                     return response.json();
                 }
                 throw new Error("Documentation data cannot be located.");
             })
-            .then((data) => setJsonData(data));
+            .then((data) => setJsonData(data))
+            .catch(() => setJsonData([]));
     }, []);
 
-    // Get unique filter options from data
+    // Convert docs to searchable format
+    const docsItems: SearchableItem[] = (jsonData && Array.isArray(jsonData)) ? 
+      jsonData.map((doc) => ({
+        id: doc.page,
+        title: doc.title || doc.showTitle || '',
+        description: doc.description || '',
+        tags: doc.tags || [],
+        category: doc.category || 'docs',
+        type: 'doc',
+        url: `/docs?page=${doc.page}`,
+      })) : [];
+
+    // Combine all searchable items
+    const allItems = [...docsItems, ...faqItems];
+
+    // Perform smart search
+    useEffect(() => {
+        if (searchQuery.trim()) {
+            const results = smartSearch(allItems, searchQuery);
+            setSearchResults(results);
+        } else {
+            // Show first 10 items if no query with default score and matched fields
+            const defaultResults: SearchResult[] = allItems.slice(0, 10).map(item => ({
+                ...item,
+                score: 0,
+                matchedFields: []
+            }));
+            setSearchResults(defaultResults);
+        }
+    }, [searchQuery, allItems]);
+
+    // Get unique filter options
     const uniqueCategories = [
-        ...Array.from(new Set(jsonData.map((page) => page.category))),
+        ...Array.from(new Set(allItems.map((item) => item.category))),
     ];
     const uniqueTags = [
-        ...Array.from(new Set(jsonData.flatMap((page) => page.tags))),
+        ...Array.from(new Set(allItems.flatMap((item) => item.tags))),
+    ];
+    const uniqueTypes = [
+        ...Array.from(new Set(allItems.map((item) => item.type))),
     ];
 
-    const handleFilterToggle = (type: "categories" | "tags", value: string) => {
+    const handleFilterToggle = (type: "categories" | "tags" | "types", value: string) => {
         setActiveFilters((prev) => ({
             ...prev,
             [type]: prev[type].includes(value)
@@ -62,46 +94,27 @@ export default function Search(props: Props) {
         }));
     };
 
-    // const results = jsonData.filter(
-    //     (page: Page) =>
-    //         page.title.toLowerCase().includes(searchQuery.toLowerCase()) || // Exact match the title
-    //         page.description
-    //             .toLowerCase()
-    //             .includes(searchQuery.toLowerCase()) || // partial match the description
-    //         page.tags.indexOf(searchQuery.toLowerCase()) > -1 || // either one of the element exact match
-    //         page.category === searchQuery.toLowerCase(), // Exact match the category names
-    // );
-    const results = jsonData.filter((page: Page) => {
-        const matchesSearch =
-            searchQuery.trim() === "" ||
-            page.title.toLowerCase().includes(searchQuery.toLowerCase()) || // Exact match the title
-            page.description
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) || // partial match the description
-            page.tags.some(
-                (tag) => tag.toLowerCase() === searchQuery.toLowerCase(),
-            ) || // either one of the element exact match
-            page.category.toLowerCase() === searchQuery.toLowerCase(); // Exact match the category names
+    // Apply filters to search results
+    const filteredResults = searchResults.filter((result) => {
         const matchesCategory =
             activeFilters.categories.length === 0 ||
-            activeFilters.categories.includes(page.category);
+            activeFilters.categories.includes(result.category);
         const matchesTags =
             activeFilters.tags.length === 0 ||
-            page.tags.some((tag) => activeFilters.tags.includes(tag));
+            result.tags.some((tag) => activeFilters.tags.includes(tag));
+        const matchesType =
+            activeFilters.types.length === 0 ||
+            activeFilters.types.includes(result.type);
 
-        return matchesSearch && matchesCategory && matchesTags;
+        return matchesCategory && matchesTags && matchesType;
     });
-
-    const [fade, setFade] = useState(false);
-    const fadeChevron = () => setFade(false); // TODO: fix the multiple chevron issue + repeat
-    const unfadeChevron = () => setFade(false);
 
     return (
         <div>
             <div className="search-results-container">
                 <div className="search-header">
                     <h1 className="search-results-title">
-                        Search Results for: {searchQuery}
+                        Search Results {searchQuery && `for: "${searchQuery}"`}
                     </h1>
                     <button
                         className="filter-button"
@@ -110,97 +123,123 @@ export default function Search(props: Props) {
                         {showFilters ? "Hide Filters ▲" : "Show Filters ▼"}
                     </button>
                 </div>
-                    <div className={`filter-dropdown ${showFilters ? 'open' : ''}`}>
-                        <h4 className="filter-label">Categories</h4>
-                        <div className="filter-group">
-                            {uniqueCategories.map((category) => (
-                                <label key={category} className="filter-option">
-                                    <input
-                                        type="checkbox"
-                                        checked={activeFilters.categories.includes(
-                                            category,
-                                        )}
-                                        onChange={() =>
-                                            handleFilterToggle(
-                                                "categories",
-                                                category,
-                                            )
-                                        }
-                                    />
-                                    {category}
-                                </label>
-                            ))}
-                        </div>
 
-                        <h4 className="filter-label">Tags</h4>
-                        <div className="filter-group">
-                            {uniqueTags.map((tag) => (
-                                <label key={tag} className="filter-option">
-                                    <input
-                                        type="checkbox"
-                                        checked={activeFilters.tags.includes(
-                                            tag,
-                                        )}
-                                        onChange={() =>
-                                            handleFilterToggle("tags", tag)
-                                        }
-                                    />
-                                    {tag}
-                                </label>
-                            ))}
-                        </div>
+                <div className={`filter-dropdown ${showFilters ? 'open' : ''}`}>
+                    <h4 className="filter-label">Content Type</h4>
+                    <div className="filter-group">
+                        {uniqueTypes.map((type) => (
+                            <label key={type} className="filter-option">
+                                <input
+                                    type="checkbox"
+                                    checked={activeFilters.types.includes(type)}
+                                    onChange={() => handleFilterToggle("types", type)}
+                                />
+                                {type === 'doc' ? 'Documentation' : 'FAQ'}
+                            </label>
+                        ))}
                     </div>
-                {/* New container for results */}
-                {results.length > 0 ? (
-                    results.map((page) => (
-                        <a
-                            className="search-result-link"
-                            href={"/docs?page=" + page.page}
-                        >
-                            <div
-                                className="search-result-container"
-                                onMouseEnter={fadeChevron}
-                                onMouseLeave={unfadeChevron}
+
+                    <h4 className="filter-label">Categories</h4>
+                    <div className="filter-group">
+                        {uniqueCategories.map((category) => (
+                            <label key={category} className="filter-option">
+                                <input
+                                    type="checkbox"
+                                    checked={activeFilters.categories.includes(category)}
+                                    onChange={() =>
+                                        handleFilterToggle("categories", category)
+                                    }
+                                />
+                                {category.charAt(0).toUpperCase() +
+                                    category.slice(1).replace('-', ' ')}
+                            </label>
+                        ))}
+                    </div>
+
+                    <h4 className="filter-label">Tags</h4>
+                    <div className="filter-group">
+                        {uniqueTags.map((tag) => (
+                            <label key={tag} className="filter-option">
+                                <input
+                                    type="checkbox"
+                                    checked={activeFilters.tags.includes(tag)}
+                                    onChange={() => handleFilterToggle("tags", tag)}
+                                />
+                                {tag}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Search Results */}
+                {filteredResults.length > 0 ? (
+                    <div className="search-results-list">
+                        <div className="results-info">
+                            <p>
+                                Found <strong>{filteredResults.length}</strong> result
+                                {filteredResults.length !== 1 ? 's' : ''}
+                            </p>
+                        </div>
+                        {filteredResults.map((result) => (
+                            <a
+                                key={`${result.type}-${result.id}`}
+                                href={result.url}
+                                className="search-result-link"
                             >
-                                <h2 className="search-page-title">
-                                    {page.category[0].toUpperCase() +
-                                        page.category.substring(1)}{" "}
-                                    <i
-                                        className={
-                                            fade
-                                                ? "small-fa-icon fas fa-chevron-right beat-fade"
-                                                : "small-fa-icon fas fa-chevron-right"
-                                        }
-                                    ></i>{" "}
-                                    {page.showTitle}
-                                </h2>
-                                <div className="search-page-tags-container">
-                                    <h3 className="search-page-tags-label">
-                                        Tags:{" "}
-                                    </h3>
-                                    {page.tags.map((tag) => (
-                                        <a
-                                            key={tag}
-                                            href={`?query=${tag}`}
-                                            className="search-page-tags"
-                                        >
-                                            {`• ${tag} •`}
-                                        </a>
-                                    ))}
+                                <div className="search-result-container">
+                                    <div className="result-header-section">
+                                        <span className={`result-type-badge ${result.type}`}>
+                                            {result.type === 'doc' ? 'Documentation' : 'FAQ'}
+                                        </span>
+                                        <h2 className="search-page-title">
+                                            {result.title}
+                                            <i className="small-fa-icon fas fa-chevron-right"></i>
+                                        </h2>
+                                    </div>
+                                    <p className="search-page-description">
+                                        {result.description}
+                                    </p>
+                                    {result.tags && result.tags.length > 0 && (
+                                        <div className="search-page-tags-container">
+                                            <div className="tags-list">
+                                                {result.tags.map((tag) => (
+                                                    <span
+                                                        key={tag}
+                                                        className="search-page-tags"
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="result-meta">
+                                        <span className="meta-category">
+                                            {result.category.charAt(0).toUpperCase() +
+                                                result.category.slice(1).replace('-', ' ')}
+                                        </span>
+                                        {result.matchedFields.length > 0 && (
+                                            <span className="matched-fields">
+                                                Matched in: {result.matchedFields.join(', ')}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
-                                <p className="search-page-description">
-                                    {page.description}
-                                </p>
-                            </div>
-                        </a>
-                    ))
+                            </a>
+                        ))}
+                    </div>
                 ) : (
-                    <div className="container-text-center">
-                        <h1>No Results Found!</h1>
+                    <div className="container-text-center no-results">
+                        <i className="fas fa-search"></i>
+                        <h1>No Results Found</h1>
+                        <p>
+                            {searchQuery
+                                ? `No results found for "${searchQuery}". Try adjusting your search terms or filters.`
+                                : 'Try searching for something to get started.'}
+                        </p>
                     </div>
                 )}
-            </div>{" "}
-            {/* End of results container */}
+            </div>
         </div>
     );
 }
