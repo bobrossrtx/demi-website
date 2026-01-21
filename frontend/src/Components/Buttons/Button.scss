@@ -1,25 +1,27 @@
+@use '../../styles/variables' as *;
+
 .btn {
-    border-radius: 4px;
+    border-radius: $border-radius-sm;
     outline: none;
     border: none;
-    font-size: 18px;
+    font-size: $font-size-md;
     cursor: pointer;
-    background: #282828 !important;
-    margin-bottom: 1rem;
-    color: #ffc832 !important;
+    background: $bg-dark !important;
+    margin-bottom: $margin-sm;
+    color: $primary-color !important;
 
     i {
-        color: #ffc832 !important;
+        color: $primary-color !important;
     }
     
     &:hover {
-        transition: all 0.3s ease-out;
-        background: #ffc832 !important;
-        color: #282828 !important;
+        transition: all $transition-ease-out;
+        background: $primary-color !important;
+        color: $bg-dark !important;
         
         * {
-            transition: all 0.3s ease-out;
-            color: #282828 !important;
+            transition: all $transition-ease-out;
+            color: $bg-dark !important;
         }
     }
 }
