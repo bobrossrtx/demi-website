@@ -1,0 +1,275 @@
+// ========================================
+// DEMI WEBSITE - THEME VARIABLES
+// Multi-Theme Support System
+// ========================================
+
+// ORIGINAL THEME - Gold/Yellow & Blue
+// ----------------------------------------
+$original-primary-color: #ffc832;
+$original-primary-hover: #5cabff;
+$original-primary-blue: #1888ff;
+$original-bg-dark: #282828;
+$original-bg-gradient-start: #61667b;
+$original-bg-gradient-end: #373a47;
+$original-text-primary: #fff;
+$original-warning-bg: #fff3cd;
+$original-warning-border: #ffeeba;
+$original-warning-text: #856404;
+$original-success-bg: #a1dc75;
+$original-success-text: #000;
+
+// ORANGE RUST TECH THEME
+// ----------------------------------------
+$rust-primary-color: #ffc832;
+$rust-primary-hover: #ff9f1c;
+$rust-primary-light: #ffb347;
+$rust-primary-dark: #e07a1f;
+$rust-accent-rust: #c1440e;
+$rust-accent-copper: #b87333;
+$rust-accent-amber: #ffbf00;
+$rust-bg-darkest: #1a1a1a;
+$rust-bg-dark: #1e1e1e;
+$rust-bg-medium: #2d2d2d;
+$rust-bg-card: #323232;
+$rust-bg-gradient-start: #3a3a3a;
+$rust-bg-gradient-end: #1f1f1f;
+$rust-text-primary: #f5f5f5;
+$rust-text-muted: #a8a8a8;
+$rust-warning-bg: #2d2416;
+$rust-warning-text: #ffb347;
+$rust-success-bg: #2a3a1f;
+$rust-success-text: #a8d08d;
+
+// DEFAULT THEME (can be switched)
+// Set to 'original' or 'rust'
+$active-theme: 'original' !default;
+
+// Active Color Variables (default to original theme)
+// ----------------------------------------
+$primary-color: $original-primary-color;
+$primary-hover: $original-primary-hover;
+$primary-blue: $original-primary-blue;
+$primary-light: $original-primary-hover;
+$primary-dark: darken($original-primary-color, 10%);
+
+// Background Colors
+$bg-darkest: darken($original-bg-dark, 5%);
+$bg-dark: $original-bg-dark;
+$bg-medium: lighten($original-bg-dark, 5%);
+$bg-card: lighten($original-bg-dark, 8%);
+$bg-gradient-start: $original-bg-gradient-start;
+$bg-gradient-end: $original-bg-gradient-end;
+$bg-primary-gradient: $bg-dark;
+$bg-navbar: linear-gradient(90deg, $bg-dark 0%, $bg-dark 100%);
+
+// Text Colors
+$text-primary: $original-text-primary;
+$text-dark: #000;
+$text-secondary: $original-primary-color;
+$text-muted: #ccc;
+
+// Alert/Warning Colors
+$warning-bg: rgba(255, 200, 50, 0.08);
+$warning-border: $primary-color;
+$warning-text: $text-primary;
+
+// Success Colors
+$success-bg: rgba(168, 208, 141, 0.08);
+$success-text: #a8d08d;
+$success-border: #7cb342;
+
+// Info Colors
+$info-bg: lighten($original-primary-blue, 40%);
+$info-text: $original-primary-blue;
+$info-border: $original-primary-blue;
+
+// Border Colors
+$border-dark: #444;
+$border-medium: #555;
+$border-light: #666;
+$border-orange: $primary-color;
+
+// Shadow Colors
+$shadow-black: #000000;
+$shadow-color: rgba(0, 0, 0, 0.5);
+$shadow-orange: rgba(255, 200, 50, 0.2);
+
+// Sidebar Colors
+$sidebar-bg: $bg-dark;
+$sidebar-hover: #444;
+$sidebar-active: lighten($bg-dark, 10%);
+
+// Tag Colors
+$tag-bg: #f0f0f0;
+$tag-color: $bg-dark;
+$tag-hover: darken(#f0f0f0, 10%);
+
+// Link Colors
+$link-color: $primary-color;
+$link-hover: $primary-hover;
+$link-visited: darken($primary-color, 15%);
+
+// Additional Accents
+$accent-rust: #c1440e;
+$accent-copper: #b87333;
+$accent-amber: #ffbf00;
+$tech-cyan: #00d9ff;
+$tech-electric: #00ff88;
+$metal-silver: #c0c0c0;
+
+// Spacing
+// ----------------------------------------
+$spacing-xs: 5px;
+$spacing-sm: 8px;
+$spacing-md: 10px;
+$spacing-lg: 15px;
+$spacing-xl: 20px;
+$spacing-2xl: 25px;
+$spacing-3xl: 30px;
+
+// Margins
+$margin-xs: 0.5rem;
+$margin-sm: 1rem;
+$margin-md: 1.5rem;
+$margin-lg: 2rem;
+$margin-xl: 10em;
+
+// Padding
+$padding-xs: 5px;
+$padding-sm: 10px;
+$padding-md: 15px;
+$padding-lg: 16px;
+$padding-xl: 30px;
+
+// Typography
+// ----------------------------------------
+// Font Families
+$font-family-primary: 'PT Sans', sans-serif;
+
+// Font Sizes
+$font-size-xs: 14px;
+$font-size-sm: 16px;
+$font-size-md: 18px;
+$font-size-lg: 20px;
+$font-size-xl: 1.2rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.6rem;
+$font-size-4xl: 2rem;
+
+// Font Weights
+$font-weight-normal: normal;
+$font-weight-bold: bold;
+$font-weight-semi-bold: 600;
+
+// Layout
+// ----------------------------------------
+// Widths
+$width-full: 100%;
+$width-container: 80vw;
+$width-nav-menu: 70vw;
+$width-dropdown: 200px;
+$width-icon: 2em;
+$width-logo: 50px;
+
+// Heights
+$height-navbar: 80px;
+$height-nav-link: 35px;
+$height-doc-nav: 50px;
+$height-button-container: 4em;
+$height-logo: 50px;
+$height-full-vh: 100vh;
+
+// Sidebar Dimensions
+$sidebar-width: 15vw;
+$sidebar-min-width: 220px;
+$sidebar-max-width: 300px;
+
+// Border Radius
+// ----------------------------------------
+$border-radius-sm: 4px;
+$border-radius-md: 5px;
+$border-radius-lg: 50em;
+
+// Borders
+// ----------------------------------------
+$border-width-sm: 1px;
+$border-width-md: 12px;
+$border-style: solid;
+
+// Transitions
+// ----------------------------------------
+$transition-fast: 0.3s ease;
+$transition-ease-out: 0.3s ease-out;
+$transition-ease-in-out: 0.3s ease-in-out;
+
+// Z-Index
+// ----------------------------------------
+$z-index-navbar: 100;
+$z-index-sidebar: 9;
+$z-index-footer: 100;
+
+// Shadows
+// ----------------------------------------
+$box-shadow-neon: 0 0 70px 15px $shadow-black;
+$box-shadow-orange-glow: 0 0 40px 5px $shadow-orange;
+$box-shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
+$box-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+// Gaps
+// ----------------------------------------
+$gap-xs: 10px;
+$gap-sm: 25px;
+$gap-md: 50px;
+
+// Opacity Levels
+// ----------------------------------------
+$opacity-subtle: 0.6;
+$opacity-medium: 0.8;
+$opacity-overlay: 0.9;
+
+// Breakpoints
+// ----------------------------------------
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 960px;
+$breakpoint-desktop: 1200px;
+$breakpoint-large: 1600px;
+
+// ========================================
+// CSS CUSTOM PROPERTIES FOR THEME SWITCHING
+// These can be changed at runtime via JavaScript
+// ========================================
+:root {
+  // Default theme colors (can be overridden by JS)
+  --theme-primary: #{$primary-color};
+  --theme-primary-hover: #{$primary-hover};
+  --theme-bg-dark: #{$bg-dark};
+  --theme-bg-gradient-start: #{$bg-gradient-start};
+  --theme-bg-gradient-end: #{$bg-gradient-end};
+  --theme-text-primary: #{$text-primary};
+  --theme-text-secondary: #{$text-secondary};
+  --theme-border-dark: #{$border-dark};
+  --theme-sidebar-bg: #{$sidebar-bg};
+  --theme-sidebar-hover: #{$sidebar-hover};
+  --theme-warning-bg: #{$warning-bg};
+  --theme-warning-text: #{$warning-text};
+  --theme-success-bg: #{$success-bg};
+  --theme-success-text: #{$success-text};
+}
+
+// Rust theme override (applied via [data-theme="rust"] on html/body)
+[data-theme="rust"] {
+  --theme-primary: #{$rust-primary-color};
+  --theme-primary-hover: #{$rust-primary-hover};
+  --theme-bg-dark: #{$rust-bg-dark};
+  --theme-bg-gradient-start: #{$rust-bg-gradient-start};
+  --theme-bg-gradient-end: #{$rust-bg-gradient-end};
+  --theme-text-primary: #{$rust-text-primary};
+  --theme-text-secondary: #{$rust-primary-color};
+  --theme-border-dark: #3d3d3d;
+  --theme-sidebar-bg: #{$rust-bg-darkest};
+  --theme-sidebar-hover: #{$rust-bg-medium};
+  --theme-warning-bg: rgba(255, 200, 50, 0.06);
+  --theme-warning-text: #{$rust-text-primary};
+  --theme-success-bg: rgba(168, 208, 141, 0.06);
+  --theme-success-text: #{$rust-success-text};
+}
