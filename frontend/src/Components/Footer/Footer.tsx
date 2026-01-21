@@ -28,8 +28,8 @@ export default class Footer extends Component<Props, State> {
               <h4>Terms & Policies</h4>
               <ul>
                 <li><Link to="/policies/code-of-conduct">Code of Conduct</Link></li>
-                {/* <li><Link to="/policies/code-of-conduct">Licenses</Link></li> */}
-                <li><Link to="/policies/security">Security Notice</Link></li>
+                {/* <li><Link to="/policies/code-of-conduct">Licenses</Link> */}
+                <li><Link to="/policies/security">Security Policy</Link></li>
                 <li><Link to="/policies">All Policies</Link></li>
               </ul>
             </div>

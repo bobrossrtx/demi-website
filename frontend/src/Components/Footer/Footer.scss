@@ -1,23 +1,20 @@
-// Variables
-$footer-bg: #282828;
-$footer-color: white;
-$link-color: #ffc832;
+@use '../../styles/variables' as *;
 
 footer {
     position: relative;
     margin-top: auto;
     left: 0;
     right: 0;
-    padding: 30px 0;
-    background-color: $footer-bg;
-    color: $footer-color;
-    z-index: 100;
+    padding: $padding-xl 0;
+    background-color: $bg-dark;
+    color: $text-primary;
+    z-index: $z-index-footer;
     
     h4 {
-        font-size: 1.2em;
-        font-weight: 600;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-semi-bold;
         margin-top: 0;
-        margin-bottom: 2rem;
+        margin-bottom: $margin-lg;
     }
     
     ul {
@@ -33,7 +30,7 @@ footer {
     
     .attribution {
         text-align: center;
-        padding-top: 30px;
+        padding-top: $padding-xl;
     }
 }
 
@@ -42,12 +39,12 @@ footer {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-right: .5em;
+        margin-right: $margin-xs;
     }
     
     img {
         filter: invert(100%) sepia(0%) saturate(17%) hue-rotate(217deg) brightness(103%) contrast(104%);
-        width: 2em;
+        width: $width-icon;
     }
 }
 
