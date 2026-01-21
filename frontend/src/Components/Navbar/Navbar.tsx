@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import "./Navbar.scss"
-import Dropdown from './Dropdown';
 import SearchBar from './SearchBar';
-import logo from './images/demilang-logo.png'
 
 type Props = {}
 
@@ -17,8 +15,12 @@ const Navbar = (props: Props) => {
       <nav className='navbar'>
         <div className="navbar-logo-container">
           <Link to='/' className='navbar-logo'>
-            <img src={logo} alt="Logo" className='navbar-logo-img' />
-            Demi
+            <span className="navbar-logo-mark" aria-hidden="true">
+              <span className="navbar-logo-angle">&lt;</span>
+              <i className="fas fa-wrench navbar-logo-wrench" />
+              <span className="navbar-logo-angle">&gt;</span>
+            </span>
+            <span className="navbar-logo-text">Demi</span>
           </Link>
         </div>
         <div className='menu-icon' onClick={handleClick}>
@@ -34,6 +36,11 @@ const Navbar = (props: Props) => {
             <a href='../docs' className='nav-links' onClick={closeMobileMenu}>
               Docs
             </a>
+          </li>
+          <li className='nav-item'>
+            <Link to='/faq' className='nav-links' onClick={closeMobileMenu}>
+              FAQ
+            </Link>
           </li>
           <li className='nav-item'>
             <Link to='https://github.com/bobrossrtx/demi-lang' className='nav-links' onClick={closeMobileMenu}>

@@ -1,23 +1,25 @@
+@use '../../styles/variables' as *;
+
 :root {
-    --primary: #1888ff;
+    --primary: $primary-blue;
 }
 
 // Dropdown styles
 .dropdown {
     &-menu {
         background: red;
-        width: 200px;
+        width: $width-dropdown;
         position: absolute;
-        top: 80px;
+        top: $height-navbar;
         list-style: none;
         text-align: start;
         
         li {
-            background: #1888ff;
+            background: $primary-blue;
             cursor: pointer;
             
             &:hover {
-                background: #5cabff;
+                background: $primary-hover;
             }
         }
         
@@ -28,79 +30,103 @@
     
     &-link {
         display: block;
-        height: 100%;
-        width: 100%;
+        height: $width-full;
+        width: $width-full;
         text-decoration: none;
-        color: #fff;
-        padding: 16px;
+        color: $text-primary;
+        padding: $padding-lg;
     }
 }
 
 // Navbar styles
 .navbar {
     position: absolute;
-    z-index: 100;
-    background: linear-gradient(90deg, rgb(40, 40, 40) 0%, rgb(40, 40, 40) 100%);
-    height: 80px;
+    z-index: $z-index-navbar;
+    background: $bg-navbar;
+    height: $height-navbar;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: $font-size-xl;
     padding: 0rem;
     flex-wrap: nowrap !important;
     
     &-logo {
-        color: #ffc832;
+        display: inline-flex;
+        align-items: center;
+        gap: $spacing-sm;
+        color: $primary-color;
         justify-self: start;
-        margin-left: 20px;
+        margin-left: $spacing-xl;
         cursor: pointer;
         text-decoration: none;
-        font-size: 2rem;
+        font-size: $font-size-4xl;
+
+        &-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: $spacing-xs;
+            line-height: 1;
+        }
+
+        &-angle {
+            color: $text-primary;
+            font-weight: $font-weight-bold;
+        }
+
+        &-wrench {
+            color: $primary-color;
+            font-size: 0.9em;
+        }
+
+        &-text {
+            color: $primary-color;
+        }
         
         &-img {
             position: relative;
-            height: 50px;
-            width: 50px;
-            margin-right: 10px;
-            margin-bottom: 10px;
+            height: $height-logo;
+            width: $width-logo;
+            margin-right: $spacing-md;
+            margin-bottom: $spacing-md;
         }
     }
 }
 
 .fa-firstdraft {
-    margin-left: 0.5rem;
-    font-size: 1.6rem;
+    margin-left: $margin-xs;
+    font-size: $font-size-3xl;
 }
 
 .nav {
     &-menu {
         display: grid;
         grid-template-columns: repeat(5, auto);
-        grid-gap: 10px;
+        grid-gap: $gap-xs;
         list-style: none;
         text-align: center;
-        width: 70vw;
+        width: $width-nav-menu;
         justify-content: end;
-        margin-top: 1rem;
+        margin-top: $margin-sm;
     }
     
     &-item {
         display: flex;
         align-items: center;
-        height: 80px;
+        height: $height-navbar;
     }
     
     &-links {
-        color: #ffc832;
+        color: $primary-color;
         text-decoration: none;
-        padding: .2em 1rem;
-        height: 35px;
-        border-radius: 50em;
+        padding: .2em $margin-sm;
+        height: $height-nav-link;
+        border-radius: $border-radius-lg;
 
-        transition: all 0.3s ease-in-out;
+        transition: all $transition-ease-in-out;
         &:hover {
-            background: #ffc832;
-            color: #3d414f;
+            background: $primary-color;
+            color: $bg-gradient-end;
         }
         
         &-mobile {
@@ -110,7 +136,7 @@
 }
 
 .fa-bars {
-    color: #fff;
+    color: $text-primary;
 }
 
 .menu-icon {
@@ -118,7 +144,7 @@
 }
 
 // Media queries
-@media screen and (max-width: 960px) {
+@media screen and (max-width: $breakpoint-tablet) {
     .fa-caret-down {
         display: none;
     }
@@ -130,8 +156,8 @@
     .nav-menu {
         display: flex;
         flex-direction: column;
-        width: 100%;
-        height: 100vh;
+        width: $width-full;
+        height: $height-full-vh;
         position: absolute;
         top: 64px;
         left: -100%;
@@ -141,7 +167,7 @@
         text-align: center;
         
         &.active {
-            background: linear-gradient(90deg, rgb(40, 40, 40) 0%, rgb(40, 40, 40) 100%);
+            background: $bg-navbar;
             left: 0;
             opacity: 1;
             transition: all 0.5s ease;
@@ -152,15 +178,15 @@
     .nav-links {
         text-align: center;
         padding: 2rem;
-        width: 100%;
+        width: $width-full;
         display: table;
-        margin-top: 15px;
-        margin-right: 25px;
+        margin-top: $padding-md;
+        margin-right: $gap-sm;
         
         &:hover {
-            background: white;
+            background: $text-primary;
             text-decoration: overline;
-            text-decoration-thickness: 5px;
+            text-decoration-thickness: $spacing-xs;
         }
         
         &-mobile {
@@ -168,15 +194,15 @@
             text-align: center;
             padding: 1.5rem;
             margin: 2rem auto;
-            border-radius: 4px;
-            width: 80%;
+            border-radius: $border-radius-sm;
+            width: $width-container;
             background: var(--primary);
             text-decoration: none;
-            color: #fff;
-            font-size: 1.5rem;
+            color: $text-primary;
+            font-size: $font-size-2xl;
             
             &:hover {
-                background: #fff;
+                background: $text-primary;
                 color: var(--primary);
                 transition: 250ms;
             }
@@ -188,7 +214,7 @@
         top: 0;
         left: 0;
         transform: translate(25%, 25%);
-        margin-bottom: 2rem;
+        margin-bottom: $margin-lg;
     }
     
     .menu-icon {
@@ -202,8 +228,8 @@
     }
     
     .fa-times {
-        color: #fff;
-        font-size: 2rem;
+        color: $text-primary;
+        font-size: $font-size-4xl;
     }
     
     button {
@@ -211,6 +237,6 @@
     }
     
     .nav-item {
-        margin-top: 20px;
+        margin-top: $spacing-xl;
     }
 }
