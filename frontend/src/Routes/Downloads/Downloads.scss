@@ -1,79 +1,772 @@
-// Variables
-$table-odd-bg: #2B2F31;
-$table-even-bg: #677185;
-$border-color: white;
+@use '../../styles/variables' as *;
 
-.download-container {
-    display: inline-block;
+.downloads-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: $spacing-xl;
+}
+
+// Hero Section
+.download-hero {
+    text-align: center;
+    padding: $spacing-xl * 2 $spacing-xl;
+    margin-bottom: $spacing-xl * 2;
+    background: linear-gradient(135deg, rgba(255, 200, 50, 0.12) 0%, rgba(255, 200, 50, 0.03) 100%);
+    border-radius: $border-radius-md;
+    border: 2px solid rgba(255, 200, 50, 0.25);
+    position: relative;
+    overflow: hidden;
     
-    button {
-        margin-right: 1rem;
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 200, 50, 0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+    
+    .hero-icon {
+        font-size: 4rem;
+        color: $primary-color;
+        margin-bottom: $spacing-lg;
+        animation: bounce 2s ease-in-out infinite;
+        position: relative;
+        z-index: 1;
+    }
+    
+    h1 {
+        font-size: 3rem;
+        margin-bottom: $spacing-md;
+        position: relative;
+        z-index: 1;
+        
+        @media (max-width: 768px) {
+            font-size: 2rem;
+        }
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: $text-muted;
+        margin-bottom: $spacing-lg;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .version-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: $spacing-sm;
+        background: $primary-color;
+        color: #000;
+        padding: $spacing-sm $spacing-lg;
+        border-radius: $spacing-xl;
+        font-weight: $font-weight-bold;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+        
+        i {
+            font-size: 1rem;
+        }
     }
 }
 
-button > i {
-    margin-left: 5px;
-}
-
-.current-version {
-    display: inline-block;
-    font-size: 1em;
-    background: rgba(0, 0, 0, 0.237);
-    padding: 0.1em 0.5em;
-    border-radius: .8em;
-    
-    &-label {
-        display: inline-block;
-        margin-right: 10px;
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
     }
 }
 
-.github-link {
-    color: white;
-    font-size: 1.5em;
-    margin-left: 25px;
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
-.release-table {
-    border-collapse: collapse;
-    width: 100%;
+// Quick Install
+.quick-install-section {
+    background: rgba(80, 200, 120, 0.08);
+    border: 2px solid rgba(80, 200, 120, 0.3);
+    border-radius: $border-radius-md;
+    padding: $padding-xl;
+    margin-bottom: $spacing-xl * 2;
     
-    > tr {
-        > td, > th {
-            border: 4px solid $table-odd-bg;
-            padding: 8px;
+    h3 {
+        color: #50c878;
+        margin-bottom: $spacing-md;
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        
+        i {
+            font-size: 1.2rem;
+        }
+    }
+    
+    p {
+        color: $text-muted;
+        margin-bottom: $spacing-md;
+    }
+}
+
+.command-box {
+    display: flex;
+    align-items: center;
+    gap: $spacing-lg;
+    background: rgba(0, 0, 0, 0.3);
+    padding: $padding-lg;
+    border-radius: $border-radius-sm;
+    border: 1px solid rgba(80, 200, 120, 0.3);
+    min-height: 60px;
+    
+    code {
+        flex: 1;
+        color: #50c878;
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: $spacing-xs 0;
+        white-space: nowrap;
+        display: block;
+    }
+    
+    .copy-btn {
+        background: rgba(80, 200, 120, 0.2);
+        border: 1px solid rgba(80, 200, 120, 0.4);
+        color: #50c878;
+        padding: $spacing-xs;
+        border-radius: $border-radius-sm;
+        cursor: pointer;
+        transition: all $transition-fast;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        
+        &:hover {
+            background: rgba(80, 200, 120, 0.3);
         }
         
-        &:first-child {
-            background-color: #ffc832;
-            color: $table-odd-bg;
+        &.copied {
+            background: rgba(80, 200, 120, 0.4);
         }
         
-        &:not(:first-child) {
-            background-color: $table-even-bg;
+        i {
+            font-size: 1rem;
+        }
+        
+        // Hide text, show only icon
+        > :not(i) {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        flex-direction: column;
+        
+        code {
+            width: 100%;
+        }
+        
+        .copy-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}
+
+// Download Cards
+.download-cards-container {
+    margin-bottom: $spacing-xl * 2;
+    
+    h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: $spacing-xl;
+        color: $text-primary;
+    }
+}
+
+.download-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-lg;
+    
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.download-card {
+    background: rgba(255, 200, 50, 0.05);
+    border: 2px solid rgba(255, 200, 50, 0.2);
+    border-radius: $border-radius-md;
+    padding: $padding-xl;
+    transition: all $transition-fast;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, $primary-color, transparent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform $transition-fast;
+    }
+    
+    &:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 200, 50, 0.5);
+        box-shadow: 0 10px 30px rgba(255, 200, 50, 0.2);
+        
+        &::before {
+            transform: scaleX(1);
+        }
+    }
+    
+    &.recommended {
+        border-color: rgba(255, 200, 50, 0.6);
+        background: rgba(255, 200, 50, 0.1);
+        
+        &::before {
+            transform: scaleX(1);
+        }
+    }
+    
+    .recommended-badge {
+        position: absolute;
+        top: $spacing-md;
+        right: $spacing-md;
+        background: $primary-color;
+        color: #000;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        font-size: 0.85rem;
+        font-weight: $font-weight-bold;
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        
+        i {
+            font-size: 0.8rem;
+        }
+    }
+    
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: $spacing-md;
+        margin-bottom: $spacing-md;
+        
+        .platform-icon {
+            font-size: 2.5rem;
+            color: $primary-color;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: $text-primary;
+        }
+    }
+    
+    .card-description {
+        color: $text-muted;
+        margin-bottom: $spacing-lg;
+        line-height: 1.6;
+    }
+    
+    .card-details {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+        margin-bottom: $spacing-lg;
+        padding: $padding-md;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: $border-radius-sm;
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: $spacing-sm;
+            color: $text-muted;
+            font-size: 0.9rem;
             
-            font-weight: bold;
+            i {
+                color: $primary-color;
+                width: 20px;
+            }
         }
     }
     
-    &-button {
-        margin-left: 10px;
-        color: white;
+    > button, .DownloadButton {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .install-command {
+        margin-top: $spacing-md;
+        padding-top: $spacing-md;
+        border-top: 1px solid rgba(255, 200, 50, 0.2);
         
-        &-first {
-            margin-left: 4em !important;
+        > span {
+            display: block;
+            font-size: 0.85rem;
+            color: $text-muted;
+            margin-bottom: $spacing-xs;
+        }
+        
+        .command-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: $spacing-md;
+            background: rgba(0, 0, 0, 0.3);
+            padding: $spacing-sm $spacing-md;
+            border-radius: $border-radius-sm;
+            min-height: 45px;
+            
+            code {
+                flex: 1;
+                color: $primary-color;
+                font-size: 0.9rem;
+                line-height: 1.6;
+                padding: $spacing-xs 0;
+                white-space: nowrap;
+                display: block;
+                text-align: left;
+            }
+            
+            .copy-icon-btn {
+                background: rgba(255, 200, 50, 0.15);
+                border: 1px solid rgba(255, 200, 50, 0.3);
+                color: $primary-color;
+                cursor: pointer;
+                padding: $spacing-xs $spacing-sm;
+                transition: all $transition-fast;
+                flex-shrink: 0;
+                border-radius: $border-radius-sm;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 35px;
+                height: 35px;
+                
+                &:hover {
+                    background: rgba(255, 200, 50, 0.25);
+                    border-color: rgba(255, 200, 50, 0.5);
+                }
+                
+                i {
+                    font-size: 1rem;
+                }
+            }
         }
     }
 }
 
-@media only screen and (max-width: 855px) {
-    .release-table-button-first {
-        margin-left: 1em !important;
+// Installation Guide
+.installation-guide {
+    margin-bottom: $spacing-xl * 2;
+    
+    h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: $spacing-xl;
+        color: $text-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-sm;
     }
 }
 
-@media only screen and (max-width: 410px) {
-    .github-link {
-        margin-left: 5px;
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: $spacing-lg;
+}
+
+.step-card {
+    text-align: center;
+    padding: $padding-lg;
+    background: rgba(255, 200, 50, 0.05);
+    border: 1px solid rgba(255, 200, 50, 0.2);
+    border-radius: $border-radius-md;
+    transition: all $transition-fast;
+    
+    &:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 200, 50, 0.08);
+        border-color: rgba(255, 200, 50, 0.4);
+    }
+    
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: $primary-color;
+        color: #000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: $font-weight-bold;
+        margin: 0 auto $spacing-md;
+    }
+    
+    h4 {
+        font-size: 1.2rem;
+        margin-bottom: $spacing-sm;
+        color: $text-primary;
+    }
+    
+    p {
+        color: $text-muted;
+        line-height: 1.6;
+        margin: 0;
+        
+        .inline-code {
+            color: $primary-color;
+            background: rgba(255, 200, 50, 0.15);
+            padding: 2px 6px;
+            border-radius: $border-radius-sm;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    }
+}
+
+// System Requirements
+.requirements-section {
+    margin-bottom: $spacing-xl * 2;
+    
+    h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: $spacing-xl;
+        color: $text-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-sm;
+    }
+}
+
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-lg;
+    
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.requirement-card {
+    padding: $padding-xl;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 200, 50, 0.2);
+    border-radius: $border-radius-md;
+    transition: all $transition-fast;
+    
+    &:hover {
+        border-color: rgba(255, 200, 50, 0.4);
+        transform: translateY(-3px);
+    }
+    
+    i {
+        font-size: 2.5rem;
+        color: $primary-color;
+        display: block;
+        margin-bottom: $spacing-md;
+    }
+    
+    h4 {
+        font-size: 1.3rem;
+        margin-bottom: $spacing-md;
+        color: $text-primary;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+        li {
+            color: $text-muted;
+            padding: $spacing-xs 0;
+            display: flex;
+            align-items: center;
+            gap: $spacing-sm;
+            
+            &::before {
+                content: '✓';
+                color: $primary-color;
+                font-weight: $font-weight-bold;
+            }
+        }
+    }
+}
+
+// Disclaimer
+.disclaimer-box {
+    background: rgba(245, 158, 11, 0.1);
+    border: 2px solid rgba(245, 158, 11, 0.3);
+    border-radius: $border-radius-md;
+    padding: $padding-lg;
+    margin-bottom: $spacing-xl * 2;
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-md;
+    
+    i {
+        color: #f59e0b;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    
+    p {
+        margin: 0;
+        color: $text-primary;
+        line-height: 1.6;
+        
+        strong {
+            color: #f59e0b;
+        }
+    }
+}
+
+// Previous Versions
+.previous-versions-section {
+    margin-bottom: $spacing-xl * 2;
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: $spacing-lg;
+        flex-wrap: wrap;
+        gap: $spacing-md;
+        
+        h2 {
+            font-size: 2rem;
+            color: $text-primary;
+            display: flex;
+            align-items: center;
+            gap: $spacing-sm;
+            margin: 0;
+        }
+        
+        .expand-btn {
+            background: rgba(255, 200, 50, 0.12);
+            border: 1px solid rgba(255, 200, 50, 0.3);
+            color: $primary-color;
+            padding: $spacing-sm $spacing-lg;
+            border-radius: $border-radius-md;
+            cursor: pointer;
+            transition: all $transition-fast;
+            display: flex;
+            align-items: center;
+            gap: $spacing-sm;
+            font-weight: $font-weight-bold;
+            
+            &:hover {
+                background: rgba(255, 200, 50, 0.2);
+                border-color: rgba(255, 200, 50, 0.5);
+            }
+        }
+    }
+}
+
+.versions-table-container {
+    animation: slideDown 0.3s ease-out;
+    overflow-x: auto;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.versions-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    
+    thead {
+        background: rgba(255, 200, 50, 0.2);
+        
+        th {
+            padding: $padding-md;
+            text-align: left;
+            color: $primary-color;
+            font-weight: $font-weight-bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+    }
+    
+    tbody {
+        tr {
+            border-bottom: 1px solid rgba(255, 200, 50, 0.1);
+            transition: background $transition-fast;
+            
+            &:last-child {
+                border-bottom: none;
+            }
+            
+            &:hover {
+                background: rgba(255, 200, 50, 0.08);
+            }
+            
+            td {
+                padding: $padding-md;
+                color: $text-primary;
+                
+                &.download-links {
+                    display: flex;
+                    gap: $spacing-md;
+                }
+            }
+        }
+    }
+    
+    .version-label {
+        font-family: 'Courier New', monospace;
+        color: $text-primary;
+        font-weight: $font-weight-bold;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $spacing-xl;
+        font-size: 0.85rem;
+        font-weight: $font-weight-bold;
+        
+        &-alpha {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+    }
+    
+    .platform-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 200, 50, 0.12);
+        border: 1px solid rgba(255, 200, 50, 0.3);
+        border-radius: $border-radius-sm;
+        color: $primary-color;
+        text-decoration: none;
+        transition: all $transition-fast;
+        
+        &:hover {
+            background: rgba(255, 200, 50, 0.25);
+            border-color: rgba(255, 200, 50, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        i {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+// Help Section
+.help-section {
+    text-align: center;
+    padding: $padding-xl;
+    background: rgba(255, 200, 50, 0.05);
+    border-radius: $border-radius-md;
+    border: 1px solid rgba(255, 200, 50, 0.2);
+    
+    h3 {
+        font-size: 1.5rem;
+        margin-bottom: $spacing-md;
+        color: $text-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-sm;
+    }
+    
+    p {
+        color: $text-muted;
+        margin: 0;
+        line-height: 1.6;
+        
+        a {
+            color: $primary-color;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color $transition-fast;
+            
+            &:hover {
+                border-bottom-color: $primary-color;
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .downloads-page {
+        padding: $spacing-md;
+    }
+    
+    .download-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .requirements-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .previous-versions-section .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        
+        .expand-btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 }
