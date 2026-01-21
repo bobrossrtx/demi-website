@@ -4,10 +4,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import router from "./Routes/routes";
+import { initTheme } from "./helpers/themeManager";
 
 // Global css
 import 'bootstrap/dist/css/bootstrap.css'
 import "./global.scss";
+
+// Initialize theme before render
+initTheme();
 
 ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
