@@ -1,19 +1,195 @@
+@use '../../styles/variables' as *;
+
 .search-container {
-    height: 35px;
+    height: $height-nav-link;
     margin-top: 22px;
+    margin-right: $padding-lg;
+    position: relative;
+    width: 300px;
     
     .search-bar {
-        height: 100%;
+        height: $width-full;
         background: transparent;
-        border-radius: 50em;
-        border: 2px solid #3c404d;
-        color: #ffc832;
-        padding-left: 15px;
-        transition: border 0.2s ease-in-out;
+        border-radius: $border-radius-md;
+        border: 2px $border-style $primary-color;
+        color: $primary-color;
+        padding-left: $padding-md;
+        padding-right: $padding-md;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
         
         &:focus {
             outline: none;
-            border-color: #ffc832;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
         }
+
+        &::placeholder {
+            color: rgba($primary-color, 0.6);
+        }
+    }
+
+    .search-dropdown {
+        position: absolute;
+        top: calc(100% - 2px);
+        left: 0;
+        right: 0;
+        background: $bg-navbar;
+        border: 2px solid $primary-color;
+        border-top-color: transparent;
+        border-radius: 0 0 $border-radius-md $border-radius-md;
+        max-height: 600px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        animation: dropdownSlide 0.15s ease-out;
+
+        .search-loading {
+            padding: $padding-lg;
+            text-align: center;
+            color: $text-secondary;
+            font-size: 0.9rem;
+        }
+
+        .search-results {
+            max-height: 500px;
+            overflow-y: auto;
+
+            .search-result-item {
+                padding: $padding-md $padding-lg;
+                border-bottom: 1px solid rgba($border-dark, 0.5);
+                cursor: pointer;
+                transition: background 0.2s ease-in-out;
+
+                &:hover {
+                    background: rgba($primary-color, 0.05);
+                }
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                .result-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: $spacing-xs;
+                    gap: $spacing-md;
+
+                    .result-title {
+                        font-weight: 600;
+                        color: $text-primary;
+                        flex: 1;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .result-type {
+                        font-size: 0.75rem;
+                        padding: 2px 8px;
+                        border-radius: $border-radius-sm;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        white-space: nowrap;
+
+                        &.doc {
+                            background: rgba(59, 130, 246, 0.2);
+                            color: #3b82f6;
+                        }
+
+                        &.faq {
+                            background: rgba(34, 197, 94, 0.2);
+                            color: #22c55e;
+                        }
+                    }
+                }
+
+                .result-description {
+                    color: $text-secondary;
+                    font-size: 0.9rem;
+                    margin-bottom: $spacing-xs;
+                    line-height: 1.4;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+
+                .result-tags {
+                    display: flex;
+                    gap: $spacing-xs;
+                    flex-wrap: wrap;
+
+                    .tag {
+                        font-size: 0.75rem;
+                        background: rgba($primary-color, 0.1);
+                        color: $primary-color;
+                        padding: 2px 6px;
+                        border-radius: $border-radius-sm;
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+
+        .search-no-results {
+            padding: $padding-lg;
+            text-align: center;
+            color: $text-secondary;
+            font-size: 0.95rem;
+        }
+
+        .search-footer {
+            padding: $padding-md $padding-lg;
+            border-top: 1px solid rgba($border-dark, 0.5);
+            background: rgba($primary-color, 0.03);
+
+            .view-all-btn {
+                width: 100%;
+                padding: $padding-md;
+                background: $primary-color;
+                color: $bg-navbar;
+                border: none;
+                border-radius: $border-radius-md;
+                cursor: pointer;
+                font-weight: 600;
+                transition: background 0.2s ease-in-out;
+
+                &:hover {
+                    background: $primary-hover;
+                }
+            }
+        }
+    }
+}
+
+// Scrollbar styling for dropdown
+.search-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb {
+    background: rgba($primary-color, 0.3);
+    border-radius: 4px;
+
+    &:hover {
+        background: rgba($primary-color, 0.5);
+    }
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
