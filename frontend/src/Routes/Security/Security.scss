@@ -1,0 +1,559 @@
+@use '../../styles/variables' as *;
+
+.security-page {
+  min-height: 100vh;
+  padding-bottom: $padding-xl;
+}
+
+.security-hero {
+  background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($primary-color, 0.05));
+  padding: $padding-xl 0;
+  text-align: center;
+  margin-bottom: $spacing-xl;
+  border-bottom: 2px solid rgba($primary-color, 0.2);
+
+  .hero-icon {
+    font-size: 4rem;
+    color: $primary-color;
+    margin-bottom: $spacing-lg;
+    animation: pulse 2s infinite;
+
+    i {
+      filter: drop-shadow(0 4px 8px rgba($primary-color, 0.3));
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: $spacing-md;
+    color: $text-primary;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: $text-secondary;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+}
+
+.security-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $padding-lg;
+}
+
+.security-section {
+  background: $bg-card;
+  border: 2px solid $border-dark;
+  border-radius: $border-radius-md;
+  padding: $padding-xl;
+  margin-bottom: $spacing-xl;
+
+  h2 {
+    color: $primary-color;
+    font-size: 2rem;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+
+  p {
+    color: $text-secondary;
+    line-height: 1.8;
+    margin-bottom: $spacing-md;
+    font-size: 1.05rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $primary-hover;
+    }
+  }
+
+  &.supported-versions {
+    background: rgba($primary-color, 0.03);
+    border-color: rgba($primary-color, 0.4);
+  }
+
+  &.best-practices {
+    background: rgba(59, 130, 246, 0.03);
+    border-color: rgba(59, 130, 246, 0.4);
+
+    h2 {
+      color: #3b82f6;
+    }
+  }
+
+  &.disclosure-policy {
+    background: rgba(34, 197, 94, 0.03);
+    border-color: rgba(34, 197, 94, 0.4);
+
+    h2 {
+      color: #22c55e;
+    }
+  }
+
+  &.scope {
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.versions-table {
+  overflow-x: auto;
+  margin-top: $spacing-lg;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: $padding-md;
+      text-align: left;
+      border-bottom: 1px solid $border-dark;
+    }
+
+    th {
+      background: rgba($primary-color, 0.1);
+      color: $primary-color;
+      font-weight: 600;
+    }
+
+    td {
+      color: $text-secondary;
+    }
+
+    tbody tr:hover {
+      background: rgba($primary-color, 0.03);
+    }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    &.supported {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    &.partial {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    &.unsupported {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+  }
+}
+
+.reporting-steps {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.step-card {
+  background: rgba($primary-color, 0.03);
+  border: 2px solid rgba($primary-color, 0.3);
+  border-radius: $border-radius-md;
+  padding: $padding-lg;
+  position: relative;
+
+  .step-number {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    width: 45px;
+    height: 45px;
+    background: $primary-color;
+    color: $text-dark;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  h3 {
+    color: $primary-color;
+    font-size: 1.3rem;
+    margin-bottom: $spacing-md;
+    padding-right: 50px;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+}
+
+.contact-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.contact-card {
+  background: rgba($primary-color, 0.03);
+  border: 2px solid rgba($primary-color, 0.3);
+  border-radius: $border-radius-md;
+  padding: $padding-lg;
+  text-align: center;
+
+  > i {
+    font-size: 3rem;
+    color: $primary-color;
+    margin-bottom: $spacing-md;
+  }
+
+  h3 {
+    color: $text-primary;
+    font-size: 1.3rem;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: $spacing-md;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-md;
+    background: $primary-color;
+    color: $text-dark;
+    border-radius: $border-radius-sm;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: darken($primary-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.commitment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.commitment-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $padding-lg;
+  background: rgba($primary-color, 0.03);
+  border-radius: $border-radius-md;
+
+  > i {
+    font-size: 2.5rem;
+    color: $primary-color;
+    margin-bottom: $spacing-md;
+  }
+
+  h3 {
+    color: $text-primary;
+    font-size: 1.2rem;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+  }
+}
+
+.scope-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.scope-column {
+  padding: $padding-xl;
+
+  h3 {
+    font-size: 1.4rem;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    i {
+      font-size: 1.3rem;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: $spacing-sm 0;
+      padding-left: $spacing-lg;
+      position: relative;
+      color: $text-secondary;
+      line-height: 1.6;
+
+      &:before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        font-size: 1.5rem;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  &.in-scope {
+    border-right: 2px solid $border-dark;
+
+    h3 {
+      color: #22c55e;
+    }
+
+    ul li:before {
+      color: #22c55e;
+    }
+  }
+
+  &.out-of-scope {
+    h3 {
+      color: #ef4444;
+    }
+
+    ul li:before {
+      color: #ef4444;
+    }
+  }
+}
+
+.practices-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.practice-card {
+  background: rgba(59, 130, 246, 0.05);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: $border-radius-md;
+  padding: $padding-lg;
+
+  > i {
+    font-size: 2rem;
+    color: #3b82f6;
+    margin-bottom: $spacing-md;
+    display: block;
+  }
+
+  h3 {
+    color: $text-primary;
+    font-size: 1.2rem;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+}
+
+.disclosure-steps {
+  list-style: none;
+  counter-reset: step-counter;
+  padding: 0;
+  margin-top: $spacing-lg;
+
+  li {
+    counter-increment: step-counter;
+    padding: $padding-md;
+    padding-left: 60px;
+    margin-bottom: $spacing-sm;
+    background: rgba(34, 197, 94, 0.05);
+    border-left: 4px solid #22c55e;
+    border-radius: $border-radius-sm;
+    position: relative;
+    color: $text-secondary;
+    font-size: 1.05rem;
+
+    &:before {
+      content: counter(step-counter);
+      position: absolute;
+      left: $spacing-md;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 35px;
+      height: 35px;
+      background: #22c55e;
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.security-footer {
+  text-align: center;
+  padding: $padding-xl;
+  background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($primary-color, 0.05));
+  border: 2px solid rgba($primary-color, 0.3);
+  border-radius: $border-radius-md;
+
+  i {
+    font-size: 3rem;
+    color: $primary-color;
+    margin-bottom: $spacing-md;
+    display: block;
+    animation: heartbeat 1.5s infinite;
+  }
+
+  p {
+    font-size: 1.3rem;
+    color: $text-primary;
+    margin: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 1024px) {
+  .reporting-steps,
+  .contact-methods,
+  .commitment-grid,
+  .practices-list {
+    grid-template-columns: 1fr;
+  }
+
+  .scope-columns {
+    grid-template-columns: 1fr;
+
+    .scope-column.in-scope {
+      border-right: none;
+      border-bottom: 2px solid $border-dark;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .security-hero {
+    padding: $padding-lg 0;
+
+    .hero-icon {
+      font-size: 3rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      padding: 0 $padding-md;
+    }
+  }
+
+  .security-container {
+    padding: 0 $padding-md;
+  }
+
+  .security-section {
+    padding: $padding-lg;
+
+    h2 {
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-sm;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .step-card,
+  .practice-card,
+  .scope-column {
+    padding: $padding-md;
+
+    h3 {
+      font-size: 1.1rem;
+    }
+  }
+
+  .step-card {
+    .step-number {
+      width: 35px;
+      height: 35px;
+      font-size: 1.2rem;
+    }
+  }
+
+  .disclosure-steps li {
+    padding-left: 50px;
+    font-size: 1rem;
+
+    &:before {
+      width: 30px;
+      height: 30px;
+      font-size: 1rem;
+    }
+  }
+}
