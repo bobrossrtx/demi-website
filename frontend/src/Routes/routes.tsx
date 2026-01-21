@@ -14,6 +14,10 @@ import Contact from "./Contact/Contact";
 import Search from "./docs/Search";
 import Downloads from "./Downloads/Downloads";
 import DocPage from "./docs/DocPage";
+import FAQ from "./FAQ/FAQ";
+import Policies from "./Policies/Policies";
+import CodeOfConduct from "./CodeOfConduct/CodeOfConduct";
+import Security from "./Security/Security";
 import ErrorNotFound from "./Errors/ErrorNotFound";
 import Sent from "./Contact/Sent";
 
@@ -48,6 +52,22 @@ const router = createBrowserRouter([
             {
                 path: "/downloads",
                 element: <Downloads />
+            },
+            {
+                path: "/faq",
+                element: <FAQ />
+            },
+            {
+                path: "/policies",
+                element: <Policies />
+            },
+            {
+                path: "/policies/code-of-conduct",
+                element: <CodeOfConduct />
+            },
+            {
+                path: "/policies/security",
+                element: <Security />
             },
             {
                 path: "/*",
