@@ -1,0 +1,202 @@
+.manage-posts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    .btn-primary {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .no-posts {
+    text-align: center;
+    padding: 3rem;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+
+    p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .post-card {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 1.5rem;
+    transition: box-shadow 0.2s;
+
+    &:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+
+      .post-info {
+        flex: 1;
+
+        .badge {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          margin-right: 0.5rem;
+          margin-bottom: 0.5rem;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          font-weight: 600;
+
+          &.pinned {
+            background: var(--warning-bg);
+            color: var(--primary-color);
+          }
+
+          &.locked {
+            background: var(--warning-bg);
+            color: #ef4444;
+          }
+        }
+
+        h3 {
+          margin: 0.5rem 0;
+          color: var(--text-color);
+          font-size: 1.25rem;
+          cursor: pointer;
+          transition: color 0.2s;
+
+          &:hover {
+            color: var(--primary-color);
+          }
+        }
+
+        .post-meta {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+
+          .category {
+            background: var(--warning-bg);
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+          }
+
+          .separator {
+            color: var(--border-color);
+          }
+        }
+      }
+
+      .post-stats {
+        display: flex;
+        gap: 1rem;
+
+        .stat {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+
+          .icon {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: opacity 0.2s;
+
+        &.btn-edit {
+          background: var(--primary-color);
+          color: white;
+        }
+
+        &.btn-secondary {
+          background: var(--warning-bg);
+          color: var(--text-color);
+          border: 1px solid var(--border-color);
+        }
+
+        &.btn-delete {
+          background: #ef4444;
+          color: white;
+        }
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .manage-posts-container {
+    padding: 1rem;
+
+    .posts-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .post-card .post-header {
+      flex-direction: column;
+      gap: 1rem;
+
+      .post-stats {
+        width: 100%;
+        justify-content: space-around;
+      }
+    }
+  }
+}

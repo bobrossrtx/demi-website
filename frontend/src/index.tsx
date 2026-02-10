@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import router from "./Routes/routes";
 import { initTheme } from "./helpers/themeManager";
+import { AuthProvider } from "./context/AuthContext";
 
 // Global css
 import 'bootstrap/dist/css/bootstrap.css'
@@ -15,6 +16,8 @@ initTheme();
 
 ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

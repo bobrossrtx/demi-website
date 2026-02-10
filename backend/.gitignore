@@ -2,3 +2,5 @@
 Cargo.lock
 *.bin
 *.o
+.env
+.env.local

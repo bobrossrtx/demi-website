@@ -42,20 +42,22 @@
 .navbar {
     position: absolute;
     z-index: $z-index-navbar;
-    background: $bg-navbar;
+    background: var(--card-background);
     height: $height-navbar;
+    width: $width-full;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: $font-size-xl;
     padding: 0rem;
     flex-wrap: nowrap !important;
+    border-bottom: 1px solid var(--border-color);
     
     &-logo {
         display: inline-flex;
         align-items: center;
         gap: $spacing-sm;
-        color: $primary-color;
+        color: var(--primary-color);
         justify-self: start;
         margin-left: $spacing-xl;
         cursor: pointer;
@@ -70,17 +72,17 @@
         }
 
         &-angle {
-            color: $text-primary;
+            color: var(--text-color);
             font-weight: $font-weight-bold;
         }
 
         &-wrench {
-            color: $primary-color;
+            color: var(--primary-color);
             font-size: 0.9em;
         }
 
         &-text {
-            color: $primary-color;
+            color: var(--primary-color);
         }
         
         &-img {
@@ -100,14 +102,17 @@
 
 .nav {
     &-menu {
-        display: grid;
-        grid-template-columns: repeat(5, auto);
-        grid-gap: $gap-xs;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: $gap-xs;
         list-style: none;
         text-align: center;
         width: $width-nav-menu;
-        justify-content: end;
         margin-top: $margin-sm;
+        margin-right: 1rem;
+        flex-wrap: nowrap;
+        min-width: 0;
     }
     
     &-item {
@@ -133,10 +138,129 @@
             display: none;
         }
     }
+    
+    &-auth-link {
+        color: $primary-color !important;
+        
+        &:hover {
+            background: transparent !important;
+            color: $primary-color !important;
+            text-decoration: underline;
+        }
+    }
+    
+    &-auth-button {
+        color: $primary-color !important;
+
+        &:hover {
+            background: transparent !important;
+            color: $primary-color !important;
+            text-decoration: underline;
+        }
+    }
+    
+    &-user-menu {
+        position: relative;
+    }
+    
+    &-user-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        border: 2px solid $primary-color;
+        color: $primary-color;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            background: $primary-color;
+            color: white;
+        }
+        
+        .fa-user-circle {
+            font-size: 1.2rem;
+        }
+        
+        .fa-chevron-down,
+        .fa-chevron-up {
+            font-size: 0.75rem;
+        }
+    }
+    
+    &-user-name {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.nav-search {
+    min-width: 0;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: var(--card-background);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    min-width: 220px;
+    box-shadow: 0 8px 16px var(--shadow);
+    z-index: 1000;
+    
+    &-header {
+        padding: 1rem;
+        border-bottom: 1px solid rgba($primary-color, 0.3);
+    }
+    
+    &-name {
+        color: var(--text-color);
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+    }
+    
+    &-email {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        margin: 0;
+        word-break: break-all;
+        line-height: 1.2;
+    }
+    
+    &-item {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-color);
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        text-decoration: none;
+        
+        &:hover {
+            background: var(--hover-background);
+            color: var(--primary-color);
+        }
+        
+        i {
+            width: 1.2rem;
+        }
+    }
 }
 
 .fa-bars {
-    color: $text-primary;
+    color: var(--text-color);
 }
 
 .menu-icon {
@@ -238,5 +362,33 @@
     
     .nav-item {
         margin-top: $spacing-xl;
+    }
+    
+    .nav-user-menu {
+        width: 100%;
+        position: relative;
+    }
+    
+    .nav-user-button {
+        width: 90%;
+        margin: 0 auto;
+        justify-content: center;
+    }
+    
+    .user-dropdown {
+        position: relative;
+        top: 0.5rem;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+    }
+    
+    .nav-auth-link,
+    .nav-auth-button {
+        width: 90%;
+        margin: 1rem auto !important;
+        display: block !important;
+        text-align: center;
     }
 }

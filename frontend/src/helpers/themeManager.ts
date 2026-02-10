@@ -3,23 +3,43 @@
  * Handles theme switching and persistence using localStorage
  */
 
-export type Theme = 'original' | 'rust';
+export type Theme = 'light' | 'dark';
 
-const THEME_STORAGE_KEY = 'theme';
+const THEME_STORAGE_KEY = 'userSettings';
 
 /**
- * Get the current theme from localStorage or default to 'rust'
+ * Get the current theme from userSettings or default to 'dark'
  */
 export const getCurrentTheme = (): Theme => {
-  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-  return (storedTheme === 'rust' || storedTheme === 'original') ? storedTheme : 'rust';
+  const storedSettings = localStorage.getItem(THEME_STORAGE_KEY);
+  if (storedSettings) {
+    try {
+      const settings = JSON.parse(storedSettings);
+      return settings.theme === 'light' ? 'light' : 'dark';
+    } catch (e) {
+      return 'dark';
+    }
+  }
+  return 'dark';
 };
 
 /**
  * Set the theme and persist to localStorage
  */
 export const setTheme = (theme: Theme): void => {
-  localStorage.setItem(THEME_STORAGE_KEY, theme);
+  const storedSettings = localStorage.getItem(THEME_STORAGE_KEY);
+  let settings: any = {};
+  
+  if (storedSettings) {
+    try {
+      settings = JSON.parse(storedSettings);
+    } catch (e) {
+      // Ignore parse errors
+    }
+  }
+  
+  settings.theme = theme;
+  localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(settings));
   applyTheme(theme);
 };
 
@@ -27,11 +47,7 @@ export const setTheme = (theme: Theme): void => {
  * Apply theme to the DOM
  */
 export const applyTheme = (theme: Theme): void => {
-  document.documentElement.setAttribute('data-theme', theme);
-  
-  // Optional: Add theme class to body as well for additional styling hooks
-  document.body.classList.remove('theme-original', 'theme-rust');
-  document.body.classList.add(`theme-${theme}`);
+  document.body.setAttribute('data-theme', theme);
 };
 
 /**
@@ -39,7 +55,7 @@ export const applyTheme = (theme: Theme): void => {
  */
 export const toggleTheme = (): Theme => {
   const currentTheme = getCurrentTheme();
-  const newTheme: Theme = currentTheme === 'original' ? 'rust' : 'original';
+  const newTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
   setTheme(newTheme);
   return newTheme;
 };

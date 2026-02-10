@@ -359,20 +359,6 @@ export default function DocPage(props: Props) {
                                     >
                                         {markdown.content}
                                     </Markdown>
-                                    
-                                    {/* Document Footer */}
-                                    <div className="document-footer">
-                                        <div className="footer-meta">
-                                            <a 
-                                                href={`https://github.com/bobrossrtx/demi-lang/edit/master/docs/${page}.md`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="edit-link"
-                                            >
-                                                <i className="fab fa-github"></i> Edit this page on GitHub
-                                            </a>
-                                        </div>
-                                    </div>
 
                                     {getPrevNextButtons(jsonData, page)}
                                 </article>

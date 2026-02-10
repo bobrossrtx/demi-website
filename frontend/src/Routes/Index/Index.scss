@@ -53,7 +53,7 @@
 .demo-card {
     max-width: 520px;
     width: 520px;
-    background: $bg-card;
+    background: var(--card-background);
     border: 1px solid rgba(255, 200, 50, 0.35);
     border-radius: 12px;
     padding: $padding-md;
@@ -101,7 +101,7 @@
     display: inline-flex;
     align-items: center;
     gap: $spacing-sm;
-    color: $text-primary;
+    color: var(--text-color);
     font-weight: $font-weight-bold;
 
     i {
@@ -111,8 +111,8 @@
 
 .demo-card-copy {
     border: 1px solid rgba(255, 200, 50, 0.45);
-    background: rgba(0, 0, 0, 0.15);
-    color: $primary-color;
+    background: var(--copy-btn-bg, rgba(0, 0, 0, 0.15));
+    color: var(--primary-color);
     border-radius: 10px;
     padding: 6px 10px;
     font-size: 0.9em;
@@ -120,7 +120,7 @@
     transition: background-color $transition-fast, border-color $transition-fast;
 
     &:hover {
-        background: rgba(255, 200, 50, 0.12);
+        background: var(--copy-btn-hover, rgba(255, 200, 50, 0.12));
         border-color: rgba(255, 200, 50, 0.75);
     }
 }
@@ -128,14 +128,15 @@
 .demo-card-code {
     margin: 0;
     padding: 0;
-    border-radius: 10px;
-    background: $bg-darkest;
-    color: $text-primary;
+    border-radius: 4px;
+    background: var(--code-bg, #1a1a1a);
+    color: var(--text-color);
     overflow-x: auto;
     text-align: left;
     
     pre {
         margin: 0 !important;
+        padding: 1.25em 1.5em !important;
         text-align: left !important;
     }
     
@@ -147,14 +148,14 @@
 
 .demo-card-hint {
     margin-top: $spacing-md;
-    color: $text-muted;
+    color: var(--text-secondary);
     font-size: 0.95em;
 }
 
 .demo-inline-code {
-    color: $primary-color;
+    color: var(--primary-color);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    background: rgba(0, 0, 0, 0.18);
+    background: var(--code-inline-bg, rgba(0, 0, 0, 0.18));
     padding: 2px 8px;
     border-radius: 999px;
     border: 1px solid rgba(255, 200, 50, 0.25);
@@ -170,12 +171,12 @@
 }
 
 .dev-note {
-    background-color: $warning-bg;
-    border: $border-width-sm $border-style $warning-border;
+    background-color: var(--warning-bg, rgba(255, 200, 50, 0.08));
+    border: $border-width-sm $border-style var(--primary-color);
     border-radius: $border-radius-md;
     padding: $padding-md;
     margin: $spacing-xl 0;
-    color: $warning-text;
+    color: var(--text-color);
     display: flex;
     align-items: center;
     font-size: $font-size-sm;
@@ -200,10 +201,10 @@
         margin-top: $spacing-md;
         margin-left: $spacing-md;
         font-size: $font-size-xs;
-        background-color: $success-bg;
+        background-color: var(--success-bg, rgba(168, 208, 141, 0.08));
         padding: $padding-xs;
         border-radius: $border-radius-md;
-        color: $success-text;
+        color: var(--success-color);
         font-weight: $font-weight-bold;
 
         p {
@@ -215,39 +216,48 @@
 .intro-container {
     h2 {
         text-align: left;
+        color: var(--text-color);
     }
 
     p {
         text-align: left;
+        color: var(--text-color);
     }
 }
 
 .description-container {
     p {
         text-align: left;
+        color: var(--text-color);
     }
 }
 
 .left-aligned-header {
     text-align: left !important;
-    border-bottom: 3px solid $primary-color;
+    border-bottom: 3px solid var(--primary-color);
     padding-bottom: $spacing-sm;
     display: inline-block;
     margin-bottom: $spacing-md;
+    color: var(--text-color);
 }
 
 .right-aligned-header {
     text-align: right !important;
-    border-bottom: 3px solid $primary-color;
+    border-bottom: 3px solid var(--primary-color);
     padding-bottom: $spacing-sm;
     display: inline-block;
     margin-bottom: $spacing-md;
     width: 100%;
+    color: var(--text-color);
 }
 
 .get-involved-container {
     margin-top: $spacing-xl;
     padding: $padding-xl;
+    background: var(--card-background);
+    border-radius: $border-radius-lg;
+    border: 2px solid var(--primary-color);
+    text-align: center;
     background: linear-gradient(135deg, rgba(255, 200, 50, 0.08) 0%, rgba(255, 200, 50, 0.02) 100%);
     border: 2px solid rgba(255, 200, 50, 0.3);
     border-radius: $border-radius-md;

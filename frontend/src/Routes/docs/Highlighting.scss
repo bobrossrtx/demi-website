@@ -44,7 +44,7 @@ $background-deletion: #ffeef0;
 // }
 pre {
   margin: 0;
-  padding: 0;
+  padding: 1.25em 1.5em;
   background: $color-background;
   color: $color-white;
   font-size: 1rem;
@@ -53,14 +53,13 @@ pre {
   word-wrap: normal;
   border-radius: 1rem;
   display: block;
-  padding: 1em;
   overflow-x: auto;
 }
 
 pre code {
   display: block;
   overflow-x: auto;
-  padding: 1em;
+  padding: 0;
   border-radius: 1rem;
   white-space: pre-wrap;
   word-wrap: break-word;

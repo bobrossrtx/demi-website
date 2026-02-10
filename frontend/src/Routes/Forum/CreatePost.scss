@@ -1,0 +1,382 @@
+.create-post-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .create-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    .btn-secondary {
+      padding: 0.75rem 1.5rem;
+      background: var(--card-background);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .editor-note {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 0.95rem;
+
+    strong {
+      color: var(--primary-color);
+    }
+  }
+
+  .no-categories {
+    text-align: center;
+    padding: 3rem;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+
+    h2 {
+      color: var(--text-color);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+  }
+
+  .create-post-form {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        color: var(--text-color);
+        font-family: inherit;
+        font-size: 1rem;
+
+        &:focus {
+          outline: none;
+          border-color: var(--primary-color);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .char-count {
+        position: absolute;
+        right: 0.5rem;
+        top: 2.5rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      // React Quill styling
+      .quill {
+        background: var(--background-color);
+        border-radius: 4px;
+
+        .ql-toolbar {
+          background: var(--card-background);
+          border: 1px solid var(--border-color);
+          border-radius: 4px 4px 0 0;
+
+          .ql-stroke {
+            stroke: var(--text-color);
+          }
+
+          .ql-fill {
+            fill: var(--text-color);
+          }
+
+          .ql-picker-label {
+            color: var(--text-color);
+          }
+
+          button:hover,
+          button:focus {
+            .ql-stroke {
+              stroke: var(--primary-color);
+            }
+            .ql-fill {
+              fill: var(--primary-color);
+            }
+          }
+
+          button.ql-active {
+            .ql-stroke {
+              stroke: var(--primary-color);
+            }
+            .ql-fill {
+              fill: var(--primary-color);
+            }
+          }
+        }
+
+        .ql-container {
+          border: 1px solid var(--border-color);
+          border-radius: 0 0 4px 4px;
+          font-size: 1rem;
+          min-height: 300px;
+
+          .ql-editor {
+            color: var(--text-color);
+            min-height: 300px;
+
+            &.ql-blank::before {
+              color: var(--text-secondary);
+            }
+
+            strong {
+              font-weight: 700;
+            }
+
+            em {
+              font-style: italic;
+            }
+
+            code {
+              background: var(--code-inline-bg);
+              padding: 0.2em 0.4em;
+              border-radius: 3px;
+              font-family: 'Courier New', monospace;
+            }
+
+            pre {
+              background: var(--code-bg);
+              color: var(--text-color);
+              padding: 1em;
+              border-radius: 4px;
+              overflow-x: auto;
+            }
+
+            blockquote {
+              border-left: 4px solid var(--primary-color);
+              padding-left: 1em;
+              margin: 1em 0;
+              color: var(--text-secondary);
+            }
+
+            a {
+              color: var(--primary-color);
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .tag-input-wrapper {
+        display: flex;
+        gap: 0.5rem;
+
+        input {
+          flex: 1;
+        }
+
+        .btn-add-tag {
+          padding: 0.75rem 1.5rem;
+          background: var(--primary-color);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 600;
+          white-space: nowrap;
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+
+          &:hover:not(:disabled) {
+            opacity: 0.9;
+          }
+        }
+      }
+
+      .tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+
+        .tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.75rem;
+          background: var(--warning-bg);
+          color: var(--text-color);
+          border-radius: 4px;
+          font-size: 0.875rem;
+          font-weight: 600;
+
+          .tag-remove {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0;
+            margin: 0;
+            opacity: 0.6;
+
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+
+      button {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: opacity 0.2s;
+
+        &.btn-primary {
+          background: var(--primary-color);
+          color: white;
+        }
+
+        &.btn-secondary {
+          background: var(--card-background);
+          color: var(--text-color);
+          border: 1px solid var(--border-color);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        &:hover:not(:disabled) {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  .post-tips {
+    background: var(--warning-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 1.5rem;
+
+    h3 {
+      color: var(--text-color);
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: var(--text-color);
+
+      li {
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .create-post-container {
+    padding: 1rem;
+
+    .create-post-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .create-post-form {
+      padding: 1rem;
+
+      .form-group .tag-input-wrapper {
+        flex-direction: column;
+
+        .btn-add-tag {
+          width: 100%;
+        }
+      }
+
+      .form-actions {
+        flex-direction: column;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

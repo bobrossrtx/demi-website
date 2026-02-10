@@ -16,6 +16,17 @@ glob = "0.3.1"
 lazy_static = "1.4.0"
 serde_urlencoded = "0.7.1"
 
+# Database dependencies
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono"] }
+tokio = { version = "1", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["serde", "v4"] }
+dotenv = "0.15"
+
+# Authentication dependencies
+bcrypt = "0.14"
+jsonwebtoken = "9.2"
+
 
 [profile.dev]
 opt-level = 1  # Use minimal optimization to handle _FORTIFY_SOURCE

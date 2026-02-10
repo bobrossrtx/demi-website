@@ -6,9 +6,10 @@ footer {
     left: 0;
     right: 0;
     padding: $padding-xl 0;
-    background-color: $bg-dark;
-    color: $text-primary;
+    background-color: var(--card-background);
+    color: var(--text-color);
     z-index: $z-index-footer;
+    border-top: 1px solid var(--border-color);
     
     h4 {
         font-size: $font-size-xl;
@@ -45,6 +46,10 @@ footer {
     img {
         filter: invert(100%) sepia(0%) saturate(17%) hue-rotate(217deg) brightness(103%) contrast(104%);
         width: $width-icon;
+        
+        body[data-theme="light"] & {
+            filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
+        }
     }
 }
 

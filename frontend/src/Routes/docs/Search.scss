@@ -10,7 +10,7 @@
     align-items: center;
     margin-bottom: $spacing-xl;
     padding-bottom: $padding-md;
-    border-bottom: $border-width-sm $border-style $border-dark;
+    border-bottom: $border-width-sm $border-style var(--border-color);
 }
 
 .search-results-container {
@@ -18,17 +18,17 @@
     /* Add margin around the results */
     padding: $margin-sm;
     /* Add padding inside the container */
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--hover-background);
     /* Slight background for contrast */
     border-radius: 8px;
     /* Slightly rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px var(--shadow);
     /* Add some shadow for depth */
 }
 
 /* Overall container for search results */
 .search-result-link {
-    color: $text-primary;
+    color: var(--text-color);
     text-decoration: none;
     /* Removes underline from links */
 }
@@ -37,21 +37,21 @@
     margin-bottom: $margin-sm;
     padding: $margin-sm;
     /* Increased padding for better spacing */
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--card-background);
     /* Softer background */
     border-radius: 1em;
-    border: $border-style 2px rgba(255, 255, 255, 0.4);
+    border: $border-style 2px var(--border-color);
     /* Thinner border for elegance */
     transition: transform 0.2s, box-shadow 0.2s;
     /* Animation for hover effect */
 }
 
 .search-result-container:hover {
-    border-color: $text-primary;
+    border-color: var(--primary-color);
     /* Highlight border on hover */
     transform: translateY(-2px);
     /* Elevate slightly on hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px var(--shadow);
     /* Add shadow for depth */
 }
 
@@ -83,9 +83,9 @@
 }
 
 .search-page-tags {
-    color: $primary-color;
+    color: var(--primary-color);
     font-size: 0.85em;
-    background: rgba($primary-color, 0.15);
+    background: var(--warning-bg);
     padding: 4px 10px;
     border-radius: $border-radius-sm;
     display: inline-block;
@@ -93,7 +93,7 @@
     transition: all 0.2s;
     
     &:hover {
-        background: rgba($primary-color, 0.3);
+        background: var(--hover-background);
         transform: translateY(-2px);
     }
 }
@@ -103,13 +103,13 @@
     gap: $spacing-lg;
     margin-top: $spacing-md;
     font-size: 0.9em;
-    color: $text-secondary;
+    color: var(--text-secondary);
     padding-top: $spacing-md;
-    border-top: 1px solid rgba($border-dark, 0.3);
+    border-top: 1px solid var(--border-color);
 
     .meta-category {
         font-weight: 600;
-        color: $primary-color;
+        color: var(--primary-color);
     }
 
     .matched-fields {
@@ -145,7 +145,7 @@
 
 .results-info {
     padding: $padding-md;
-    background: rgba($primary-color, 0.1);
+    background: var(--warning-bg);
     border-radius: $border-radius-md;
     margin-bottom: $spacing-lg;
     
@@ -166,18 +166,18 @@
     
     i {
         font-size: 3rem;
-        color: rgba($primary-color, 0.3);
+        color: var(--text-secondary);
         margin-bottom: $spacing-lg;
         display: block;
     }
     
     h1 {
-        color: $text-primary;
+        color: var(--text-color);
         margin-bottom: $spacing-md;
     }
     
     p {
-        color: $text-secondary;
+        color: var(--text-secondary);
         font-size: 1.1rem;
         max-width: 500px;
         margin: 0 auto;
@@ -267,17 +267,17 @@
     /* Add margin around the results */
     padding: 1rem;
     /* Add padding inside the container */
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--hover-background);
     /* Slight background for contrast */
     border-radius: 8px;
     /* Slightly rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px var(--shadow);
     /* Add some shadow for depth */
 }
 
 .filter-button {
-    background-color: #40424b;
-    color: #ffc832;
+    background-color: var(--card-background);
+    color: var(--primary-color);
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -286,13 +286,13 @@
 }
 
 .filter-button:hover {
-    background-color: #ffc83299;
-    color: #40424b;
+    background-color: var(--warning-bg);
+    color: var(--text-color);
 }
 
 /* Overall container for search results */
 .search-result-link {
-    color: white;
+    color: var(--text-color);
     text-decoration: none;
     /* Removes underline from links */
 }
@@ -301,21 +301,21 @@
     margin-bottom: 1rem;
     padding: 1rem;
     /* Increased padding for better spacing */
-    background-color: rgb(40 40 40 / 40%);
+    background-color: var(--card-background);
     /* Softer background */
     border-radius: 1em;
-    border: solid 2px rgba(255, 255, 255, 0.4);
+    border: solid 2px var(--border-color);
     /* Thinner border for elegance */
     transition: transform 0.2s, box-shadow 0.2s;
     /* Animation for hover effect */
 }
 
 .search-result-container:hover {
-    border-color: white;
+    border-color: var(--primary-color);
     /* Highlight border on hover */
     transform: translateY(-2px);
     /* Elevate slightly on hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px var(--shadow);
     /* Add shadow for depth */
 }
 
@@ -335,17 +335,17 @@
 
 .search-page-tags-label {
     font-size: 1em;
-    color: #ccc;
+    color: var(--text-secondary);
     /* Lighter color for the tag label */
 }
 
 .search-page-tags {
-    color: #ffc832;
+    color: var(--primary-color);
     /* Better contrast for tags */
     margin-left: 5px;
     font-size: 0.9em;
     /* Slightly smaller font size */
-    background: #2828289f;
+    background: var(--warning-bg);
     /* Different background for tags */
     padding: 0.2em 0.5em;
     border-radius: 10px;
@@ -356,15 +356,15 @@
 }
 
 .search-page-tags:hover {
-    background: rgba(255, 200, 50, 0.6);
+    background: var(--hover-background);
     /* Change background on hover */
-    color: #40424b;
+    color: var(--primary-color);
 }
 
 .search-page-description {
     font-size: 0.9em;
     /* Smaller size for description */
-    color: #e0e0e0;
+    color: var(--text-secondary);
     /* Lighter text for better readability */
     margin-top: 10px;
     /* Space above the description */
@@ -383,10 +383,10 @@
     width: 100%;
     margin-top: 10px;
     margin-bottom: 20px;
-    background-color: rgba(40, 40, 40, 0.624);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px var(--shadow);
     
     // Animation properties
     display: flex;
@@ -421,7 +421,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--hover-background);
     /* Consistent with parent */
     padding: 15px;
     border-radius: 6px;
@@ -430,7 +430,7 @@
 }
 
 .filter-label {
-    color: #ffc832;
+    color: var(--primary-color);
     margin: 0 0 10px 0;
     font-size: 0.95em;
     font-weight: 600;
@@ -446,17 +446,17 @@
 }
 
 .filter-option:hover {
-    background: rgba(255, 200, 50, 0.1);
+    background: var(--warning-bg);
 }
 
 .filter-option input[type="checkbox"] {
     margin: 0 10px 0 0;
-    accent-color: #ffc832;
+    accent-color: var(--primary-color);
     transform: scale(1.1);
 }
 
 .filter-option label {
-    color: #e0e0e0;
+    color: var(--text-secondary);
     font-size: 0.9em;
     cursor: pointer;
     user-select: none;
@@ -475,11 +475,11 @@
 }
 
 .filter-group>div::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--hover-background);
 }
 
 .filter-group>div::-webkit-scrollbar-thumb {
-    background: #ffc832;
+    background: var(--primary-color);
     border-radius: 3px;
 }
 

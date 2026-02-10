@@ -30,7 +30,6 @@ export default class Footer extends Component<Props, State> {
                 <li><Link to="/policies/code-of-conduct">Code of Conduct</Link></li>
                 {/* <li><Link to="/policies/code-of-conduct">Licenses</Link> */}
                 <li><Link to="/policies/security">Security Policy</Link></li>
-                <li><Link to="/policies">All Policies</Link></li>
               </ul>
             </div>
             <div className="flex flex-col mw8 w-100 measure-wide-l pv2 pv5-m pv2-ns ph4-m ph4-l" id="get-help" data-np-autofill-form-type="other" data-np-checked="1" data-np-watching="1">
@@ -48,17 +47,6 @@ export default class Footer extends Component<Props, State> {
                 {/* Change when migrated to the Demi github org */}
                 <Link to="https://github.com/bobrossrtx/demi-lang" target="_blank"><img src="/static/images/github.svg" alt="github logo" title="GitHub" /></Link>
               </div>
-            </div>
-            <div className="flex flex-col mw8 w-100 measure-wide-l pv2 pv5-m pv2-ns ph4-m ph4-l" id="support">
-              <h4>Support</h4>
-              <a href='https://ko-fi.com/V7V61SQ037' target='_blank' rel="noopener noreferrer">
-                <img 
-                  height='36' 
-                  style={{border: '0px', height: '36px'}} 
-                  src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' 
-                  alt='Buy Me a Coffee at ko-fi.com' 
-                />
-              </a>
             </div>
           </div>
           <div className="attribution">

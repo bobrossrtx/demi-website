@@ -2,10 +2,12 @@
 
 .search-container {
     height: $height-nav-link;
-    margin-top: 22px;
+    margin-top: 0;
     margin-right: $padding-lg;
     position: relative;
     width: 300px;
+    flex: 0 1 300px;
+    min-width: 180px;
     
     .search-bar {
         height: $width-full;
@@ -162,6 +164,13 @@
                 }
             }
         }
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .search-container {
+        width: 220px;
+        flex-basis: 220px;
     }
 }
 
